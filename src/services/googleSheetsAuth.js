@@ -16,21 +16,23 @@
 // Google Sheets API Configuration
 export const GOOGLE_SHEETS_CONFIG = {
   // Replace with your actual Google Sheets API key
-  API_KEY: process.env.REACT_APP_GOOGLE_SHEETS_API_KEY || '',
+  API_KEY: process.env.REACT_APP_GOOGLE_SHEETS_API_KEY || "",
 
   // MIA Warehouse Google Sheets ID from the provided link
-  SHEET_ID: process.env.REACT_APP_GOOGLE_SHEETS_ID || '1m2B2ODXuuatnW0EKExdVeCa1WwvF52bZOhS7DGqG6Vg',
+  SHEET_ID:
+    process.env.REACT_APP_GOOGLE_SHEETS_ID ||
+    "1m2B2ODXuuatnW0EKExdVeCa1WwvF52bZOhS7DGqG6Vg",
 
   // Sheet ranges for different data types - Updated to match actual sheet structure
   RANGES: {
-    USERS: 'Users!A:H', // Username, Password, Full Name, Email, Role, Department, Permissions, Shift
-    AUDIT_LOG: 'AuditLog!A:F', // Timestamp, Action, Username, Details, Status, IP Address
-    PERMISSIONS: 'Permissions!A:C', // Role, Permission, Description
-    SESSIONS: 'Sessions!A:E', // Session ID, User ID, Login Time, Expires At, Is Active
+    USERS: "Users!A:H", // Username, Password, Full Name, Email, Role, Department, Permissions, Shift
+    AUDIT_LOG: "AuditLog!A:F", // Timestamp, Action, Username, Details, Status, IP Address
+    PERMISSIONS: "Permissions!A:C", // Role, Permission, Description
+    SESSIONS: "Sessions!A:E", // Session ID, User ID, Login Time, Expires At, Is Active
   },
 
   // API endpoints
-  BASE_URL: 'https://sheets.googleapis.com/v4/spreadsheets',
+  BASE_URL: "https://sheets.googleapis.com/v4/spreadsheets",
 };
 
 // ==================== AUTHENTICATION FUNCTIONS ====================
@@ -56,7 +58,7 @@ export const verifyCredentials = async (username, password) => {
       {
         signal: controller.signal,
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       }
     );
@@ -64,11 +66,15 @@ export const verifyCredentials = async (username, password) => {
     clearTimeout(timeoutId);
 
     if (!response.ok) {
-      console.error('Google Sheets API failed:', response.status, response.statusText);
+      console.error(
+        "Google Sheets API failed:",
+        response.status,
+        response.statusText
+      );
       return {
         success: false,
-        error: 'Không thể kết nối tới hệ thống xác thực. Vui lòng thử lại sau.',
-        code: 'SHEETS_API_ERROR'
+        error: "Không thể kết nối tới hệ thống xác thực. Vui lòng thử lại sau.",
+        code: "SHEETS_API_ERROR",
       };
     }
 
@@ -77,7 +83,7 @@ export const verifyCredentials = async (username, password) => {
     if (!data.values || data.values.length === 0) {
       return {
         success: false,
-        error: 'Không có dữ liệu người dùng trong hệ thống',
+        error: "Không có dữ liệu người dùng trong hệ thống",
       };
     }
 
@@ -86,14 +92,14 @@ export const verifyCredentials = async (username, password) => {
 
     const users = userRows.map((row) => {
       return {
-        username: row[0] || '',          // Username
-        password: row[1] || '',          // Password
-        fullName: row[2] || '',          // Full Name
-        email: row[3] || '',             // Email
-        role: row[4] || '',              // Role
-        department: row[5] || '',        // Department
-        permissions: row[6] || '',       // Permissions
-        shift: row[7] || ''              // Shift
+        username: row[0] || "", // Username
+        password: row[1] || "", // Password
+        fullName: row[2] || "", // Full Name
+        email: row[3] || "", // Email
+        role: row[4] || "", // Role
+        department: row[5] || "", // Department
+        permissions: row[6] || "", // Permissions
+        shift: row[7] || "", // Shift
       };
     });
 
@@ -105,7 +111,7 @@ export const verifyCredentials = async (username, password) => {
     if (!user) {
       return {
         success: false,
-        error: 'Không tìm thấy tài khoản này trong hệ thống',
+        error: "Không tìm thấy tài khoản này trong hệ thống",
       };
     }
 
@@ -113,7 +119,7 @@ export const verifyCredentials = async (username, password) => {
     if (user.password !== password) {
       return {
         success: false,
-        error: 'Mật khẩu không chính xác',
+        error: "Mật khẩu không chính xác",
       };
     }
 
@@ -127,13 +133,13 @@ export const verifyCredentials = async (username, password) => {
         id: user.username,
         name: user.fullName || user.username,
         email: user.email || `${user.username}@mia.vn`,
-        role: user.role || 'Staff',
-        department: user.department || 'Operations',
+        role: user.role || "Staff",
+        department: user.department || "Operations",
         permissions: user.permissions
-          ? user.permissions.split(',').map(p => p.trim())
-          : ['read_orders'],
-        avatar: '/api/placeholder/32/32',
-        shift: user.shift || 'Day Shift',
+          ? user.permissions.split(",").map((p) => p.trim())
+          : ["read_orders"],
+        avatar: "/api/placeholder/32/32",
+        shift: user.shift || "Day Shift",
         lastLogin: new Date(),
       },
       token: sessionToken,
@@ -145,15 +151,16 @@ export const verifyCredentials = async (username, password) => {
       },
     };
   } catch (error) {
-    console.error('Google Sheets credentials verification failed:', error);
+    console.error("Google Sheets credentials verification failed:", error);
 
     // Return authentication failure
     return {
       success: false,
-      error: error.name === 'AbortError'
-        ? 'Kết nối tới hệ thống quá chậm. Vui lòng thử lại.'
-        : 'Không thể kết nối tới hệ thống xác thực. Vui lòng kiểm tra kết nối mạng.',
-      code: error.name === 'AbortError' ? 'TIMEOUT' : 'CONNECTION_ERROR'
+      error:
+        error.name === "AbortError"
+          ? "Kết nối tới hệ thống quá chậm. Vui lòng thử lại."
+          : "Không thể kết nối tới hệ thống xác thực. Vui lòng kiểm tra kết nối mạng.",
+      code: error.name === "AbortError" ? "TIMEOUT" : "CONNECTION_ERROR",
     };
   }
 };
@@ -166,7 +173,7 @@ export const verifyCredentials = async (username, password) => {
 const generateSessionToken = (user) => {
   const timestamp = Date.now();
   const randomString = Math.random().toString(36).substring(2);
-  return `mia_session_${user.id || 'user'}_${timestamp}_${randomString}`;
+  return `mia_session_${user.id || "user"}_${timestamp}_${randomString}`;
 };
 
 // ==================== CONNECTION TESTING ====================
@@ -189,7 +196,7 @@ export const testGoogleSheetsConnection = async () => {
       {
         signal: controller.signal,
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       }
     );
@@ -197,9 +204,9 @@ export const testGoogleSheetsConnection = async () => {
     clearTimeout(timeoutId);
     return response.ok;
   } catch (error) {
-    console.error('Google Sheets connection test failed:', error);
-    if (error.name === 'AbortError') {
-      console.log('Google Sheets connection timeout');
+    console.error("Google Sheets connection test failed:", error);
+    if (error.name === "AbortError") {
+      console.log("Google Sheets connection timeout");
     }
     return false;
   }
@@ -215,34 +222,50 @@ export const logAuditEvent = async (eventData) => {
   try {
     // Google Apps Script Web App URL for audit logging
     // Replace this with your deployed Google Apps Script Web App URL
-    const AUDIT_WEBHOOK_URL = process.env.REACT_APP_AUDIT_WEBHOOK_URL ||
-      'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec';
+    const AUDIT_WEBHOOK_URL =
+      process.env.REACT_APP_AUDIT_WEBHOOK_URL ||
+      "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec";
 
     // Prepare audit log data
     const auditData = {
       timestamp: new Date().toISOString(),
-      action: eventData.action || 'UNKNOWN',
-      username: eventData.username || 'unknown',
-      details: eventData.details || '',
-      status: eventData.status || 'SUCCESS',
+      action: eventData.action || "UNKNOWN",
+      username: eventData.username || "unknown",
+      details: eventData.details || "",
+      status: eventData.status || "SUCCESS",
       ipAddress: eventData.ipAddress || getClientIP(),
     };
 
-    console.log('Logging audit event:', auditData);
+    console.log("Logging audit event:", auditData);
+
+    // Prefer serverless API (Service Account) if available
+    try {
+      const apiBase = process.env.REACT_APP_API_BASE_URL || "/api";
+      const resp = await fetch(`${apiBase}/audit-log`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(auditData),
+      });
+      if (resp && resp.ok) {
+        return { success: true, logged: "serverless_api" };
+      }
+    } catch (_) {
+      // continue to fallbacks
+    }
 
     // If no webhook URL is configured, log locally only
-    if (AUDIT_WEBHOOK_URL.includes('YOUR_SCRIPT_ID')) {
-      console.log('Audit Event (Local Only - Configure webhook):', auditData);
-      return { success: true, logged: 'locally' };
+    if (AUDIT_WEBHOOK_URL.includes("YOUR_SCRIPT_ID")) {
+      console.log("Audit Event (Local Only - Configure webhook):", auditData);
+      return { success: true, logged: "locally" };
     }
 
     // Fire-and-forget to Apps Script (no-cors)
     try {
       fetch(AUDIT_WEBHOOK_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(auditData),
-        mode: 'no-cors',
+        mode: "no-cors",
       }).catch(() => {});
     } catch (_) {
       // ignore webhook errors; we will still try direct Sheets append
@@ -252,16 +275,16 @@ export const logAuditEvent = async (eventData) => {
     try {
       const apiKey = GOOGLE_SHEETS_CONFIG.API_KEY;
       const sheetId = GOOGLE_SHEETS_CONFIG.SHEET_ID;
-      const range = GOOGLE_SHEETS_CONFIG.RANGES.AUDIT_LOG || 'AuditLog!A:F';
+      const range = GOOGLE_SHEETS_CONFIG.RANGES.AUDIT_LOG || "AuditLog!A:F";
 
       if (apiKey && sheetId) {
         await fetch(
           `${GOOGLE_SHEETS_CONFIG.BASE_URL}/${sheetId}/values/${encodeURIComponent(
-            range,
+            range
           )}:append?valueInputOption=RAW&key=${apiKey}`,
           {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               values: [
                 [
@@ -274,19 +297,21 @@ export const logAuditEvent = async (eventData) => {
                 ],
               ],
             }),
-          },
+          }
         );
-        return { success: true, logged: 'sheets_api' };
+        return { success: true, logged: "sheets_api" };
       }
     } catch (appendError) {
-      console.warn('Direct Sheets append failed:', appendError?.message || appendError);
+      console.warn(
+        "Direct Sheets append failed:",
+        appendError?.message || appendError
+      );
     }
 
     // If we reach here, we at least attempted webhook
-    return { success: true, logged: 'webhook_only' };
-
+    return { success: true, logged: "webhook_only" };
   } catch (error) {
-    console.error('Failed to log audit event:', error);
+    console.error("Failed to log audit event:", error);
     return { success: false, error: error.message };
   }
 };
@@ -297,7 +322,7 @@ export const logAuditEvent = async (eventData) => {
 const getClientIP = () => {
   // In a browser environment, we can't get the real client IP
   // This would typically be handled by the server
-  return 'browser-client';
+  return "browser-client";
 };
 
 // ==================== SESSION MANAGEMENT ====================
@@ -352,7 +377,7 @@ export const endSession = async (sessionId) => {
   try {
     localStorage.removeItem(`session_${sessionId}`);
   } catch (error) {
-    console.error('Failed to end session:', error);
+    console.error("Failed to end session:", error);
   }
 };
 
@@ -383,11 +408,11 @@ export const endSession = async (sessionId) => {
  */
 export const getUserIP = async () => {
   try {
-    const response = await fetch('https://api.ipify.org?format=json');
+    const response = await fetch("https://api.ipify.org?format=json");
     const data = await response.json();
     return data.ip;
   } catch (error) {
-    return 'unknown';
+    return "unknown";
   }
 };
 
