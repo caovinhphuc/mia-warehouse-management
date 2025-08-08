@@ -1,0 +1,519 @@
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base Layer - Typography & Reset */
+@layer base {
+  * {
+    @apply antialiased;
+  }
+
+  html {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  }
+
+  body {
+    @apply text-sm font-normal leading-relaxed text-gray-900 dark:text-gray-100;
+    background-color: #fafafa;
+  }
+
+  /* Headings */
+  h1 {
+    @apply text-2xl font-semibold leading-tight tracking-tight;
+  }
+  h2 {
+    @apply text-xl font-semibold leading-tight tracking-tight;
+  }
+  h3 {
+    @apply text-lg font-medium leading-snug;
+  }
+  h4 {
+    @apply text-base font-medium leading-snug;
+  }
+  h5 {
+    @apply text-sm font-medium leading-snug;
+  }
+  h6 {
+    @apply text-xs font-medium leading-snug uppercase tracking-wider;
+  }
+
+  /* Paragraphs */
+  p {
+    @apply text-sm leading-relaxed;
+  }
+
+  /* Links */
+  a {
+    @apply text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors;
+  }
+
+  /* Form Elements */
+  input,
+  textarea,
+  select {
+    @apply text-sm;
+  }
+
+  /* Lists */
+  ul,
+  ol {
+    @apply text-sm;
+  }
+
+  /* Tables */
+  table {
+    @apply text-sm;
+  }
+  th {
+    @apply text-xs font-medium uppercase tracking-wider;
+  }
+  td {
+    @apply text-sm;
+  }
+}
+
+/* Components Layer - Custom Components */
+@layer components {
+  /* ==================== CENTRALIZED THEME COMPONENTS ==================== */
+
+  /* Surface Components */
+  .theme-surface {
+    @apply bg-white dark:bg-gray-800;
+  }
+
+  .theme-surface-secondary {
+    @apply bg-gray-50 dark:bg-gray-700/30;
+  }
+
+  .theme-surface-elevated {
+    @apply bg-white dark:bg-gray-800 shadow-sm;
+  }
+
+  .theme-surface-overlay {
+    @apply bg-white/95 dark:bg-gray-800/95;
+  }
+
+  /* Border Components */
+  .theme-border {
+    @apply border-gray-200 dark:border-gray-700;
+  }
+
+  .theme-border-light {
+    @apply border-gray-100 dark:border-gray-700;
+  }
+
+  .theme-border-focus {
+    @apply border-blue-500 dark:border-blue-400;
+  }
+
+  .theme-border-accent {
+    @apply border-blue-600 dark:border-blue-500;
+  }
+
+  /* Text Components */
+  .theme-text-primary {
+    @apply text-gray-900 dark:text-white;
+  }
+
+  .theme-text-secondary {
+    @apply text-gray-700 dark:text-gray-300;
+  }
+
+  .theme-text-muted {
+    @apply text-gray-600 dark:text-gray-400;
+  }
+
+  .theme-text-subtle {
+    @apply text-gray-500 dark:text-gray-500;
+  }
+
+  .theme-text-inverse {
+    @apply text-white dark:text-gray-900;
+  }
+
+  .theme-text-accent {
+    @apply text-blue-600 dark:text-blue-400;
+  }
+
+  /* Interactive Components */
+  .theme-hover {
+    @apply hover:bg-gray-100 dark:hover:bg-gray-700/50;
+  }
+
+  .theme-active {
+    @apply bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300;
+  }
+
+  .theme-selected {
+    @apply bg-blue-50 dark:bg-blue-900/30;
+  }
+
+  .theme-focus {
+    @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-blue-400;
+  }
+
+  /* Card Components */
+  .theme-card {
+    @apply bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700;
+  }
+
+  .theme-card-elevated {
+    @apply bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow;
+  }
+
+  .theme-card-interactive {
+    @apply bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-all cursor-pointer;
+  }
+
+  .theme-card-header {
+    @apply p-4 border-b border-gray-200 dark:border-gray-700;
+  }
+
+  .theme-card-body {
+    @apply p-4;
+  }
+
+  /* Button Components */
+  .theme-btn-primary {
+    @apply bg-blue-600 hover:bg-blue-700 text-white border-blue-600 dark:bg-blue-700 dark:hover:bg-blue-800;
+    @apply inline-flex items-center px-4 py-2 text-sm font-medium rounded-lg border transition-colors;
+    @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-blue-400;
+  }
+
+  .theme-btn-secondary {
+    @apply bg-white hover:bg-gray-50 text-gray-700 border-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-300 dark:border-gray-600;
+    @apply inline-flex items-center px-4 py-2 text-sm font-medium rounded-lg border transition-colors;
+    @apply focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2;
+  }
+
+  .theme-btn-ghost {
+    @apply bg-transparent hover:bg-gray-100 text-gray-700 dark:hover:bg-gray-700 dark:text-gray-300;
+    @apply inline-flex items-center px-4 py-2 text-sm font-medium rounded-lg transition-colors;
+    @apply focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2;
+  }
+
+  .theme-btn-danger {
+    @apply bg-red-600 hover:bg-red-700 text-white border-red-600 dark:bg-red-700 dark:hover:bg-red-800;
+    @apply inline-flex items-center px-4 py-2 text-sm font-medium rounded-lg border transition-colors;
+    @apply focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2;
+  }
+
+  /* Sidebar Components */
+  .theme-sidebar {
+    @apply theme-surface border-r theme-border;
+  }
+
+  .theme-sidebar-link {
+    @apply flex items-center px-4 py-2.5 mx-2 space-x-3 text-sm font-medium rounded-lg transition-all duration-200 theme-text-secondary theme-hover;
+  }
+
+  .theme-sidebar-link-active {
+    @apply flex items-center px-4 py-2.5 mx-2 space-x-3 text-sm font-medium rounded-lg transition-all duration-200 theme-active border-r-2 border-blue-600 shadow-sm;
+  }
+
+  /* Form Components */
+  .theme-input {
+    @apply theme-surface border theme-border theme-text-primary placeholder:theme-text-muted rounded-lg px-3 py-2 theme-focus;
+  }
+
+  .theme-label {
+    @apply theme-text-secondary text-sm font-medium block mb-1;
+  }
+
+  /* Status Components */
+  .theme-status-success {
+    @apply text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20;
+  }
+
+  .theme-status-warning {
+    @apply text-yellow-600 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-900/20;
+  }
+
+  .theme-status-error {
+    @apply text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20;
+  }
+
+  .theme-status-info {
+    @apply text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20;
+  }
+
+  /* Legacy Sidebar Styles (Keep for compatibility) */
+  .sidebar-link {
+    @apply theme-sidebar-link;
+  }
+
+  .sidebar-link.active {
+    @apply theme-sidebar-link-active;
+  }
+
+  .sidebar-link:not(.active) {
+    @apply theme-sidebar-link;
+  }
+
+  /* Module Header Styles */
+  .module-header {
+    @apply theme-surface theme-card-header px-6 py-4;
+  }
+
+  .module-title {
+    @apply text-xl font-semibold theme-text-primary;
+  }
+
+  .module-subtitle {
+    @apply text-sm text-gray-600 dark:text-gray-400;
+  }
+
+  /* Button Variants (Legacy) */
+  .btn-primary {
+    @apply inline-flex items-center px-4 py-2 text-sm font-medium rounded-lg transition-colors theme-focus theme-btn-primary;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center px-4 py-2 text-sm font-medium rounded-lg transition-colors theme-focus theme-btn-secondary;
+  }
+
+  /* Card Styles (Legacy) */
+  .card {
+    @apply theme-card;
+  }
+
+  .card-header {
+    @apply p-4 theme-card-header;
+  }
+
+  .card-body {
+    @apply p-4;
+  }
+
+  /* Status Indicators (Legacy) */
+  .status-healthy {
+    @apply theme-status-success;
+  }
+  .status-warning {
+    @apply theme-status-warning;
+  }
+  .status-error {
+    @apply theme-status-error;
+  }
+  .status-offline {
+    @apply theme-text-muted;
+  }
+}
+
+/* ==================== UNIFIED THEME UTILITIES ==================== */
+/* Complete replacement for all hardcoded dark mode classes */
+/* Version: Final 2.0 - Unified theme system */
+
+/* Surface Classes - Replace all bg-white dark:bg-gray-* patterns */
+.theme-surface-primary {
+  @apply bg-white dark:bg-gray-800;
+}
+
+.theme-surface-secondary {
+  @apply bg-gray-50 dark:bg-gray-700/30;
+}
+
+.theme-surface-elevated {
+  @apply bg-white dark:bg-gray-800 shadow-sm;
+}
+
+.theme-surface-overlay {
+  @apply bg-white/95 dark:bg-gray-800/95;
+}
+
+/* Border Classes - Replace all border-gray-* dark:border-* patterns */
+.theme-border {
+  @apply border-gray-200 dark:border-gray-700;
+}
+
+.theme-border-light {
+  @apply border-gray-100 dark:border-gray-700;
+}
+
+.theme-border-focus {
+  @apply border-blue-500 dark:border-blue-400;
+}
+
+.theme-border-accent {
+  @apply border-blue-600 dark:border-blue-500;
+}
+
+/* Text Classes - Replace all text-gray-* dark:text-* patterns */
+.theme-text-primary {
+  @apply text-gray-900 dark:text-white;
+}
+
+.theme-text-secondary {
+  @apply text-gray-700 dark:text-gray-300;
+}
+
+.theme-text-muted {
+  @apply text-gray-600 dark:text-gray-400;
+}
+
+.theme-text-subtle {
+  @apply text-gray-500 dark:text-gray-500;
+}
+
+.theme-text-inverse {
+  @apply text-white dark:text-gray-900;
+}
+
+.theme-text-accent {
+  @apply text-blue-600 dark:text-blue-400;
+}
+
+/* Interactive States - Replace all hover/active patterns */
+.theme-hover {
+  @apply hover:bg-gray-100 dark:hover:bg-gray-700/50;
+}
+
+.theme-active {
+  @apply bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300;
+}
+
+.theme-selected {
+  @apply bg-blue-50 dark:bg-blue-900/30;
+}
+
+.theme-focus {
+  @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-blue-400;
+}
+
+/* Button Classes - Complete button variants */
+.theme-btn-primary {
+  @apply bg-blue-600 hover:bg-blue-700 text-white border-blue-600 dark:bg-blue-700 dark:hover:bg-blue-800;
+  @apply inline-flex items-center px-4 py-2 text-sm font-medium rounded-lg border transition-colors;
+  @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-blue-400;
+}
+
+.theme-btn-secondary {
+  @apply bg-white hover:bg-gray-50 text-gray-700 border-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-300 dark:border-gray-600;
+  @apply inline-flex items-center px-4 py-2 text-sm font-medium rounded-lg border transition-colors;
+  @apply focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2;
+}
+
+.theme-btn-ghost {
+  @apply bg-transparent hover:bg-gray-100 text-gray-700 dark:hover:bg-gray-700 dark:text-gray-300;
+  @apply inline-flex items-center px-4 py-2 text-sm font-medium rounded-lg transition-colors;
+  @apply focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2;
+}
+
+.theme-btn-danger {
+  @apply bg-red-600 hover:bg-red-700 text-white border-red-600 dark:bg-red-700 dark:hover:bg-red-800;
+  @apply inline-flex items-center px-4 py-2 text-sm font-medium rounded-lg border transition-colors;
+  @apply focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2;
+}
+
+/* Card Classes - Replace all card patterns */
+.theme-card {
+  @apply bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700;
+}
+
+.theme-card-elevated {
+  @apply bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow;
+}
+
+.theme-card-interactive {
+  @apply bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-all cursor-pointer;
+}
+
+.theme-card-header {
+  @apply p-4 border-b border-gray-200 dark:border-gray-700;
+}
+
+.theme-card-body {
+  @apply p-4;
+}
+
+/* Navigation Classes - Replace all nav patterns */
+.theme-nav-sidebar {
+  @apply bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700;
+}
+
+.theme-nav-link {
+  @apply text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-all;
+}
+
+.theme-nav-link-active {
+  @apply bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 border-r-2 border-blue-600;
+}
+
+/* Form Classes - Replace all form patterns */
+.theme-form-input {
+  @apply bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400;
+  @apply rounded-lg px-3 py-2 text-sm transition-colors;
+  @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-400;
+}
+
+.theme-form-label {
+  @apply text-sm font-medium text-gray-700 dark:text-gray-300;
+}
+
+.theme-form-error {
+  @apply text-red-600 dark:text-red-400 text-sm;
+}
+
+.theme-form-helper {
+  @apply text-gray-500 dark:text-gray-400 text-sm;
+}
+
+/* Status Classes - Replace all status patterns */
+.theme-status-success {
+  @apply text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20;
+  @apply px-2 py-1 rounded-full text-xs font-medium;
+}
+
+.theme-status-warning {
+  @apply text-yellow-600 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-900/20;
+  @apply px-2 py-1 rounded-full text-xs font-medium;
+}
+
+.theme-status-error {
+  @apply text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20;
+  @apply px-2 py-1 rounded-full text-xs font-medium;
+}
+
+.theme-status-info {
+  @apply text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20;
+  @apply px-2 py-1 rounded-full text-xs font-medium;
+}
+
+/* Table specific styles */
+.theme-table {
+  @apply bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden;
+}
+
+.theme-table-header {
+  @apply bg-gray-50 dark:bg-gray-700/30 border-b border-gray-200 dark:border-gray-700;
+}
+
+.theme-table-row {
+  @apply bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700/50 border-b border-gray-200 dark:border-gray-700 last:border-b-0;
+}
+
+/* Dropdown and modal styles */
+.theme-dropdown {
+  @apply bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg;
+}
+
+.theme-modal {
+  @apply bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-xl;
+}
+
+.theme-overlay {
+  @apply bg-black/50 dark:bg-black/70;
+}
+
+/* Legacy compatibility - redirect old classes to new ones */
+.theme-surface {
+  @apply theme-surface-primary;
+}
+
+.theme-surface-2 {
+  @apply theme-surface-secondary;
+}
