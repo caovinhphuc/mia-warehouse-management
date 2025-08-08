@@ -236,27 +236,54 @@ export const logAuditEvent = async (eventData) => {
       return { success: true, logged: 'locally' };
     }
 
+    // Fire-and-forget to Apps Script (no-cors)
     try {
-      // Send audit data to Google Apps Script webhook
-      await fetch(AUDIT_WEBHOOK_URL, {
+      fetch(AUDIT_WEBHOOK_URL, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(auditData),
-        mode: 'no-cors' // Google Apps Script requires no-cors mode
-      });
-
-      // Note: With no-cors mode, we can't read the response
-      // but the request will still go through to Google Apps Script
-      console.log('Audit event sent to webhook successfully');
-      return { success: true, logged: 'remote' };
-
-    } catch (webhookError) {
-      console.error('Webhook logging failed:', webhookError.message);
-      console.log('Audit data logged locally:', auditData);
-      return { success: true, logged: 'locally', error: webhookError.message };
+        mode: 'no-cors',
+      }).catch(() => {});
+    } catch (_) {
+      // ignore webhook errors; we will still try direct Sheets append
     }
+
+    // Parallel fallback: append directly to Google Sheets via API
+    try {
+      const apiKey = GOOGLE_SHEETS_CONFIG.API_KEY;
+      const sheetId = GOOGLE_SHEETS_CONFIG.SHEET_ID;
+      const range = GOOGLE_SHEETS_CONFIG.RANGES.AUDIT_LOG || 'AuditLog!A:F';
+
+      if (apiKey && sheetId) {
+        await fetch(
+          `${GOOGLE_SHEETS_CONFIG.BASE_URL}/${sheetId}/values/${encodeURIComponent(
+            range,
+          )}:append?valueInputOption=RAW&key=${apiKey}`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              values: [
+                [
+                  auditData.timestamp,
+                  auditData.action,
+                  auditData.username,
+                  auditData.details,
+                  auditData.status,
+                  auditData.ipAddress,
+                ],
+              ],
+            }),
+          },
+        );
+        return { success: true, logged: 'sheets_api' };
+      }
+    } catch (appendError) {
+      console.warn('Direct Sheets append failed:', appendError?.message || appendError);
+    }
+
+    // If we reach here, we at least attempted webhook
+    return { success: true, logged: 'webhook_only' };
 
   } catch (error) {
     console.error('Failed to log audit event:', error);
