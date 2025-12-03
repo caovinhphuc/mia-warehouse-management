@@ -72,3 +72,4 @@ credentials.json
 
 # Vercel
 .vercel
+.env*.local
