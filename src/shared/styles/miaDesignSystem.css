@@ -55,11 +55,11 @@
   --mia-info-dark: #1d4ed8;
 
   /* ==================== TYPOGRAPHY VARIABLES ==================== */
-  --mia-font-family-primary: 'Inter', -apple-system, BlinkMacSystemFont,
-    'Segoe UI', Roboto, sans-serif;
-  --mia-font-family-secondary: 'SF Pro Display', -apple-system,
+  --mia-font-family-primary: "Inter", -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, sans-serif;
+  --mia-font-family-secondary: "SF Pro Display", -apple-system,
     BlinkMacSystemFont, sans-serif;
-  --mia-font-family-mono: 'SF Mono', Consolas, 'Liberation Mono', monospace;
+  --mia-font-family-mono: "SF Mono", Consolas, "Liberation Mono", monospace;
 
   /* Font Sizes */
   --mia-text-xs: 0.75rem; /* 12px */
@@ -118,7 +118,7 @@
 }
 
 /* ==================== DARK MODE VARIABLES ==================== */
-[data-theme='dark'] {
+[data-theme="dark"] {
   --mia-bg-primary: var(--mia-gray-900);
   --mia-bg-secondary: var(--mia-gray-800);
   --mia-bg-tertiary: var(--mia-gray-700);
@@ -137,7 +137,7 @@
 }
 
 /* ==================== LIGHT MODE VARIABLES ==================== */
-[data-theme='light'] {
+[data-theme="light"] {
   --mia-bg-primary: #ffffff;
   --mia-bg-secondary: var(--mia-gray-50);
   --mia-bg-tertiary: var(--mia-gray-100);

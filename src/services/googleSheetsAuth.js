@@ -103,9 +103,12 @@ export const verifyCredentials = async (username, password) => {
       };
     });
 
-    // Find user by username
+    // Tìm user theo username hoặc email (không phân biệt hoa thường)
+    const normalizedInput = username.toLowerCase().trim();
     const user = users.find(
-      (u) => u.username && u.username.toLowerCase() === username.toLowerCase()
+      (u) =>
+        (u.username && u.username.toLowerCase() === normalizedInput) ||
+        (u.email && u.email.toLowerCase() === normalizedInput)
     );
 
     if (!user) {
@@ -279,7 +282,9 @@ export const logAuditEvent = async (eventData) => {
 
       if (apiKey && sheetId) {
         await fetch(
-          `${GOOGLE_SHEETS_CONFIG.BASE_URL}/${sheetId}/values/${encodeURIComponent(
+          `${
+            GOOGLE_SHEETS_CONFIG.BASE_URL
+          }/${sheetId}/values/${encodeURIComponent(
             range
           )}:append?valueInputOption=RAW&key=${apiKey}`,
           {

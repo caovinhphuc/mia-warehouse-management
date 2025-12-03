@@ -1,7 +1,6 @@
 // Test simplified routing structure
-import React from 'react';
-import { Routes, Route } from 'react-router-dom';
-import MainLayout from './components/MainLayout';
+import { Route, Routes } from "react-router-dom";
+import MainLayout from "./components/MainLayout";
 
 const TestRoutes = () => {
   return (

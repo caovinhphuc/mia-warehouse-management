@@ -1,10 +1,10 @@
 /**
  * Custom hook for monitoring performance metrics in the application
- * 
+ *
  * @module utils/usePerformanceMonitor
  */
 
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from "react";
 
 /**
  * Custom hook to track and report application performance metrics
@@ -24,26 +24,33 @@ export const usePerformanceMonitor = () => {
   useEffect(() => {
     // Check if Performance API is available
     if (!window.performance) {
-      console.warn('Performance API not supported in this browser');
+      console.warn("Performance API not supported in this browser");
       return;
     }
 
     // Record initial page load time
-    const navigationEntry = performance.getEntriesByType('navigation')[0];
+    const navigationEntry = performance.getEntriesByType("navigation")[0];
     if (navigationEntry) {
       metricsRef.current.pageLoad = {
         loadTime: navigationEntry.loadEventEnd - navigationEntry.startTime,
-        domContentLoaded: navigationEntry.domContentLoadedEventEnd - navigationEntry.startTime,
-        firstPaint: performance.getEntriesByName('first-paint')[0]?.startTime || null,
-        firstContentfulPaint: performance.getEntriesByName('first-contentful-paint')[0]?.startTime || null,
+        domContentLoaded:
+          navigationEntry.domContentLoadedEventEnd - navigationEntry.startTime,
+        firstPaint:
+          performance.getEntriesByName("first-paint")[0]?.startTime || null,
+        firstContentfulPaint:
+          performance.getEntriesByName("first-contentful-paint")[0]
+            ?.startTime || null,
       };
     }
 
     // Set up PerformanceObserver for resource loading
     try {
       const resourceObserver = new PerformanceObserver((list) => {
-        list.getEntries().forEach(entry => {
-          if (entry.initiatorType === 'fetch' || entry.initiatorType === 'xmlhttprequest') {
+        list.getEntries().forEach((entry) => {
+          if (
+            entry.initiatorType === "fetch" ||
+            entry.initiatorType === "xmlhttprequest"
+          ) {
             metricsRef.current.apiCalls[entry.name] = {
               duration: entry.duration,
               size: entry.transferSize,
@@ -59,8 +66,8 @@ export const usePerformanceMonitor = () => {
           }
         });
       });
-      
-      resourceObserver.observe({ entryTypes: ['resource'] });
+
+      resourceObserver.observe({ entryTypes: ["resource"] });
 
       // Monitor memory usage if available
       if (performance.memory) {
@@ -87,7 +94,7 @@ export const usePerformanceMonitor = () => {
         resourceObserver.disconnect();
       };
     } catch (error) {
-      console.warn('PerformanceObserver not supported', error);
+      console.warn("PerformanceObserver not supported", error);
     }
   }, []);
 

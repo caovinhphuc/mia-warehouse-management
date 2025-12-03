@@ -1,6 +1,6 @@
-import React from 'react';
-import * as LucideIcons from 'lucide-react';
-import { useMiaDesignSystem } from '../hooks/useMiaDesignSystem';
+import React from "react";
+import * as LucideIcons from "lucide-react";
+import { useMiaDesignSystem } from "../hooks/useMiaDesignSystem";
 
 // ==================== MIA UI COMPONENTS ====================
 // Thư viện components UI đồng nhất cho Warehouse Management System
@@ -8,13 +8,13 @@ import { useMiaDesignSystem } from '../hooks/useMiaDesignSystem';
 // ==================== BUTTON COMPONENT ====================
 export const MiaButton = ({
   children,
-  variant = 'primary',
-  size = 'md',
+  variant = "primary",
+  size = "md",
   disabled = false,
   onClick,
-  type = 'button',
+  type = "button",
   icon,
-  iconPosition = 'left',
+  iconPosition = "left",
   fullWidth = false,
   loading = false,
   ...props
@@ -24,8 +24,11 @@ export const MiaButton = ({
   const IconComponent = icon && LucideIcons[icon];
   const LoadingIcon = LucideIcons[icons.refresh];
 
-  const classes = `${getComponentClasses.button(variant, size, disabled || loading)} ${fullWidth ? 'w-full' : ''
-    }`;
+  const classes = `${getComponentClasses.button(
+    variant,
+    size,
+    disabled || loading
+  )} ${fullWidth ? "w-full" : ""}`;
 
   return (
     <button
@@ -35,14 +38,12 @@ export const MiaButton = ({
       onClick={onClick}
       {...props}
     >
-      {loading && (
-        <LoadingIcon size={16} className="animate-spin mr-2" />
-      )}
-      {!loading && IconComponent && iconPosition === 'left' && (
+      {loading && <LoadingIcon size={16} className="animate-spin mr-2" />}
+      {!loading && IconComponent && iconPosition === "left" && (
         <IconComponent size={16} className="mr-2" />
       )}
       {children}
-      {!loading && IconComponent && iconPosition === 'right' && (
+      {!loading && IconComponent && iconPosition === "right" && (
         <IconComponent size={16} className="ml-2" />
       )}
     </button>
@@ -52,21 +53,23 @@ export const MiaButton = ({
 // ==================== CARD COMPONENT ====================
 export const MiaCard = ({
   children,
-  variant = 'default',
-  padding = 'md',
-  className = '',
+  variant = "default",
+  padding = "md",
+  className = "",
   ...props
 }) => {
   const { getComponentClasses, spacing } = useMiaDesignSystem();
 
   const paddingClasses = {
-    none: '',
-    sm: 'p-4',
-    md: 'p-6',
-    lg: 'p-8',
+    none: "",
+    sm: "p-4",
+    md: "p-6",
+    lg: "p-8",
   };
 
-  const classes = `${getComponentClasses.card(variant)} ${paddingClasses[padding]} ${className}`;
+  const classes = `${getComponentClasses.card(variant)} ${
+    paddingClasses[padding]
+  } ${className}`;
 
   return (
     <div className={classes} {...props}>
@@ -76,12 +79,7 @@ export const MiaCard = ({
 };
 
 // ==================== BADGE COMPONENT ====================
-export const MiaBadge = ({
-  children,
-  variant = 'default',
-  icon,
-  ...props
-}) => {
+export const MiaBadge = ({ children, variant = "default", icon, ...props }) => {
   const { getComponentClasses } = useMiaDesignSystem();
   const IconComponent = icon && LucideIcons[icon];
 
@@ -101,39 +99,34 @@ export const MiaInput = ({
   error,
   helperText,
   icon,
-  iconPosition = 'left',
-  className = '',
+  iconPosition = "left",
+  className = "",
   ...props
 }) => {
   const { getComponentClasses, typography, labels } = useMiaDesignSystem();
   const IconComponent = icon && LucideIcons[icon];
 
-  const inputClasses = `${getComponentClasses.input(!!error)} px-3 py-2 ${IconComponent ? (iconPosition === 'left' ? 'pl-10' : 'pr-10') : ''
-    } ${className}`;
+  const inputClasses = `${getComponentClasses.input(!!error)} px-3 py-2 ${
+    IconComponent ? (iconPosition === "left" ? "pl-10" : "pr-10") : ""
+  } ${className}`;
 
   return (
     <div className="space-y-1">
-      {label && (
-        <label className="block text-sm font-medium">
-          {label}
-        </label>
-      )}
+      {label && <label className="block text-sm font-medium">{label}</label>}
       <div className="relative">
-        {IconComponent && iconPosition === 'left' && (
+        {IconComponent && iconPosition === "left" && (
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
             <IconComponent size={16} className="text-gray-400" />
           </div>
         )}
         <input className={inputClasses} {...props} />
-        {IconComponent && iconPosition === 'right' && (
+        {IconComponent && iconPosition === "right" && (
           <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
             <IconComponent size={16} className="text-gray-400" />
           </div>
         )}
       </div>
-      {error && (
-        <p className="text-sm text-red-600">{error}</p>
-      )}
+      {error && <p className="text-sm text-red-600">{error}</p>}
       {helperText && !error && (
         <p className="text-sm text-gray-500">{helperText}</p>
       )}
@@ -156,24 +149,16 @@ export const MiaSelect = ({
 
   return (
     <div className="space-y-1">
-      {label && (
-        <label className="block text-sm font-medium">
-          {label}
-        </label>
-      )}
+      {label && <label className="block text-sm font-medium">{label}</label>}
       <select className={selectClasses} {...props}>
-        {placeholder && (
-          <option value="">{placeholder}</option>
-        )}
+        {placeholder && <option value="">{placeholder}</option>}
         {options.map((option, index) => (
           <option key={index} value={option.value}>
             {option.label}
           </option>
         ))}
       </select>
-      {error && (
-        <p className="text-sm text-red-600">{error}</p>
-      )}
+      {error && <p className="text-sm text-red-600">{error}</p>}
       {helperText && !error && (
         <p className="text-sm text-gray-500">{helperText}</p>
       )}
@@ -186,38 +171,38 @@ export const MiaAvatar = ({
   src,
   alt,
   name,
-  size = 'md',
-  variant = 'circular',
-  fallbackIcon = 'User',
+  size = "md",
+  variant = "circular",
+  fallbackIcon = "User",
   ...props
 }) => {
   const { colors } = useMiaDesignSystem();
   const FallbackIcon = LucideIcons[fallbackIcon];
 
   const sizeClasses = {
-    xs: 'w-6 h-6 text-xs',
-    sm: 'w-8 h-8 text-sm',
-    md: 'w-10 h-10 text-base',
-    lg: 'w-12 h-12 text-lg',
-    xl: 'w-16 h-16 text-xl',
-    '2xl': 'w-20 h-20 text-2xl',
+    xs: "w-6 h-6 text-xs",
+    sm: "w-8 h-8 text-sm",
+    md: "w-10 h-10 text-base",
+    lg: "w-12 h-12 text-lg",
+    xl: "w-16 h-16 text-xl",
+    "2xl": "w-20 h-20 text-2xl",
   };
 
   const variantClasses = {
-    circular: 'rounded-full',
-    rounded: 'rounded-lg',
-    square: 'rounded-none',
+    circular: "rounded-full",
+    rounded: "rounded-lg",
+    square: "rounded-none",
   };
 
   const baseClasses = `${sizeClasses[size]} ${variantClasses[variant]} flex items-center justify-center font-medium overflow-hidden`;
 
   // Get initials from name
   const getInitials = (name) => {
-    if (!name) return '';
+    if (!name) return "";
     return name
-      .split(' ')
-      .map(word => word.charAt(0))
-      .join('')
+      .split(" ")
+      .map((word) => word.charAt(0))
+      .join("")
       .toUpperCase()
       .slice(0, 2);
   };
@@ -235,43 +220,37 @@ export const MiaAvatar = ({
 
   if (name) {
     return (
-      <div
-        className={`${baseClasses} bg-blue-500 text-white`}
-        {...props}
-      >
+      <div className={`${baseClasses} bg-blue-500 text-white`} {...props}>
         {getInitials(name)}
       </div>
     );
   }
 
   return (
-    <div
-      className={`${baseClasses} bg-gray-300 text-gray-600`}
-      {...props}
-    >
-      <FallbackIcon size={size === 'xs' ? 12 : size === 'sm' ? 16 : 20} />
+    <div className={`${baseClasses} bg-gray-300 text-gray-600`} {...props}>
+      <FallbackIcon size={size === "xs" ? 12 : size === "sm" ? 16 : 20} />
     </div>
   );
 };
 
 // ==================== LOADING COMPONENT ====================
 export const MiaLoading = ({
-  size = 'md',
+  size = "md",
   text,
-  variant = 'spinner',
+  variant = "spinner",
   ...props
 }) => {
   const { colors, labels } = useMiaDesignSystem();
   const SpinnerIcon = LucideIcons.Loader2;
 
   const sizeClasses = {
-    sm: 'w-4 h-4',
-    md: 'w-6 h-6',
-    lg: 'w-8 h-8',
-    xl: 'w-12 h-12',
+    sm: "w-4 h-4",
+    md: "w-6 h-6",
+    lg: "w-8 h-8",
+    xl: "w-12 h-12",
   };
 
-  if (variant === 'spinner') {
+  if (variant === "spinner") {
     return (
       <div className="flex items-center justify-center space-x-2" {...props}>
         <SpinnerIcon className={`${sizeClasses[size]} animate-spin`} />
@@ -280,12 +259,18 @@ export const MiaLoading = ({
     );
   }
 
-  if (variant === 'dots') {
+  if (variant === "dots") {
     return (
       <div className="flex items-center justify-center space-x-1" {...props}>
         <div className="w-2 h-2 bg-current rounded-full animate-bounce"></div>
-        <div className="w-2 h-2 bg-current rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-        <div className="w-2 h-2 bg-current rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+        <div
+          className="w-2 h-2 bg-current rounded-full animate-bounce"
+          style={{ animationDelay: "0.1s" }}
+        ></div>
+        <div
+          className="w-2 h-2 bg-current rounded-full animate-bounce"
+          style={{ animationDelay: "0.2s" }}
+        ></div>
         {text && <span className="text-sm ml-2">{text}</span>}
       </div>
     );
@@ -295,12 +280,7 @@ export const MiaLoading = ({
 };
 
 // ==================== ICON COMPONENT ====================
-export const MiaIcon = ({
-  name,
-  size = 16,
-  className = '',
-  ...props
-}) => {
+export const MiaIcon = ({ name, size = 16, className = "", ...props }) => {
   const IconComponent = LucideIcons[name];
 
   if (!IconComponent) {
@@ -315,7 +295,7 @@ export const MiaIcon = ({
 export const MiaStatusIndicator = ({
   status,
   text,
-  size = 'sm',
+  size = "sm",
   showText = true,
   ...props
 }) => {
@@ -334,27 +314,31 @@ export const MiaStatusIndicator = ({
   };
 
   const statusColors = {
-    active: 'bg-green-500',
-    inactive: 'bg-gray-400',
-    pending: 'bg-yellow-500',
-    completed: 'bg-green-500',
-    processing: 'bg-blue-500',
-    cancelled: 'bg-red-500',
-    success: 'bg-green-500',
-    warning: 'bg-yellow-500',
-    error: 'bg-red-500',
+    active: "bg-green-500",
+    inactive: "bg-gray-400",
+    pending: "bg-yellow-500",
+    completed: "bg-green-500",
+    processing: "bg-blue-500",
+    cancelled: "bg-red-500",
+    success: "bg-green-500",
+    warning: "bg-yellow-500",
+    error: "bg-red-500",
   };
 
   const sizeClasses = {
-    xs: 'w-1.5 h-1.5',
-    sm: 'w-2 h-2',
-    md: 'w-3 h-3',
-    lg: 'w-4 h-4',
+    xs: "w-1.5 h-1.5",
+    sm: "w-2 h-2",
+    md: "w-3 h-3",
+    lg: "w-4 h-4",
   };
 
   return (
     <div className="flex items-center space-x-2" {...props}>
-      <div className={`${sizeClasses[size]} ${statusColors[status] || 'bg-gray-400'} rounded-full`}></div>
+      <div
+        className={`${sizeClasses[size]} ${
+          statusColors[status] || "bg-gray-400"
+        } rounded-full`}
+      ></div>
       {showText && (
         <span className="text-sm">
           {text || statusLabels[status] || status}

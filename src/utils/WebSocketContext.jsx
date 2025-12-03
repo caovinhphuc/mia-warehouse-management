@@ -5,37 +5,37 @@
  * @module utils/WebSocketContext
  */
 
-import React, {
+import {
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useRef,
   useState,
-  useCallback,
-} from 'react';
+} from "react";
 
 // ==================== CONTEXT DEFINITION ====================
 const WebSocketContext = createContext();
 
 // ==================== CONNECTION STATES ====================
 const ConnectionState = {
-  CONNECTING: 'connecting',
-  CONNECTED: 'connected',
-  DISCONNECTED: 'disconnected',
-  RECONNECTING: 'reconnecting',
-  ERROR: 'error',
+  CONNECTING: "connecting",
+  CONNECTED: "connected",
+  DISCONNECTED: "disconnected",
+  RECONNECTING: "reconnecting",
+  ERROR: "error",
 };
 
 // ==================== MESSAGE TYPES ====================
 const MessageTypes = {
-  METRICS_UPDATE: 'METRICS_UPDATE',
-  ORDER_UPDATE: 'ORDER_UPDATE',
-  INVENTORY_UPDATE: 'INVENTORY_UPDATE',
-  ALERT: 'ALERT',
-  STAFF_UPDATE: 'STAFF_UPDATE',
-  SYSTEM_STATUS: 'SYSTEM_STATUS',
-  HEARTBEAT: 'HEARTBEAT',
-  USER_ACTION: 'USER_ACTION',
+  METRICS_UPDATE: "METRICS_UPDATE",
+  ORDER_UPDATE: "ORDER_UPDATE",
+  INVENTORY_UPDATE: "INVENTORY_UPDATE",
+  ALERT: "ALERT",
+  STAFF_UPDATE: "STAFF_UPDATE",
+  SYSTEM_STATUS: "SYSTEM_STATUS",
+  HEARTBEAT: "HEARTBEAT",
+  USER_ACTION: "USER_ACTION",
 };
 
 // ==================== PROVIDER COMPONENT ====================
@@ -55,12 +55,12 @@ export const WebSocketProvider = ({ children }) => {
 
   // Configuration
   const config = {
-    url: process.env.REACT_APP_WS_URL || 'ws://localhost:8080/ws',
+    url: process.env.REACT_APP_WS_URL || "ws://localhost:8080/ws",
     maxReconnectAttempts: 3, // Reduced from 10
     reconnectInterval: 5000,
     heartbeatInterval: 30000,
     messageHistoryLimit: 100,
-    enableWebSocket: process.env.REACT_APP_ENABLE_WEBSOCKET === 'true', // WebSocket optional
+    enableWebSocket: process.env.REACT_APP_ENABLE_WEBSOCKET === "true", // WebSocket optional
   };
 
   // ==================== MESSAGE HANDLERS ====================
@@ -91,7 +91,7 @@ export const WebSocketProvider = ({ children }) => {
     (message) => {
       try {
         const parsedMessage =
-          typeof message === 'string' ? JSON.parse(message) : message;
+          typeof message === "string" ? JSON.parse(message) : message;
 
         // Update message history
         setMessageHistory((prev) => {
@@ -115,7 +115,7 @@ export const WebSocketProvider = ({ children }) => {
           try {
             handler(parsedMessage);
           } catch (error) {
-            console.error('Error in message handler:', error);
+            console.error("Error in message handler:", error);
           }
         });
 
@@ -135,7 +135,7 @@ export const WebSocketProvider = ({ children }) => {
             break;
 
           case MessageTypes.SYSTEM_STATUS:
-            console.log('System status update:', parsedMessage.data);
+            console.log("System status update:", parsedMessage.data);
             break;
 
           default:
@@ -143,7 +143,7 @@ export const WebSocketProvider = ({ children }) => {
             break;
         }
       } catch (error) {
-        console.error('Error processing WebSocket message:', error, message);
+        console.error("Error processing WebSocket message:", error, message);
       }
     },
     [config.messageHistoryLimit]
@@ -153,7 +153,7 @@ export const WebSocketProvider = ({ children }) => {
   const connect = useCallback(() => {
     // Check if WebSocket is enabled
     if (!config.enableWebSocket) {
-      console.log('WebSocket is disabled via configuration');
+      console.log("WebSocket is disabled via configuration");
       setConnectionState(ConnectionState.DISCONNECTED);
       return;
     }
@@ -167,7 +167,7 @@ export const WebSocketProvider = ({ children }) => {
       wsRef.current = new WebSocket(config.url);
 
       wsRef.current.onopen = () => {
-        console.log('WebSocket connected');
+        console.log("WebSocket connected");
         setConnectionState(ConnectionState.CONNECTED);
         setReconnectAttempts(0);
         reconnectAttemptsRef.current = 0;
@@ -177,7 +177,7 @@ export const WebSocketProvider = ({ children }) => {
 
         // Send connection message
         sendMessage({
-          type: 'CONNECTION',
+          type: "CONNECTION",
           timestamp: new Date().toISOString(),
           clientInfo: {
             userAgent: navigator.userAgent,
@@ -191,7 +191,7 @@ export const WebSocketProvider = ({ children }) => {
       };
 
       wsRef.current.onclose = (event) => {
-        console.log('WebSocket closed:', event.code, event.reason);
+        console.log("WebSocket closed:", event.code, event.reason);
         setConnectionState(ConnectionState.DISCONNECTED);
         stopHeartbeat();
 
@@ -207,19 +207,19 @@ export const WebSocketProvider = ({ children }) => {
 
       wsRef.current.onerror = (error) => {
         if (config.enableWebSocket) {
-          console.error('WebSocket error:', error);
+          console.error("WebSocket error:", error);
         } else {
-          console.log('WebSocket error (disabled):', error);
+          console.log("WebSocket error (disabled):", error);
         }
         setConnectionState(ConnectionState.ERROR);
       };
     } catch (error) {
       if (config.enableWebSocket) {
-        console.error('Failed to create WebSocket connection:', error);
+        console.error("Failed to create WebSocket connection:", error);
         setConnectionState(ConnectionState.ERROR);
         scheduleReconnect();
       } else {
-        console.log('WebSocket connection failed (disabled):', error);
+        console.log("WebSocket connection failed (disabled):", error);
         setConnectionState(ConnectionState.DISCONNECTED);
       }
     }
@@ -233,7 +233,7 @@ export const WebSocketProvider = ({ children }) => {
 
   const disconnect = useCallback(() => {
     if (wsRef.current) {
-      wsRef.current.close(1000, 'Client disconnect');
+      wsRef.current.close(1000, "Client disconnect");
     }
     stopHeartbeat();
     clearReconnectTimeout();
@@ -242,12 +242,12 @@ export const WebSocketProvider = ({ children }) => {
 
   const scheduleReconnect = useCallback(() => {
     if (!config.enableWebSocket) {
-      console.log('WebSocket reconnection skipped (disabled)');
+      console.log("WebSocket reconnection skipped (disabled)");
       return;
     }
 
     if (reconnectAttemptsRef.current >= config.maxReconnectAttempts) {
-      console.log('Max reconnection attempts reached');
+      console.log("Max reconnection attempts reached");
       return;
     }
 
@@ -315,11 +315,11 @@ export const WebSocketProvider = ({ children }) => {
         wsRef.current.send(JSON.stringify(messageToSend));
         return true;
       } catch (error) {
-        console.error('Failed to send WebSocket message:', error);
+        console.error("Failed to send WebSocket message:", error);
         return false;
       }
     } else {
-      console.warn('WebSocket not connected, message queued:', message);
+      console.warn("WebSocket not connected, message queued:", message);
       // In a production app, you might want to queue messages and send when reconnected
       return false;
     }
@@ -333,7 +333,7 @@ export const WebSocketProvider = ({ children }) => {
     // Handle visibility change - reconnect when tab becomes visible
     const handleVisibilityChange = () => {
       if (
-        document.visibilityState === 'visible' &&
+        document.visibilityState === "visible" &&
         connectionState === ConnectionState.DISCONNECTED
       ) {
         connect();
@@ -351,17 +351,17 @@ export const WebSocketProvider = ({ children }) => {
       disconnect();
     };
 
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
 
     // Cleanup on unmount
     return () => {
       disconnect();
       clearReconnectTimeout();
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
     };
   }, [connect, disconnect, clearReconnectTimeout, connectionState]); // Include all dependencies
 
@@ -427,8 +427,8 @@ export const WebSocketProvider = ({ children }) => {
         type: MessageTypes.USER_ACTION,
         data: {
           ...action,
-          userId: 'current-user', // Would be actual user ID
-          sessionId: 'current-session', // Would be actual session ID
+          userId: "current-user", // Would be actual user ID
+          sessionId: "current-session", // Would be actual session ID
         },
       });
     },
@@ -477,7 +477,7 @@ export const WebSocketProvider = ({ children }) => {
 export const useWebSocket = () => {
   const context = useContext(WebSocketContext);
   if (!context) {
-    throw new Error('useWebSocket must be used within a WebSocketProvider');
+    throw new Error("useWebSocket must be used within a WebSocketProvider");
   }
   return context;
 };
@@ -511,10 +511,10 @@ export const useWebSocketSender = () => {
             if (success) {
               resolve(true);
             } else {
-              reject(new Error('Failed to send message'));
+              reject(new Error("Failed to send message"));
             }
           } else {
-            reject(new Error('WebSocket not connected'));
+            reject(new Error("WebSocket not connected"));
           }
         });
       };

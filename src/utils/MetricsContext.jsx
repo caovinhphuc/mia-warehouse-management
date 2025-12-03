@@ -1,11 +1,17 @@
 /**
  * Metrics Context Provider for warehouse management application
  * Provides real-time metrics and analytics data throughout the app
- * 
+ *
  * @module utils/MetricsContext
  */
 
-import React, { createContext, useContext, useReducer, useEffect, useCallback } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useReducer,
+  useEffect,
+  useCallback,
+} from "react";
 
 // ==================== CONTEXT DEFINITION ====================
 const MetricsContext = createContext();
@@ -22,7 +28,7 @@ const initialState = {
     lowStockItems: 0,
     criticalAlerts: 0,
   },
-  
+
   // Business KPIs
   businessKPIs: {
     orderFulfillmentRate: 0,
@@ -103,15 +109,15 @@ const initialState = {
 
 // ==================== ACTION TYPES ====================
 const ActionTypes = {
-  SET_LOADING: 'SET_LOADING',
-  SET_ERROR: 'SET_ERROR',
-  UPDATE_REAL_TIME_METRICS: 'UPDATE_REAL_TIME_METRICS',
-  UPDATE_BUSINESS_KPIS: 'UPDATE_BUSINESS_KPIS',
-  UPDATE_PERFORMANCE_METRICS: 'UPDATE_PERFORMANCE_METRICS',
-  UPDATE_STAFF_METRICS: 'UPDATE_STAFF_METRICS',
-  UPDATE_OPERATIONAL_METRICS: 'UPDATE_OPERATIONAL_METRICS',
-  ADD_TREND_DATA: 'ADD_TREND_DATA',
-  RESET_METRICS: 'RESET_METRICS',
+  SET_LOADING: "SET_LOADING",
+  SET_ERROR: "SET_ERROR",
+  UPDATE_REAL_TIME_METRICS: "UPDATE_REAL_TIME_METRICS",
+  UPDATE_BUSINESS_KPIS: "UPDATE_BUSINESS_KPIS",
+  UPDATE_PERFORMANCE_METRICS: "UPDATE_PERFORMANCE_METRICS",
+  UPDATE_STAFF_METRICS: "UPDATE_STAFF_METRICS",
+  UPDATE_OPERATIONAL_METRICS: "UPDATE_OPERATIONAL_METRICS",
+  ADD_TREND_DATA: "ADD_TREND_DATA",
+  RESET_METRICS: "RESET_METRICS",
 };
 
 // ==================== REDUCER ====================
@@ -307,7 +313,7 @@ export const MetricsProvider = ({ children }) => {
 
   // ==================== DATA FETCHING FUNCTIONS ====================
   const fetchRealTimeMetrics = useCallback(async () => {
-    setLoading('realTimeMetrics', true);
+    setLoading("realTimeMetrics", true);
     try {
       // Mock real-time metrics - in production, this would be API calls
       const mockMetrics = {
@@ -321,27 +327,28 @@ export const MetricsProvider = ({ children }) => {
       };
 
       updateRealTimeMetrics(mockMetrics);
-      
+
       // Add to trends
-      addTrendData('orderTrends', {
+      addTrendData("orderTrends", {
         totalOrders: mockMetrics.totalOrders,
         completedOrders: mockMetrics.completedOrders,
       });
-
     } catch (error) {
-      setError('realTimeMetrics', error.message);
+      setError("realTimeMetrics", error.message);
     }
   }, [updateRealTimeMetrics, addTrendData, setLoading, setError]);
 
   const fetchBusinessKPIs = useCallback(async () => {
-    setLoading('businessKPIs', true);
+    setLoading("businessKPIs", true);
     try {
       // Mock business KPIs
       const mockKPIs = {
         orderFulfillmentRate: Math.round((Math.random() * 20 + 80) * 100) / 100,
-        averageOrderProcessingTime: Math.round((Math.random() * 10 + 15) * 100) / 100,
+        averageOrderProcessingTime:
+          Math.round((Math.random() * 10 + 15) * 100) / 100,
         inventoryTurnoverRate: Math.round((Math.random() * 5 + 8) * 100) / 100,
-        customerSatisfactionScore: Math.round((Math.random() * 20 + 80) * 100) / 100,
+        customerSatisfactionScore:
+          Math.round((Math.random() * 20 + 80) * 100) / 100,
         warehouseUtilization: Math.round((Math.random() * 30 + 60) * 100) / 100,
         costPerOrder: Math.round((Math.random() * 10 + 5) * 100) / 100,
         revenuePerDay: Math.floor(Math.random() * 50000) + 25000,
@@ -349,18 +356,19 @@ export const MetricsProvider = ({ children }) => {
 
       updateBusinessKPIs(mockKPIs);
     } catch (error) {
-      setError('businessKPIs', error.message);
+      setError("businessKPIs", error.message);
     }
   }, [updateBusinessKPIs, setLoading, setError]);
 
   const fetchPerformanceMetrics = useCallback(async () => {
-    setLoading('performanceMetrics', true);
+    setLoading("performanceMetrics", true);
     try {
       // Mock performance metrics
       const mockMetrics = {
         systemUptime: Math.round((Math.random() * 5 + 95) * 100) / 100,
-        averageResponseTime: Math.round((Math.random() * 200 + 100) * 100) / 100,
-        errorRate: Math.round((Math.random() * 2) * 100) / 100,
+        averageResponseTime:
+          Math.round((Math.random() * 200 + 100) * 100) / 100,
+        errorRate: Math.round(Math.random() * 2 * 100) / 100,
         throughputPerHour: Math.floor(Math.random() * 1000) + 500,
         memoryUsage: Math.round((Math.random() * 30 + 40) * 100) / 100,
         cpuUsage: Math.round((Math.random() * 40 + 20) * 100) / 100,
@@ -368,12 +376,12 @@ export const MetricsProvider = ({ children }) => {
 
       updatePerformanceMetrics(mockMetrics);
     } catch (error) {
-      setError('performanceMetrics', error.message);
+      setError("performanceMetrics", error.message);
     }
   }, [updatePerformanceMetrics, setLoading, setError]);
 
   const fetchStaffMetrics = useCallback(async () => {
-    setLoading('staffMetrics', true);
+    setLoading("staffMetrics", true);
     try {
       // Mock staff metrics
       const mockMetrics = {
@@ -382,24 +390,24 @@ export const MetricsProvider = ({ children }) => {
         staffProductivity: Math.round((Math.random() * 20 + 75) * 100) / 100,
         averagePickingTime: Math.round((Math.random() * 5 + 8) * 100) / 100,
         staffUtilization: Math.round((Math.random() * 25 + 70) * 100) / 100,
-        trainingCompletionRate: Math.round((Math.random() * 15 + 80) * 100) / 100,
+        trainingCompletionRate:
+          Math.round((Math.random() * 15 + 80) * 100) / 100,
       };
 
       updateStaffMetrics(mockMetrics);
-      
+
       // Add to trends
-      addTrendData('staffProductivityTrends', {
+      addTrendData("staffProductivityTrends", {
         productivity: mockMetrics.staffProductivity,
         utilization: mockMetrics.staffUtilization,
       });
-
     } catch (error) {
-      setError('staffMetrics', error.message);
+      setError("staffMetrics", error.message);
     }
   }, [updateStaffMetrics, addTrendData, setLoading, setError]);
 
   const fetchOperationalMetrics = useCallback(async () => {
-    setLoading('operationalMetrics', true);
+    setLoading("operationalMetrics", true);
     try {
       // Mock operational metrics
       const mockMetrics = {
@@ -413,51 +421,62 @@ export const MetricsProvider = ({ children }) => {
       };
 
       updateOperationalMetrics(mockMetrics);
-      
+
       // Add to trends
-      addTrendData('inventoryTrends', {
+      addTrendData("inventoryTrends", {
         totalSkus: mockMetrics.totalSkus,
         inStock: mockMetrics.inStock,
         outOfStock: mockMetrics.outOfStock,
       });
-
     } catch (error) {
-      setError('operationalMetrics', error.message);
+      setError("operationalMetrics", error.message);
     }
   }, [updateOperationalMetrics, addTrendData, setLoading, setError]);
 
   // ==================== CALCULATED METRICS ====================
   const getCalculatedMetrics = useCallback(() => {
-    const { realTimeMetrics, businessKPIs, performanceMetrics, staffMetrics, operationalMetrics } = state;
+    const {
+      realTimeMetrics,
+      businessKPIs,
+      performanceMetrics,
+      staffMetrics,
+      operationalMetrics,
+    } = state;
 
     return {
       // Efficiency Scores
-      overallEfficiency: Math.round(
-        (businessKPIs.orderFulfillmentRate * 0.3 +
-         performanceMetrics.systemUptime * 0.2 +
-         staffMetrics.staffProductivity * 0.3 +
-         operationalMetrics.pickingAccuracy * 0.2) * 100
-      ) / 100,
+      overallEfficiency:
+        Math.round(
+          (businessKPIs.orderFulfillmentRate * 0.3 +
+            performanceMetrics.systemUptime * 0.2 +
+            staffMetrics.staffProductivity * 0.3 +
+            operationalMetrics.pickingAccuracy * 0.2) *
+            100
+        ) / 100,
 
       // Health Score
-      systemHealthScore: Math.round(
-        (performanceMetrics.systemUptime * 0.4 +
-         (100 - performanceMetrics.errorRate) * 0.3 +
-         (businessKPIs.customerSatisfactionScore) * 0.3) * 100
-      ) / 100,
+      systemHealthScore:
+        Math.round(
+          (performanceMetrics.systemUptime * 0.4 +
+            (100 - performanceMetrics.errorRate) * 0.3 +
+            businessKPIs.customerSatisfactionScore * 0.3) *
+            100
+        ) / 100,
 
       // Productivity Index
-      productivityIndex: Math.round(
-        (staffMetrics.staffProductivity * 0.4 +
-         businessKPIs.warehouseUtilization * 0.3 +
-         operationalMetrics.pickingAccuracy * 0.3) * 100
-      ) / 100,
+      productivityIndex:
+        Math.round(
+          (staffMetrics.staffProductivity * 0.4 +
+            businessKPIs.warehouseUtilization * 0.3 +
+            operationalMetrics.pickingAccuracy * 0.3) *
+            100
+        ) / 100,
 
       // Alert Priority Score
       alertPriorityScore: Math.min(
         realTimeMetrics.criticalAlerts * 20 +
-        realTimeMetrics.lowStockItems * 5 +
-        (100 - performanceMetrics.systemUptime) * 10,
+          realTimeMetrics.lowStockItems * 5 +
+          (100 - performanceMetrics.systemUptime) * 10,
         100
       ),
     };
@@ -499,17 +518,23 @@ export const MetricsProvider = ({ children }) => {
       clearInterval(staffInterval);
       clearInterval(operationalInterval);
     };
-  }, [refreshAllMetrics, fetchRealTimeMetrics, fetchPerformanceMetrics, 
-      fetchBusinessKPIs, fetchStaffMetrics, fetchOperationalMetrics]);
+  }, [
+    refreshAllMetrics,
+    fetchRealTimeMetrics,
+    fetchPerformanceMetrics,
+    fetchBusinessKPIs,
+    fetchStaffMetrics,
+    fetchOperationalMetrics,
+  ]);
 
   // ==================== CONTEXT VALUE ====================
   const contextValue = {
     // State
     ...state,
-    
+
     // Calculated metrics
     calculatedMetrics: getCalculatedMetrics(),
-    
+
     // Actions
     updateRealTimeMetrics,
     updateBusinessKPIs,
@@ -517,7 +542,7 @@ export const MetricsProvider = ({ children }) => {
     updateStaffMetrics,
     updateOperationalMetrics,
     addTrendData,
-    
+
     // Fetch functions
     fetchRealTimeMetrics,
     fetchBusinessKPIs,
@@ -525,7 +550,7 @@ export const MetricsProvider = ({ children }) => {
     fetchStaffMetrics,
     fetchOperationalMetrics,
     refreshAllMetrics,
-    
+
     // Utility
     setLoading,
     setError,
@@ -542,7 +567,7 @@ export const MetricsProvider = ({ children }) => {
 export const useMetrics = () => {
   const context = useContext(MetricsContext);
   if (!context) {
-    throw new Error('useMetrics must be used within a MetricsProvider');
+    throw new Error("useMetrics must be used within a MetricsProvider");
   }
   return context;
 };

@@ -1,63 +1,63 @@
 /**
  * Comprehensive Warehouse Actions
  * Centralized action creators for all warehouse operations
- * 
+ *
  * @module utils/warehouseActions
  */
 
-import { API_CONFIG } from './constants';
+import { API_CONFIG } from "./constants";
 
 // ==================== ACTION TYPES ====================
 export const ActionTypes = {
   // User Management
-  USER_LOGIN_REQUEST: 'USER_LOGIN_REQUEST',
-  USER_LOGIN_SUCCESS: 'USER_LOGIN_SUCCESS',
-  USER_LOGIN_FAILURE: 'USER_LOGIN_FAILURE',
-  USER_LOGOUT: 'USER_LOGOUT',
-  USER_UPDATE_PROFILE: 'USER_UPDATE_PROFILE',
-  
+  USER_LOGIN_REQUEST: "USER_LOGIN_REQUEST",
+  USER_LOGIN_SUCCESS: "USER_LOGIN_SUCCESS",
+  USER_LOGIN_FAILURE: "USER_LOGIN_FAILURE",
+  USER_LOGOUT: "USER_LOGOUT",
+  USER_UPDATE_PROFILE: "USER_UPDATE_PROFILE",
+
   // Order Management
-  ORDER_FETCH_ALL: 'ORDER_FETCH_ALL',
-  ORDER_FETCH_BY_ID: 'ORDER_FETCH_BY_ID',
-  ORDER_CREATE: 'ORDER_CREATE',
-  ORDER_UPDATE: 'ORDER_UPDATE',
-  ORDER_DELETE: 'ORDER_DELETE',
-  ORDER_UPDATE_STATUS: 'ORDER_UPDATE_STATUS',
-  ORDER_BULK_UPDATE: 'ORDER_BULK_UPDATE',
-  
+  ORDER_FETCH_ALL: "ORDER_FETCH_ALL",
+  ORDER_FETCH_BY_ID: "ORDER_FETCH_BY_ID",
+  ORDER_CREATE: "ORDER_CREATE",
+  ORDER_UPDATE: "ORDER_UPDATE",
+  ORDER_DELETE: "ORDER_DELETE",
+  ORDER_UPDATE_STATUS: "ORDER_UPDATE_STATUS",
+  ORDER_BULK_UPDATE: "ORDER_BULK_UPDATE",
+
   // Inventory Management
-  INVENTORY_FETCH_ALL: 'INVENTORY_FETCH_ALL',
-  INVENTORY_FETCH_BY_ID: 'INVENTORY_FETCH_BY_ID',
-  INVENTORY_CREATE: 'INVENTORY_CREATE',
-  INVENTORY_UPDATE: 'INVENTORY_UPDATE',
-  INVENTORY_DELETE: 'INVENTORY_DELETE',
-  INVENTORY_BULK_UPDATE: 'INVENTORY_BULK_UPDATE',
-  INVENTORY_ADJUST_STOCK: 'INVENTORY_ADJUST_STOCK',
-  
+  INVENTORY_FETCH_ALL: "INVENTORY_FETCH_ALL",
+  INVENTORY_FETCH_BY_ID: "INVENTORY_FETCH_BY_ID",
+  INVENTORY_CREATE: "INVENTORY_CREATE",
+  INVENTORY_UPDATE: "INVENTORY_UPDATE",
+  INVENTORY_DELETE: "INVENTORY_DELETE",
+  INVENTORY_BULK_UPDATE: "INVENTORY_BULK_UPDATE",
+  INVENTORY_ADJUST_STOCK: "INVENTORY_ADJUST_STOCK",
+
   // Staff Management
-  STAFF_FETCH_ALL: 'STAFF_FETCH_ALL',
-  STAFF_FETCH_BY_ID: 'STAFF_FETCH_BY_ID',
-  STAFF_CREATE: 'STAFF_CREATE',
-  STAFF_UPDATE: 'STAFF_UPDATE',
-  STAFF_DELETE: 'STAFF_DELETE',
-  STAFF_UPDATE_STATUS: 'STAFF_UPDATE_STATUS',
-  
+  STAFF_FETCH_ALL: "STAFF_FETCH_ALL",
+  STAFF_FETCH_BY_ID: "STAFF_FETCH_BY_ID",
+  STAFF_CREATE: "STAFF_CREATE",
+  STAFF_UPDATE: "STAFF_UPDATE",
+  STAFF_DELETE: "STAFF_DELETE",
+  STAFF_UPDATE_STATUS: "STAFF_UPDATE_STATUS",
+
   // Analytics
-  ANALYTICS_FETCH_DASHBOARD: 'ANALYTICS_FETCH_DASHBOARD',
-  ANALYTICS_FETCH_REPORTS: 'ANALYTICS_FETCH_REPORTS',
-  ANALYTICS_FETCH_METRICS: 'ANALYTICS_FETCH_METRICS',
-  
+  ANALYTICS_FETCH_DASHBOARD: "ANALYTICS_FETCH_DASHBOARD",
+  ANALYTICS_FETCH_REPORTS: "ANALYTICS_FETCH_REPORTS",
+  ANALYTICS_FETCH_METRICS: "ANALYTICS_FETCH_METRICS",
+
   // Alerts
-  ALERT_CREATE: 'ALERT_CREATE',
-  ALERT_UPDATE: 'ALERT_UPDATE',
-  ALERT_RESOLVE: 'ALERT_RESOLVE',
-  ALERT_FETCH_ALL: 'ALERT_FETCH_ALL',
-  
+  ALERT_CREATE: "ALERT_CREATE",
+  ALERT_UPDATE: "ALERT_UPDATE",
+  ALERT_RESOLVE: "ALERT_RESOLVE",
+  ALERT_FETCH_ALL: "ALERT_FETCH_ALL",
+
   // System
-  SYSTEM_SET_LOADING: 'SYSTEM_SET_LOADING',
-  SYSTEM_SET_ERROR: 'SYSTEM_SET_ERROR',
-  SYSTEM_CLEAR_ERROR: 'SYSTEM_CLEAR_ERROR',
-  SYSTEM_UPDATE_STATUS: 'SYSTEM_UPDATE_STATUS',
+  SYSTEM_SET_LOADING: "SYSTEM_SET_LOADING",
+  SYSTEM_SET_ERROR: "SYSTEM_SET_ERROR",
+  SYSTEM_CLEAR_ERROR: "SYSTEM_CLEAR_ERROR",
+  SYSTEM_UPDATE_STATUS: "SYSTEM_UPDATE_STATUS",
 };
 
 // ==================== API HELPER FUNCTIONS ====================
@@ -67,7 +67,7 @@ export const ActionTypes = {
  */
 const apiRequest = async (endpoint, options = {}) => {
   const {
-    method = 'GET',
+    method = "GET",
     data = null,
     headers = {},
     timeout = API_CONFIG.TIMEOUT,
@@ -76,7 +76,7 @@ const apiRequest = async (endpoint, options = {}) => {
   const config = {
     method,
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
       ...headers,
     },
     signal: AbortSignal.timeout(timeout),
@@ -88,7 +88,7 @@ const apiRequest = async (endpoint, options = {}) => {
 
   try {
     const response = await fetch(`${API_CONFIG.BASE_URL}${endpoint}`, config);
-    
+
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}: ${response.statusText}`);
     }
@@ -106,12 +106,12 @@ const apiRequest = async (endpoint, options = {}) => {
 export const userActions = {
   login: (credentials) => async (dispatch) => {
     dispatch({ type: ActionTypes.USER_LOGIN_REQUEST });
-    
+
     try {
       // Use Google Sheets auth endpoint
       const response = await fetch(API_CONFIG.GOOGLE_SHEETS_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(credentials),
       });
 
@@ -141,17 +141,17 @@ export const userActions = {
 
   logout: () => (dispatch) => {
     // Clear storage
-    localStorage.removeItem('mia-warehouse-token');
-    localStorage.removeItem('mia-warehouse-user');
+    localStorage.removeItem("mia-warehouse-token");
+    localStorage.removeItem("mia-warehouse-user");
     sessionStorage.clear();
-    
+
     dispatch({ type: ActionTypes.USER_LOGOUT });
   },
 
   updateProfile: (profileData) => async (dispatch) => {
     try {
-      const result = await apiRequest('/users/profile', {
-        method: 'PUT',
+      const result = await apiRequest("/users/profile", {
+        method: "PUT",
         data: profileData,
       });
 
@@ -174,31 +174,33 @@ export const userActions = {
 // ==================== ORDER ACTIONS ====================
 
 export const orderActions = {
-  fetchAll: (params = {}) => async (dispatch) => {
-    dispatch({ type: ActionTypes.SYSTEM_SET_LOADING, payload: true });
-    
-    try {
-      const result = await apiRequest('/orders', {
-        method: 'GET',
-        data: params,
-      });
+  fetchAll:
+    (params = {}) =>
+    async (dispatch) => {
+      dispatch({ type: ActionTypes.SYSTEM_SET_LOADING, payload: true });
 
-      dispatch({
-        type: ActionTypes.ORDER_FETCH_ALL,
-        payload: result.orders || [],
-      });
+      try {
+        const result = await apiRequest("/orders", {
+          method: "GET",
+          data: params,
+        });
 
-      return { success: true, orders: result.orders };
-    } catch (error) {
-      dispatch({
-        type: ActionTypes.SYSTEM_SET_ERROR,
-        payload: error.message,
-      });
-      return { success: false, error: error.message };
-    } finally {
-      dispatch({ type: ActionTypes.SYSTEM_SET_LOADING, payload: false });
-    }
-  },
+        dispatch({
+          type: ActionTypes.ORDER_FETCH_ALL,
+          payload: result.orders || [],
+        });
+
+        return { success: true, orders: result.orders };
+      } catch (error) {
+        dispatch({
+          type: ActionTypes.SYSTEM_SET_ERROR,
+          payload: error.message,
+        });
+        return { success: false, error: error.message };
+      } finally {
+        dispatch({ type: ActionTypes.SYSTEM_SET_LOADING, payload: false });
+      }
+    },
 
   fetchById: (orderId) => async (dispatch) => {
     try {
@@ -221,8 +223,8 @@ export const orderActions = {
 
   create: (orderData) => async (dispatch) => {
     try {
-      const result = await apiRequest('/orders', {
-        method: 'POST',
+      const result = await apiRequest("/orders", {
+        method: "POST",
         data: orderData,
       });
 
@@ -244,7 +246,7 @@ export const orderActions = {
   update: (orderId, orderData) => async (dispatch) => {
     try {
       const result = await apiRequest(`/orders/${orderId}`, {
-        method: 'PUT',
+        method: "PUT",
         data: orderData,
       });
 
@@ -266,7 +268,7 @@ export const orderActions = {
   updateStatus: (orderId, status) => async (dispatch) => {
     try {
       const result = await apiRequest(`/orders/${orderId}/status`, {
-        method: 'PATCH',
+        method: "PATCH",
         data: { status },
       });
 
@@ -287,8 +289,8 @@ export const orderActions = {
 
   bulkUpdate: (orderIds, updates) => async (dispatch) => {
     try {
-      const result = await apiRequest('/orders/bulk', {
-        method: 'PUT',
+      const result = await apiRequest("/orders/bulk", {
+        method: "PUT",
         data: { orderIds, updates },
       });
 
@@ -310,7 +312,7 @@ export const orderActions = {
   delete: (orderId) => async (dispatch) => {
     try {
       await apiRequest(`/orders/${orderId}`, {
-        method: 'DELETE',
+        method: "DELETE",
       });
 
       dispatch({
@@ -332,31 +334,33 @@ export const orderActions = {
 // ==================== INVENTORY ACTIONS ====================
 
 export const inventoryActions = {
-  fetchAll: (params = {}) => async (dispatch) => {
-    dispatch({ type: ActionTypes.SYSTEM_SET_LOADING, payload: true });
-    
-    try {
-      const result = await apiRequest('/inventory', {
-        method: 'GET',
-        data: params,
-      });
+  fetchAll:
+    (params = {}) =>
+    async (dispatch) => {
+      dispatch({ type: ActionTypes.SYSTEM_SET_LOADING, payload: true });
 
-      dispatch({
-        type: ActionTypes.INVENTORY_FETCH_ALL,
-        payload: result.items || [],
-      });
+      try {
+        const result = await apiRequest("/inventory", {
+          method: "GET",
+          data: params,
+        });
 
-      return { success: true, items: result.items };
-    } catch (error) {
-      dispatch({
-        type: ActionTypes.SYSTEM_SET_ERROR,
-        payload: error.message,
-      });
-      return { success: false, error: error.message };
-    } finally {
-      dispatch({ type: ActionTypes.SYSTEM_SET_LOADING, payload: false });
-    }
-  },
+        dispatch({
+          type: ActionTypes.INVENTORY_FETCH_ALL,
+          payload: result.items || [],
+        });
+
+        return { success: true, items: result.items };
+      } catch (error) {
+        dispatch({
+          type: ActionTypes.SYSTEM_SET_ERROR,
+          payload: error.message,
+        });
+        return { success: false, error: error.message };
+      } finally {
+        dispatch({ type: ActionTypes.SYSTEM_SET_LOADING, payload: false });
+      }
+    },
 
   fetchById: (itemId) => async (dispatch) => {
     try {
@@ -379,8 +383,8 @@ export const inventoryActions = {
 
   create: (itemData) => async (dispatch) => {
     try {
-      const result = await apiRequest('/inventory', {
-        method: 'POST',
+      const result = await apiRequest("/inventory", {
+        method: "POST",
         data: itemData,
       });
 
@@ -402,7 +406,7 @@ export const inventoryActions = {
   update: (itemId, itemData) => async (dispatch) => {
     try {
       const result = await apiRequest(`/inventory/${itemId}`, {
-        method: 'PUT',
+        method: "PUT",
         data: itemData,
       });
 
@@ -424,7 +428,7 @@ export const inventoryActions = {
   adjustStock: (itemId, adjustment) => async (dispatch) => {
     try {
       const result = await apiRequest(`/inventory/${itemId}/adjust`, {
-        method: 'POST',
+        method: "POST",
         data: adjustment,
       });
 
@@ -445,8 +449,8 @@ export const inventoryActions = {
 
   bulkUpdate: (itemIds, updates) => async (dispatch) => {
     try {
-      const result = await apiRequest('/inventory/bulk', {
-        method: 'PUT',
+      const result = await apiRequest("/inventory/bulk", {
+        method: "PUT",
         data: { itemIds, updates },
       });
 
@@ -468,7 +472,7 @@ export const inventoryActions = {
   delete: (itemId) => async (dispatch) => {
     try {
       await apiRequest(`/inventory/${itemId}`, {
-        method: 'DELETE',
+        method: "DELETE",
       });
 
       dispatch({
@@ -492,9 +496,9 @@ export const inventoryActions = {
 export const staffActions = {
   fetchAll: () => async (dispatch) => {
     dispatch({ type: ActionTypes.SYSTEM_SET_LOADING, payload: true });
-    
+
     try {
-      const result = await apiRequest('/staff');
+      const result = await apiRequest("/staff");
 
       dispatch({
         type: ActionTypes.STAFF_FETCH_ALL,
@@ -515,8 +519,8 @@ export const staffActions = {
 
   create: (staffData) => async (dispatch) => {
     try {
-      const result = await apiRequest('/staff', {
-        method: 'POST',
+      const result = await apiRequest("/staff", {
+        method: "POST",
         data: staffData,
       });
 
@@ -538,7 +542,7 @@ export const staffActions = {
   update: (staffId, staffData) => async (dispatch) => {
     try {
       const result = await apiRequest(`/staff/${staffId}`, {
-        method: 'PUT',
+        method: "PUT",
         data: staffData,
       });
 
@@ -560,7 +564,7 @@ export const staffActions = {
   updateStatus: (staffId, status) => async (dispatch) => {
     try {
       const result = await apiRequest(`/staff/${staffId}/status`, {
-        method: 'PATCH',
+        method: "PATCH",
         data: { status },
       });
 
@@ -585,7 +589,7 @@ export const staffActions = {
 export const analyticsActions = {
   fetchDashboard: () => async (dispatch) => {
     try {
-      const result = await apiRequest('/analytics/dashboard');
+      const result = await apiRequest("/analytics/dashboard");
 
       dispatch({
         type: ActionTypes.ANALYTICS_FETCH_DASHBOARD,
@@ -602,44 +606,52 @@ export const analyticsActions = {
     }
   },
 
-  fetchMetrics: (timeRange = '7d') => async (dispatch) => {
-    try {
-      const result = await apiRequest(`/analytics/metrics?range=${timeRange}`);
+  fetchMetrics:
+    (timeRange = "7d") =>
+    async (dispatch) => {
+      try {
+        const result = await apiRequest(
+          `/analytics/metrics?range=${timeRange}`
+        );
 
-      dispatch({
-        type: ActionTypes.ANALYTICS_FETCH_METRICS,
-        payload: result.metrics,
-      });
+        dispatch({
+          type: ActionTypes.ANALYTICS_FETCH_METRICS,
+          payload: result.metrics,
+        });
 
-      return { success: true, metrics: result.metrics };
-    } catch (error) {
-      dispatch({
-        type: ActionTypes.SYSTEM_SET_ERROR,
-        payload: error.message,
-      });
-      return { success: false, error: error.message };
-    }
-  },
+        return { success: true, metrics: result.metrics };
+      } catch (error) {
+        dispatch({
+          type: ActionTypes.SYSTEM_SET_ERROR,
+          payload: error.message,
+        });
+        return { success: false, error: error.message };
+      }
+    },
 
-  fetchReports: (reportType, params = {}) => async (dispatch) => {
-    try {
-      const queryParams = new URLSearchParams(params).toString();
-      const result = await apiRequest(`/analytics/reports/${reportType}?${queryParams}`);
+  fetchReports:
+    (reportType, params = {}) =>
+    async (dispatch) => {
+      try {
+        const queryParams = new URLSearchParams(params).toString();
+        const result = await apiRequest(
+          `/analytics/reports/${reportType}?${queryParams}`
+        );
 
-      dispatch({
-        type: ActionTypes.ANALYTICS_FETCH_REPORTS,
-        payload: { reportType, data: result.data },
-      });
+        dispatch({
+          type: ActionTypes.ANALYTICS_FETCH_REPORTS,
+          payload: { reportType, data: result.data },
+        });
 
-      return { success: true, data: result.data };
-    } catch (error) {
-      dispatch({
-        type: ActionTypes.SYSTEM_SET_ERROR,
-        payload: error.message,
-      });
-      return { success: false, error: error.message };
-    }
-  },
+        return { success: true, data: result.data };
+      } catch (error) {
+        dispatch({
+          type: ActionTypes.SYSTEM_SET_ERROR,
+          payload: error.message,
+        });
+        return { success: false, error: error.message };
+      }
+    },
 };
 
 // ==================== ALERT ACTIONS ====================
@@ -647,7 +659,7 @@ export const analyticsActions = {
 export const alertActions = {
   fetchAll: () => async (dispatch) => {
     try {
-      const result = await apiRequest('/alerts');
+      const result = await apiRequest("/alerts");
 
       dispatch({
         type: ActionTypes.ALERT_FETCH_ALL,
@@ -666,8 +678,8 @@ export const alertActions = {
 
   create: (alertData) => async (dispatch) => {
     try {
-      const result = await apiRequest('/alerts', {
-        method: 'POST',
+      const result = await apiRequest("/alerts", {
+        method: "POST",
         data: alertData,
       });
 
@@ -689,7 +701,7 @@ export const alertActions = {
   resolve: (alertId, resolution) => async (dispatch) => {
     try {
       const result = await apiRequest(`/alerts/${alertId}/resolve`, {
-        method: 'POST',
+        method: "POST",
         data: { resolution },
       });
 

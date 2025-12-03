@@ -1,3 +1,19 @@
+
+GOOGLE APPS SCRIPT DEPLOYMENT INSTRUCTIONS
+==========================================
+
+1. Truy cập: https://script.google.com
+2. Tạo project mới: "MIA Warehouse Profile Updater"
+3. Copy Code.gs content (đã save trong file này)
+4. Deploy as Web App với settings:
+   - Execute as: Me
+   - Who has access: Anyone
+5. Copy Web App URL
+6. Update Vercel environment variables
+7. Test integration
+
+Code.gs Content:
+================
 /**
  * 🚀 MIA WAREHOUSE MANAGEMENT - SIMPLIFIED APPS SCRIPT FOR AUDIT LOGGING
  * Compatible với frontend logAuditEvent() function
@@ -120,3 +136,19 @@ function doPost(e) {
 function doOptions(e) {
   return ContentService.createTextOutput("");
 }
+
+
+Environment Variables to Add:
+============================
+REACT_APP_AUDIT_WEBHOOK_URL=[YOUR_WEB_APP_URL]
+REACT_APP_PROFILE_UPDATE_WEBHOOK_URL=[YOUR_WEB_APP_URL]
+
+Test Cases:
+===========
+1. Login with admin account
+2. Update profile information
+3. Verify Google Sheets update
+4. Check audit log entries
+
+Generated: 2025-12-03T00:29:49.808Z
+Support: caovinhphuc.ios@gmail.com

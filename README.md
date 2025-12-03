@@ -3,20 +3,24 @@
 🏭 **Modern React + Google Sheets warehouse management system**
 
 ## 🚀 Live Demo
-- **Production**: https://warehouse-management-template-jsx.vercel.app/login
+
+- **Production**: <https://warehouse-management-template-jsx.vercel.app/login>
 - **Features**: Real-time dashboard, Order management, Analytics, Automation
 
 ## 🎯 Current Status
-✅ **Vercel Deployment**: Active  
-✅ **GitHub Integration**: Connected  
-✅ **Auto-Deploy**: Enabled  
+
+✅ **Vercel Deployment**: Active
+✅ **GitHub Integration**: Connected
+✅ **Auto-Deploy**: Enabled
 
 ## 📋 Next Steps
+
 1. Configure Google Sheets API
-2. Deploy Google Apps Script 
+2. Deploy Google Apps Script
 3. Production testing
 
 ## 🔧 Tech Stack
+
 - **Frontend**: React.js, TailwindCSS, Chart.js
 - **Backend**: Google Sheets API, Apps Script
 - **Deployment**: Vercel

@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🧪 Test Google Apps Script URL</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+      }
+      .container {
+        background: white;
+        border-radius: 12px;
+        padding: 30px;
+        max-width: 600px;
+        width: 100%;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+      }
+      h1 {
+        color: #333;
+        margin-bottom: 10px;
+        font-size: 24px;
+      }
+      .url-display {
+        background: #f5f5f5;
+        padding: 12px;
+        border-radius: 6px;
+        margin: 20px 0;
+        word-break: break-all;
+        font-size: 12px;
+        color: #666;
+      }
+      button {
+        background: #667eea;
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 16px;
+        margin: 10px 5px;
+        transition: all 0.3s;
+      }
+      button:hover {
+        background: #5568d3;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+      }
+      button:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+        transform: none;
+      }
+      .result {
+        margin-top: 20px;
+        padding: 15px;
+        border-radius: 6px;
+        display: none;
+      }
+      .result.success {
+        background: #d4edda;
+        border: 1px solid #c3e6cb;
+        color: #155724;
+        display: block;
+      }
+      .result.error {
+        background: #f8d7da;
+        border: 1px solid #f5c6cb;
+        color: #721c24;
+        display: block;
+      }
+      .result.loading {
+        background: #d1ecf1;
+        border: 1px solid #bee5eb;
+        color: #0c5460;
+        display: block;
+      }
+      pre {
+        background: #f5f5f5;
+        padding: 10px;
+        border-radius: 4px;
+        overflow-x: auto;
+        margin-top: 10px;
+        font-size: 12px;
+      }
+      .status {
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        margin-left: 10px;
+      }
+      .status.pending {
+        background: #ffc107;
+        color: #000;
+      }
+      .status.success {
+        background: #28a745;
+        color: white;
+      }
+      .status.error {
+        background: #dc3545;
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🧪 Test Google Apps Script URL</h1>
+      <p style="color: #666; margin-bottom: 20px">
+        Test kết nối đến Google Apps Script Web App
+      </p>
+
+      <div class="url-display" id="urlDisplay"></div>
+
+      <div>
+        <button onclick="testGet()" id="btnGet">Test GET Request</button>
+        <button onclick="testPost()" id="btnPost">Test POST Request</button>
+        <button onclick="window.open(APPS_SCRIPT_URL, '_blank')" style="background: #17a2b8;">
+          🌐 Mở URL trực tiếp
+        </button>
+      </div>
+
+      <div style="margin-top: 20px; padding: 15px; background: #fff3cd; border-radius: 6px; border: 1px solid #ffc107;">
+        <strong>⚠️ Lưu ý:</strong>
+        <p style="margin: 10px 0 0 0; font-size: 14px;">
+          Nếu gặp lỗi "Failed to fetch", đây là lỗi CORS khi mở file trực tiếp.
+          Hãy chạy local server: <code>node test-server.js</code> rồi mở
+          <code>http://localhost:3000/test-apps-script.html</code>
+        </p>
+      </div>
+
+      <div id="result" class="result"></div>
+    </div>
+
+    <script>
+      const APPS_SCRIPT_URL =
+        "https://script.google.com/macros/s/AKfycbzJ7ZVmG3JyU0wQlBAfNxC1CK9eUAqrHGKvf_BVUT8eIQYT0TsYL7Jp39kQQidOrPft/exec";
+
+      document.getElementById("urlDisplay").textContent = APPS_SCRIPT_URL;
+
+      function showResult(message, type = "loading") {
+        const resultDiv = document.getElementById("result");
+        resultDiv.className = "result " + type;
+        resultDiv.innerHTML = message;
+      }
+
+      async function testGet() {
+        const btn = document.getElementById("btnGet");
+        btn.disabled = true;
+        showResult("🔄 Đang test GET request...", "loading");
+
+        try {
+          const response = await fetch(APPS_SCRIPT_URL, {
+            method: "GET",
+            mode: "cors",
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            showResult(
+              `✅ GET Request thành công!<br>
+            <pre>${JSON.stringify(data, null, 2)}</pre>`,
+              "success"
+            );
+          } else {
+            const text = await response.text();
+            showResult(
+              `⚠️ GET Request trả về status: ${response.status}<br>
+            <pre>${text.substring(0, 500)}</pre>
+            <p style="margin-top: 10px; font-size: 14px;">
+              💡 Nếu thấy trang đăng nhập, cần cấu hình lại deployment settings:
+              <ul style="margin-left: 20px; margin-top: 5px;">
+                <li>Execute as: Me</li>
+                <li>Who has access: <strong>Anyone</strong></li>
+              </ul>
+            </p>`,
+              "error"
+            );
+          }
+        } catch (error) {
+          let errorMessage = `❌ GET Request failed: ${error.message}`;
+
+          // Provide helpful error messages
+          if (error.message.includes('Failed to fetch')) {
+            errorMessage += `<br><br>
+            <strong>💡 Vấn đề:</strong> Lỗi CORS - Không thể fetch từ file:// protocol<br><br>
+            <strong>✅ Giải pháp:</strong><br>
+            <ol style="margin-left: 20px; margin-top: 10px;">
+              <li>Chạy local server: <code>node test-server.js</code></li>
+              <li>Mở browser: <code>http://localhost:3000/test-apps-script.html</code></li>
+              <li>Hoặc test trực tiếp URL trong browser tab mới</li>
+            </ol>
+            <br>
+            <button onclick="window.open('${APPS_SCRIPT_URL}', '_blank')" style="background: #28a745; margin-top: 10px;">
+              🌐 Mở URL trong tab mới để test
+            </button>`;
+          }
+
+          showResult(
+            `${errorMessage}<br>
+          <pre style="font-size: 11px;">${error.stack || ''}</pre>`,
+            "error"
+          );
+        } finally {
+          btn.disabled = false;
+        }
+      }
+
+      async function testPost() {
+        const btn = document.getElementById("btnPost");
+        btn.disabled = true;
+        showResult("🔄 Đang test POST request...", "loading");
+
+        const testData = {
+          timestamp: new Date().toISOString(),
+          action: "TEST_CONNECTION",
+          username: "test-user",
+          details: "Testing Apps Script connection from browser",
+          status: "SUCCESS",
+          ipAddress: "127.0.0.1",
+        };
+
+        try {
+          const response = await fetch(APPS_SCRIPT_URL, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(testData),
+            mode: "cors",
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            showResult(
+              `✅ POST Request thành công!<br>
+            <strong>Test Data đã gửi:</strong><br>
+            <pre>${JSON.stringify(testData, null, 2)}</pre>
+            <strong>Response:</strong><br>
+            <pre>${JSON.stringify(data, null, 2)}</pre>`,
+              "success"
+            );
+          } else {
+            const text = await response.text();
+            showResult(
+              `⚠️ POST Request trả về status: ${response.status}<br>
+            <pre>${text.substring(0, 500)}</pre>
+            <p style="margin-top: 10px; font-size: 14px;">
+              💡 Nếu thấy trang đăng nhập, cần cấu hình lại deployment settings.
+            </p>`,
+              "error"
+            );
+          }
+        } catch (error) {
+          let errorMessage = `❌ POST Request failed: ${error.message}`;
+
+          // Provide helpful error messages
+          if (error.message.includes('Failed to fetch')) {
+            errorMessage += `<br><br>
+            <strong>💡 Vấn đề:</strong> Lỗi CORS - Không thể fetch từ file:// protocol<br><br>
+            <strong>✅ Giải pháp:</strong><br>
+            <ol style="margin-left: 20px; margin-top: 10px;">
+              <li>Chạy local server: <code>node test-server.js</code></li>
+              <li>Mở browser: <code>http://localhost:3000/test-apps-script.html</code></li>
+              <li>Hoặc test bằng Node.js script: <code>node test-apps-script-url.js</code></li>
+            </ol>
+            <p style="margin-top: 10px; font-size: 14px;">
+              💡 Lỗi CORS xảy ra vì browser block fetch từ file:// protocol. Cần chạy từ HTTP server.
+            </p>`;
+          }
+
+          showResult(
+            `${errorMessage}<br>
+          <pre style="font-size: 11px;">${error.stack || ''}</pre>`,
+            "error"
+          );
+        } finally {
+          btn.disabled = false;
+        }
+      }
+    </script>
+  </body>
+</html>

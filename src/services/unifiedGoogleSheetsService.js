@@ -9,23 +9,24 @@
 // ==================== CONFIGURATION ====================
 export const UNIFIED_GOOGLE_SHEETS_CONFIG = {
   // API Configuration
-  API_KEY: process.env.REACT_APP_GOOGLE_SHEETS_API_KEY || '',
+  API_KEY: process.env.REACT_APP_GOOGLE_SHEETS_API_KEY || "",
   SHEET_ID:
-    process.env.REACT_APP_GOOGLE_SHEETS_ID || '1m2B2ODXuuatnW0EKExdVeCa1WwvF52bZOhS7DGqG6Vg',
-  BASE_URL: 'https://sheets.googleapis.com/v4/spreadsheets',
+    process.env.REACT_APP_GOOGLE_SHEETS_ID ||
+    "1m2B2ODXuuatnW0EKExdVeCa1WwvF52bZOhS7DGqG6Vg",
+  BASE_URL: "https://sheets.googleapis.com/v4/spreadsheets",
 
   // Webhook URLs
   WEBHOOKS: {
-    AUDIT: process.env.REACT_APP_AUDIT_WEBHOOK_URL || '',
-    PROFILE: process.env.REACT_APP_PROFILE_UPDATE_WEBHOOK_URL || '',
+    AUDIT: process.env.REACT_APP_AUDIT_WEBHOOK_URL || "",
+    PROFILE: process.env.REACT_APP_PROFILE_UPDATE_WEBHOOK_URL || "",
   },
 
   // Sheet Ranges (Thống nhất naming)
   RANGES: {
-    USERS: 'Users!A:H', // Username, Password, Full Name, Email, Role, Department, Permissions, Shift
-    AUDIT_LOG: 'AuditLog!A:F', // Timestamp, Action, Username, Details, Status, IP Address
-    PERMISSIONS: 'Permissions!A:C', // Role, Permission, Description
-    SESSIONS: 'Sessions!A:E', // Session ID, User ID, Login Time, Expires At, Is Active
+    USERS: "Users!A:H", // Username, Password, Full Name, Email, Role, Department, Permissions, Shift
+    AUDIT_LOG: "AuditLog!A:F", // Timestamp, Action, Username, Details, Status, IP Address
+    PERMISSIONS: "Permissions!A:C", // Role, Permission, Description
+    SESSIONS: "Sessions!A:E", // Session ID, User ID, Login Time, Expires At, Is Active
   },
 
   // Performance Settings
@@ -76,37 +77,37 @@ class CacheManager {
 
 // ==================== ERROR HANDLER ====================
 class ErrorHandler {
-  static handle(error, context = '') {
+  static handle(error, context = "") {
     console.error(`[GoogleSheetsService] ${context}:`, error);
 
-    if (error.name === 'AbortError') {
+    if (error.name === "AbortError") {
       return {
         success: false,
-        error: 'Kết nối quá chậm. Vui lòng thử lại.',
-        code: 'TIMEOUT',
+        error: "Kết nối quá chậm. Vui lòng thử lại.",
+        code: "TIMEOUT",
       };
     }
 
     if (error.status === 403) {
       return {
         success: false,
-        error: 'Không có quyền truy cập. Kiểm tra API key và permissions.',
-        code: 'PERMISSION_DENIED',
+        error: "Không có quyền truy cập. Kiểm tra API key và permissions.",
+        code: "PERMISSION_DENIED",
       };
     }
 
     if (error.status === 429) {
       return {
         success: false,
-        error: 'Vượt quá giới hạn request. Vui lòng thử lại sau.',
-        code: 'RATE_LIMIT',
+        error: "Vượt quá giới hạn request. Vui lòng thử lại sau.",
+        code: "RATE_LIMIT",
       };
     }
 
     return {
       success: false,
-      error: 'Lỗi kết nối với Google Sheets. Vui lòng kiểm tra mạng.',
-      code: 'CONNECTION_ERROR',
+      error: "Lỗi kết nối với Google Sheets. Vui lòng kiểm tra mạng.",
+      code: "CONNECTION_ERROR",
     };
   }
 }
@@ -136,12 +137,15 @@ class UnifiedGoogleSheetsService {
 
     try {
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), this.config.TIMEOUT);
+      const timeoutId = setTimeout(
+        () => controller.abort(),
+        this.config.TIMEOUT
+      );
 
       const response = await fetch(endpoint, {
         signal: controller.signal,
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         ...options.fetchOptions,
       });
@@ -151,7 +155,9 @@ class UnifiedGoogleSheetsService {
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
         throw new Error(
-          `API Error: ${response.status} - ${errorData.error?.message || 'Unknown error'}`,
+          `API Error: ${response.status} - ${
+            errorData.error?.message || "Unknown error"
+          }`
         );
       }
 
@@ -180,46 +186,51 @@ class UnifiedGoogleSheetsService {
 
       const data = await this.makeRequest(endpoint, {
         useCache: true,
-        cacheKey: 'users_data',
+        cacheKey: "users_data",
       });
 
       if (!data.values || data.values.length === 0) {
         return {
           success: false,
-          error: 'Không có dữ liệu người dùng trong hệ thống',
+          error: "Không có dữ liệu người dùng trong hệ thống",
         };
       }
 
       const users = this.parseUsersData(data.values);
+
+      // Tìm user theo username hoặc email (không phân biệt hoa thường)
+      const normalizedInput = username.toLowerCase().trim();
       const user = users.find(
-        (u) => u.username && u.username.toLowerCase() === username.toLowerCase(),
+        (u) =>
+          (u.username && u.username.toLowerCase() === normalizedInput) ||
+          (u.email && u.email.toLowerCase() === normalizedInput)
       );
 
       if (!user) {
         await this.queueAuditLog({
-          action: 'LOGIN_FAILED',
+          action: "LOGIN_FAILED",
           username,
-          details: 'User not found',
-          status: 'FAILED',
+          details: "User not found",
+          status: "FAILED",
         });
 
         return {
           success: false,
-          error: 'Không tìm thấy tài khoản này trong hệ thống',
+          error: "Không tìm thấy tài khoản này trong hệ thống",
         };
       }
 
       if (user.password !== password) {
         await this.queueAuditLog({
-          action: 'LOGIN_FAILED',
+          action: "LOGIN_FAILED",
           username,
-          details: 'Invalid password',
-          status: 'FAILED',
+          details: "Invalid password",
+          status: "FAILED",
         });
 
         return {
           success: false,
-          error: 'Mật khẩu không chính xác',
+          error: "Mật khẩu không chính xác",
         };
       }
 
@@ -228,10 +239,10 @@ class UnifiedGoogleSheetsService {
       const userData = this.transformUserData(user);
 
       await this.queueAuditLog({
-        action: 'LOGIN_SUCCESS',
+        action: "LOGIN_SUCCESS",
         username,
-        details: 'Successful login',
-        status: 'SUCCESS',
+        details: "Successful login",
+        status: "SUCCESS",
       });
 
       return {
@@ -242,11 +253,13 @@ class UnifiedGoogleSheetsService {
           id: sessionToken,
           userId: user.username,
           loginTime: new Date().toISOString(),
-          expiresAt: new Date(Date.now() + this.config.SESSION_EXPIRE).toISOString(),
+          expiresAt: new Date(
+            Date.now() + this.config.SESSION_EXPIRE
+          ).toISOString(),
         },
       };
     } catch (error) {
-      return ErrorHandler.handle(error, 'verifyCredentials');
+      return ErrorHandler.handle(error, "verifyCredentials");
     }
   }
 
@@ -255,10 +268,10 @@ class UnifiedGoogleSheetsService {
   async queueAuditLog(eventData) {
     const auditData = {
       timestamp: new Date().toISOString(),
-      action: eventData.action || 'UNKNOWN',
-      username: eventData.username || 'unknown',
-      details: eventData.details || '',
-      status: eventData.status || 'SUCCESS',
+      action: eventData.action || "UNKNOWN",
+      username: eventData.username || "unknown",
+      details: eventData.details || "",
+      status: eventData.status || "SUCCESS",
       ipAddress: eventData.ipAddress || (await this.getClientIP()),
       id: `audit_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
     };
@@ -283,18 +296,26 @@ class UnifiedGoogleSheetsService {
 
     try {
       // Send to webhook
-      if (this.config.WEBHOOKS.AUDIT && !this.config.WEBHOOKS.AUDIT.includes('YOUR_SCRIPT_ID')) {
+      if (
+        this.config.WEBHOOKS.AUDIT &&
+        !this.config.WEBHOOKS.AUDIT.includes("YOUR_SCRIPT_ID")
+      ) {
         await fetch(this.config.WEBHOOKS.AUDIT, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ batch }),
-          mode: 'no-cors',
+          mode: "no-cors",
         });
       }
 
-      console.log(`[UnifiedGoogleSheetsService] Processed ${batch.length} audit logs`);
+      console.log(
+        `[UnifiedGoogleSheetsService] Processed ${batch.length} audit logs`
+      );
     } catch (error) {
-      console.error('[UnifiedGoogleSheetsService] Audit processing failed:', error);
+      console.error(
+        "[UnifiedGoogleSheetsService] Audit processing failed:",
+        error
+      );
       // Re-queue failed items
       this.auditQueue.unshift(...batch);
     } finally {
@@ -308,25 +329,25 @@ class UnifiedGoogleSheetsService {
     try {
       if (
         this.config.WEBHOOKS.PROFILE &&
-        !this.config.WEBHOOKS.PROFILE.includes('YOUR_SCRIPT_ID')
+        !this.config.WEBHOOKS.PROFILE.includes("YOUR_SCRIPT_ID")
       ) {
         await fetch(this.config.WEBHOOKS.PROFILE, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            action: 'UPDATE_PROFILE',
+            action: "UPDATE_PROFILE",
             userId,
             updateData: updates,
             timestamp: new Date().toISOString(),
           }),
-          mode: 'no-cors',
+          mode: "no-cors",
         });
 
         await this.queueAuditLog({
-          action: 'PROFILE_UPDATE',
+          action: "PROFILE_UPDATE",
           username: userId,
-          details: `Updated profile: ${Object.keys(updates).join(', ')}`,
-          status: 'SUCCESS',
+          details: `Updated profile: ${Object.keys(updates).join(", ")}`,
+          status: "SUCCESS",
         });
 
         // Clear user cache
@@ -336,11 +357,11 @@ class UnifiedGoogleSheetsService {
       } else {
         return {
           success: false,
-          error: 'Profile update webhook not configured',
+          error: "Profile update webhook not configured",
         };
       }
     } catch (error) {
-      return ErrorHandler.handle(error, 'updateUserProfile');
+      return ErrorHandler.handle(error, "updateUserProfile");
     }
   }
 
@@ -353,14 +374,14 @@ class UnifiedGoogleSheetsService {
     const userRows = values.slice(1);
 
     return userRows.map((row) => ({
-      username: row[0] || '',
-      password: row[1] || '',
-      fullName: row[2] || '',
-      email: row[3] || '',
-      role: row[4] || '',
-      department: row[5] || '',
-      permissions: row[6] ? row[6].split(',').map((p) => p.trim()) : [],
-      shift: row[7] || '',
+      username: row[0] || "",
+      password: row[1] || "",
+      fullName: row[2] || "",
+      email: row[3] || "",
+      role: row[4] || "",
+      department: row[5] || "",
+      permissions: row[6] ? row[6].split(",").map((p) => p.trim()) : [],
+      shift: row[7] || "",
     }));
   }
 
@@ -369,11 +390,11 @@ class UnifiedGoogleSheetsService {
       id: user.username,
       name: user.fullName || user.username,
       email: user.email || `${user.username}@mia.vn`,
-      role: user.role || 'Staff',
-      department: user.department || 'Operations',
-      permissions: user.permissions || ['read_orders'],
-      avatar: '/api/placeholder/32/32',
-      shift: user.shift || 'Day Shift',
+      role: user.role || "Staff",
+      department: user.department || "Operations",
+      permissions: user.permissions || ["read_orders"],
+      avatar: "/api/placeholder/32/32",
+      shift: user.shift || "Day Shift",
       lastLogin: new Date(),
     };
   }
@@ -386,11 +407,11 @@ class UnifiedGoogleSheetsService {
 
   async getClientIP() {
     try {
-      const response = await fetch('https://api.ipify.org?format=json');
+      const response = await fetch("https://api.ipify.org?format=json");
       const data = await response.json();
       return data.ip;
     } catch (error) {
-      return 'unknown';
+      return "unknown";
     }
   }
 
@@ -414,7 +435,7 @@ class UnifiedGoogleSheetsService {
 
       return {
         success: true,
-        status: 'healthy',
+        status: "healthy",
         timestamp: new Date().toISOString(),
         cache: this.cache.getStats(),
         queueSize: this.auditQueue.length,
@@ -422,7 +443,7 @@ class UnifiedGoogleSheetsService {
     } catch (error) {
       return {
         success: false,
-        status: 'unhealthy',
+        status: "unhealthy",
         error: error.message,
         timestamp: new Date().toISOString(),
       };

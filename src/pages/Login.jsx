@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth, useTheme } from '../App'; // Import useAuth and useTheme hooks
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth, useTheme } from "../App"; // Import useAuth and useTheme hooks
 
 import {
   Activity,
@@ -20,12 +20,12 @@ import {
   UserCheck,
   Wifi,
   WifiOff,
-} from 'lucide-react';
+} from "lucide-react";
 import {
   logAuditEvent,
   testConnection,
   verifyCredentials,
-} from '../services/unifiedGoogleSheetsService';
+} from "../services/unifiedGoogleSheetsService";
 
 // ==================== OFFICIAL MIA WAREHOUSE LOGIN SYSTEM ====================
 /**
@@ -46,14 +46,14 @@ export default function Login() {
 
   // Authentication state
   const [credentials, setCredentials] = useState({
-    username: '',
-    password: '',
+    username: "",
+    password: "",
   });
   const [showPassword, setShowPassword] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false);
-  const [loadingMessage, setLoadingMessage] = useState('');
-  const [error, setError] = useState('');
+  const [loadingMessage, setLoadingMessage] = useState("");
+  const [error, setError] = useState("");
 
   // Security state
   const [loginAttempts, setLoginAttempts] = useState(0);
@@ -62,7 +62,7 @@ export default function Login() {
   const [rememberMe, setRememberMe] = useState(false);
 
   // Connection state
-  const [connectionStatus, setConnectionStatus] = useState('checking');
+  const [connectionStatus, setConnectionStatus] = useState("checking");
   const [showConnectionDetails, setShowConnectionDetails] = useState(false);
 
   // Security constants
@@ -74,7 +74,7 @@ export default function Login() {
   // Redirect if already authenticated (only after auth loading is complete)
   useEffect(() => {
     if (!authLoading && isAuthenticated) {
-      navigate('/dashboard', { replace: true });
+      navigate("/dashboard", { replace: true });
     }
   }, [authLoading, isAuthenticated, navigate]);
 
@@ -88,28 +88,28 @@ export default function Login() {
 
         // Check Google Sheets connection with timeout
         try {
-          setConnectionStatus('checking');
+          setConnectionStatus("checking");
           const connectionTest = Promise.race([
             testConnection(),
             new Promise((resolve) => setTimeout(() => resolve(false), 8000)), // 8 second timeout
           ]);
 
           const isConnected = await connectionTest;
-          setConnectionStatus(isConnected ? 'connected' : 'disconnected');
+          setConnectionStatus(isConnected ? "connected" : "disconnected");
         } catch (error) {
-          console.error('Connection test failed:', error);
-          setConnectionStatus('error');
+          console.error("Connection test failed:", error);
+          setConnectionStatus("error");
         }
 
         // Load saved credentials if "Remember Me" was used
-        const savedUsername = localStorage.getItem('rememberedUsername');
+        const savedUsername = localStorage.getItem("rememberedUsername");
         if (savedUsername) {
           setCredentials((prev) => ({ ...prev, username: savedUsername }));
           setRememberMe(true);
         }
 
         // Check for existing login blocks
-        const blockInfo = localStorage.getItem('loginBlock');
+        const blockInfo = localStorage.getItem("loginBlock");
         if (blockInfo) {
           const { timestamp, attempts } = JSON.parse(blockInfo);
           const timePassed = Date.now() - timestamp;
@@ -120,12 +120,12 @@ export default function Login() {
             setBlockTimeLeft(Math.ceil(remainingTime / 1000));
             setLoginAttempts(attempts);
           } else {
-            localStorage.removeItem('loginBlock');
+            localStorage.removeItem("loginBlock");
           }
         }
       } catch (error) {
-        console.error('Login system initialization failed:', error);
-        setError('Lỗi khởi tạo hệ thống. Vui lòng thử lại.');
+        console.error("Login system initialization failed:", error);
+        setError("Lỗi khởi tạo hệ thống. Vui lòng thử lại.");
       }
     };
 
@@ -160,7 +160,7 @@ export default function Login() {
       ...prev,
       [name]: value,
     }));
-    setError('');
+    setError("");
   };
 
   const handleLogin = async (e) => {
@@ -168,45 +168,47 @@ export default function Login() {
 
     // Prevent login if blocked
     if (isBlocked) {
-      setError(`Tài khoản bị khóa. Vui lòng thử lại sau ${formatTime(blockTimeLeft)}`);
+      setError(
+        `Tài khoản bị khóa. Vui lòng thử lại sau ${formatTime(blockTimeLeft)}`
+      );
       return;
     }
 
     // Validate input
     if (!credentials.username.trim() || !credentials.password) {
-      setError('Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu');
+      setError("Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu");
       return;
     }
 
     setIsLoading(true);
-    setError('');
-    setLoadingMessage('Đang kết nối tới hệ thống...');
+    setError("");
+    setLoadingMessage("Đang kết nối tới hệ thống...");
 
     try {
       // Create a timeout for the entire login process
       const loginTimeout = new Promise(
-        (_, reject) => setTimeout(() => reject(new Error('Timeout')), 15000), // 15 second timeout
+        (_, reject) => setTimeout(() => reject(new Error("Timeout")), 15000) // 15 second timeout
       );
 
-      setLoadingMessage('Đang xác thực thông tin đăng nhập...');
+      setLoadingMessage("Đang xác thực thông tin đăng nhập...");
 
       // Check Google Sheets connection first
-      if (connectionStatus !== 'connected') {
+      if (connectionStatus !== "connected") {
         setError(
-          'Không thể kết nối tới hệ thống xác thực. Vui lòng kiểm tra kết nối mạng và thử lại.',
+          "Không thể kết nối tới hệ thống xác thực. Vui lòng kiểm tra kết nối mạng và thử lại."
         );
 
         // Log failed connection attempt
         try {
           logAuditEvent({
-            action: 'LOGIN_FAILED',
+            action: "LOGIN_FAILED",
             username: credentials.username,
-            details: 'Google Sheets connection not available',
-            status: 'CONNECTION_ERROR',
-            ipAddress: 'local',
+            details: "Google Sheets connection not available",
+            status: "CONNECTION_ERROR",
+            ipAddress: "local",
           });
         } catch (auditError) {
-          console.log('Audit logging failed:', auditError);
+          console.log("Audit logging failed:", auditError);
         }
         return;
       }
@@ -218,44 +220,47 @@ export default function Login() {
       ]);
 
       if (authResult.success) {
-        setLoadingMessage('Đăng nhập thành công! Đang chuyển hướng...');
+        setLoadingMessage("Đăng nhập thành công! Đang chuyển hướng...");
 
         // Reset login attempts on successful login
         setLoginAttempts(0);
-        localStorage.removeItem('loginBlock');
+        localStorage.removeItem("loginBlock");
 
         // Handle "Remember Me" functionality
         if (rememberMe) {
-          localStorage.setItem('rememberedUsername', credentials.username);
+          localStorage.setItem("rememberedUsername", credentials.username);
         } else {
-          localStorage.removeItem('rememberedUsername');
+          localStorage.removeItem("rememberedUsername");
         }
 
         // Store user session data
-        localStorage.setItem('currentUser', JSON.stringify(authResult.userData));
-        sessionStorage.setItem('authToken', authResult.token);
-        sessionStorage.setItem('loginTime', new Date().toISOString());
+        localStorage.setItem(
+          "currentUser",
+          JSON.stringify(authResult.userData)
+        );
+        sessionStorage.setItem("authToken", authResult.token);
+        sessionStorage.setItem("loginTime", new Date().toISOString());
 
         // Trigger a storage event to update AuthProvider state
         window.dispatchEvent(
-          new StorageEvent('storage', {
-            key: 'currentUser',
+          new StorageEvent("storage", {
+            key: "currentUser",
             newValue: JSON.stringify(authResult.userData),
             storageArea: localStorage,
-          }),
+          })
         );
 
         // Simple audit log (no external IP fetch to avoid hanging)
         try {
           logAuditEvent({
-            action: 'LOGIN_SUCCESS',
+            action: "LOGIN_SUCCESS",
             username: credentials.username,
-            details: 'Successful login',
-            status: 'SUCCESS',
-            ipAddress: 'local',
+            details: "Successful login",
+            status: "SUCCESS",
+            ipAddress: "local",
           });
         } catch (auditError) {
-          console.log('Audit logging failed, but login succeeded:', auditError);
+          console.log("Audit logging failed, but login succeeded:", auditError);
         }
 
         // Let the authentication state handle navigation
@@ -269,59 +274,63 @@ export default function Login() {
           setIsBlocked(true);
           setBlockTimeLeft(BLOCK_DURATION);
           localStorage.setItem(
-            'loginBlock',
+            "loginBlock",
             JSON.stringify({
               timestamp: Date.now(),
               attempts: newAttempts,
-            }),
+            })
           );
 
           setError(
-            `Quá nhiều lần đăng nhập sai. Tài khoản bị khóa trong ${BLOCK_DURATION / 60} phút.`,
+            `Quá nhiều lần đăng nhập sai. Tài khoản bị khóa trong ${
+              BLOCK_DURATION / 60
+            } phút.`
           );
         } else {
           setError(
-            `Sai tên đăng nhập hoặc mật khẩu. Còn lại ${MAX_LOGIN_ATTEMPTS - newAttempts} lần thử.`,
+            `Sai tên đăng nhập hoặc mật khẩu. Còn lại ${
+              MAX_LOGIN_ATTEMPTS - newAttempts
+            } lần thử.`
           );
         }
 
         // Simple audit log for failed attempt (no external IP fetch)
         try {
           logAuditEvent({
-            action: 'LOGIN_FAILED',
+            action: "LOGIN_FAILED",
             username: credentials.username,
             details: `Failed login attempt ${newAttempts}/${MAX_LOGIN_ATTEMPTS}`,
-            status: 'FAILED',
-            ipAddress: 'local',
+            status: "FAILED",
+            ipAddress: "local",
           });
         } catch (auditError) {
-          console.log('Audit logging failed:', auditError);
+          console.log("Audit logging failed:", auditError);
         }
       }
     } catch (error) {
-      console.error('Login error:', error);
+      console.error("Login error:", error);
 
-      if (error.message === 'Timeout') {
-        setError('Kết nối quá chậm. Vui lòng kiểm tra mạng và thử lại.');
+      if (error.message === "Timeout") {
+        setError("Kết nối quá chậm. Vui lòng kiểm tra mạng và thử lại.");
       } else {
-        setError('Lỗi hệ thống. Vui lòng thử lại sau.');
+        setError("Lỗi hệ thống. Vui lòng thử lại sau.");
       }
 
       // Simple audit log for system error (no external IP fetch)
       try {
         logAuditEvent({
-          action: 'LOGIN_ERROR',
-          username: credentials.username || 'unknown',
+          action: "LOGIN_ERROR",
+          username: credentials.username || "unknown",
           details: `System error during login: ${error.message}`,
-          status: 'ERROR',
-          ipAddress: 'local',
+          status: "ERROR",
+          ipAddress: "local",
         });
       } catch (auditError) {
-        console.log('Audit logging failed:', auditError);
+        console.log("Audit logging failed:", auditError);
       }
     } finally {
       setIsLoading(false);
-      setLoadingMessage('');
+      setLoadingMessage("");
     }
   };
 
@@ -329,40 +338,40 @@ export default function Login() {
 
   const refreshConnection = async () => {
     try {
-      setConnectionStatus('checking');
+      setConnectionStatus("checking");
       const isConnected = await testConnection();
-      setConnectionStatus(isConnected ? 'connected' : 'disconnected');
+      setConnectionStatus(isConnected ? "connected" : "disconnected");
     } catch (error) {
-      setConnectionStatus('error');
+      setConnectionStatus("error");
     }
   };
 
   const formatTime = (seconds) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
   };
 
   const getConnectionStatusColor = () => {
     switch (connectionStatus) {
-      case 'connected':
-        return 'text-green-600';
-      case 'disconnected':
-        return 'text-red-600';
-      case 'checking':
-        return 'text-yellow-600';
+      case "connected":
+        return "text-green-600";
+      case "disconnected":
+        return "text-red-600";
+      case "checking":
+        return "text-yellow-600";
       default:
-        return 'text-gray-600';
+        return "text-gray-600";
     }
   };
 
   const getConnectionStatusIcon = () => {
     switch (connectionStatus) {
-      case 'connected':
+      case "connected":
         return <Wifi className="w-4 h-4" />;
-      case 'disconnected':
+      case "disconnected":
         return <WifiOff className="w-4 h-4" />;
-      case 'checking':
+      case "checking":
         return <RefreshCw className="w-4 h-4 animate-spin" />;
       default:
         return <AlertTriangle className="w-4 h-4" />;
@@ -371,14 +380,14 @@ export default function Login() {
 
   const getConnectionStatusText = () => {
     switch (connectionStatus) {
-      case 'connected':
-        return 'Kết nối Google Sheets thành công';
-      case 'disconnected':
-        return 'Không thể kết nối Google Sheets';
-      case 'checking':
-        return 'Đang kiểm tra kết nối...';
+      case "connected":
+        return "Kết nối Google Sheets thành công";
+      case "disconnected":
+        return "Không thể kết nối Google Sheets";
+      case "checking":
+        return "Đang kiểm tra kết nối...";
       default:
-        return 'Lỗi kết nối';
+        return "Lỗi kết nối";
     }
   };
 
@@ -388,8 +397,8 @@ export default function Login() {
     <div
       className={`min-h-screen flex items-center justify-center p-4 transition-colors duration-200 ${
         isDarkMode
-          ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-blue-900'
-          : 'bg-gradient-to-br from-blue-50 via-white to-indigo-50'
+          ? "bg-gradient-to-br from-gray-900 via-gray-800 to-blue-900"
+          : "bg-gradient-to-br from-blue-50 via-white to-indigo-50"
       }`}
     >
       {/* Dark Mode Toggle */}
@@ -397,12 +406,16 @@ export default function Login() {
         onClick={toggleTheme}
         className={`fixed top-4 right-4 p-3 rounded-full transition-colors duration-200 ${
           isDarkMode
-            ? 'bg-gray-800 hover:bg-gray-700 text-yellow-400'
-            : 'bg-white hover:bg-gray-100 text-gray-600'
+            ? "bg-gray-800 hover:bg-gray-700 text-yellow-400"
+            : "bg-white hover:bg-gray-100 text-gray-600"
         } shadow-lg`}
-        title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+        title={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
       >
-        {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+        {isDarkMode ? (
+          <Sun className="w-5 h-5" />
+        ) : (
+          <Moon className="w-5 h-5" />
+        )}
       </button>
 
       {/* Background Pattern */}
@@ -415,14 +428,22 @@ export default function Login() {
         {/* Header */}
         <div className="text-center mb-8">
           <div className="flex items-center justify-center mb-4">
-            <div className={`p-3 rounded-full ${isDarkMode ? 'bg-blue-500' : 'bg-blue-600'}`}>
+            <div
+              className={`p-3 rounded-full ${
+                isDarkMode ? "bg-blue-500" : "bg-blue-600"
+              }`}
+            >
               <Package className="w-8 h-8 text-white" />
             </div>
           </div>
-          <h1 className={`text-3xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+          <h1
+            className={`text-3xl font-bold mb-2 ${
+              isDarkMode ? "text-white" : "text-gray-900"
+            }`}
+          >
             MIA Warehouse
           </h1>
-          <p className={`${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+          <p className={`${isDarkMode ? "text-gray-300" : "text-gray-600"}`}>
             Hệ thống quản lý kho chính thức
           </p>
         </div>
@@ -431,23 +452,27 @@ export default function Login() {
         <div className="mb-6">
           <div
             className={`flex items-center justify-between p-3 rounded-lg border cursor-pointer transition-colors duration-200 ${
-              connectionStatus === 'connected'
+              connectionStatus === "connected"
                 ? isDarkMode
-                  ? 'bg-green-900/30 border-green-700 text-green-400'
-                  : 'bg-green-50 border-green-200 text-green-800'
-                : connectionStatus === 'disconnected'
-                  ? isDarkMode
-                    ? 'bg-red-900/30 border-red-700 text-red-400'
-                    : 'bg-red-50 border-red-200 text-red-800'
-                  : isDarkMode
-                    ? 'bg-yellow-900/30 border-yellow-700 text-yellow-400'
-                    : 'bg-yellow-50 border-yellow-200 text-yellow-800'
+                  ? "bg-green-900/30 border-green-700 text-green-400"
+                  : "bg-green-50 border-green-200 text-green-800"
+                : connectionStatus === "disconnected"
+                ? isDarkMode
+                  ? "bg-red-900/30 border-red-700 text-red-400"
+                  : "bg-red-50 border-red-200 text-red-800"
+                : isDarkMode
+                ? "bg-yellow-900/30 border-yellow-700 text-yellow-400"
+                : "bg-yellow-50 border-yellow-200 text-yellow-800"
             }`}
             onClick={() => setShowConnectionDetails(!showConnectionDetails)}
           >
             <div className="flex items-center gap-2">
-              <span className={getConnectionStatusColor()}>{getConnectionStatusIcon()}</span>
-              <span className={`text-sm font-medium ${getConnectionStatusColor()}`}>
+              <span className={getConnectionStatusColor()}>
+                {getConnectionStatusIcon()}
+              </span>
+              <span
+                className={`text-sm font-medium ${getConnectionStatusColor()}`}
+              >
                 {getConnectionStatusText()}
               </span>
             </div>
@@ -469,27 +494,45 @@ export default function Login() {
           {showConnectionDetails && (
             <div
               className={`mt-2 p-3 border rounded-lg text-sm transition-colors duration-200 ${
-                isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'
+                isDarkMode
+                  ? "bg-gray-800 border-gray-700"
+                  : "bg-gray-50 border-gray-200"
               }`}
             >
               <div className="flex items-center gap-2 mb-2">
-                <Database className={`w-4 h-4 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`} />
-                <span className={`font-medium ${isDarkMode ? 'text-gray-200' : 'text-gray-900'}`}>
+                <Database
+                  className={`w-4 h-4 ${
+                    isDarkMode ? "text-gray-400" : "text-gray-600"
+                  }`}
+                />
+                <span
+                  className={`font-medium ${
+                    isDarkMode ? "text-gray-200" : "text-gray-900"
+                  }`}
+                >
                   Trạng thái kết nối:
                 </span>
               </div>
-              <ul className={`space-y-1 ml-6 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+              <ul
+                className={`space-y-1 ml-6 ${
+                  isDarkMode ? "text-gray-300" : "text-gray-600"
+                }`}
+              >
                 <li>
-                  • Google Sheets API:{' '}
-                  {connectionStatus === 'connected' ? '✅ Hoạt động' : '❌ Lỗi'}
+                  • Google Sheets API:{" "}
+                  {connectionStatus === "connected" ? "✅ Hoạt động" : "❌ Lỗi"}
                 </li>
                 <li>
-                  • Xác thực người dùng:{' '}
-                  {connectionStatus === 'connected' ? '✅ Sẵn sàng' : '❌ Không khả dụng'}
+                  • Xác thực người dùng:{" "}
+                  {connectionStatus === "connected"
+                    ? "✅ Sẵn sàng"
+                    : "❌ Không khả dụng"}
                 </li>
                 <li>
-                  • Ghi log audit:{' '}
-                  {connectionStatus === 'connected' ? '✅ Hoạt động' : '❌ Tạm dừng'}
+                  • Ghi log audit:{" "}
+                  {connectionStatus === "connected"
+                    ? "✅ Hoạt động"
+                    : "❌ Tạm dừng"}
                 </li>
               </ul>
             </div>
@@ -499,7 +542,9 @@ export default function Login() {
         {/* Login Form */}
         <div
           className={`p-8 rounded-2xl shadow-xl border transition-colors duration-200 ${
-            isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'
+            isDarkMode
+              ? "bg-gray-800 border-gray-700"
+              : "bg-white border-gray-100"
           }`}
         >
           <form onSubmit={handleLogin} className="space-y-6">
@@ -508,8 +553,8 @@ export default function Login() {
               <div
                 className={`flex items-center gap-2 p-4 border rounded-lg transition-colors duration-200 ${
                   isDarkMode
-                    ? 'bg-red-900/30 border-red-700 text-red-400'
-                    : 'bg-red-50 border-red-200 text-red-700'
+                    ? "bg-red-900/30 border-red-700 text-red-400"
+                    : "bg-red-50 border-red-200 text-red-700"
                 }`}
               >
                 <AlertTriangle className="w-5 h-5 flex-shrink-0" />
@@ -522,8 +567,8 @@ export default function Login() {
               <div
                 className={`flex items-center gap-2 p-4 border rounded-lg transition-colors duration-200 ${
                   isDarkMode
-                    ? 'bg-orange-900/30 border-orange-700 text-orange-400'
-                    : 'bg-orange-50 border-orange-200 text-orange-700'
+                    ? "bg-orange-900/30 border-orange-700 text-orange-400"
+                    : "bg-orange-50 border-orange-200 text-orange-700"
                 }`}
               >
                 <Clock className="w-5 h-5 flex-shrink-0" />
@@ -534,19 +579,23 @@ export default function Login() {
               </div>
             )}
 
-            {/* Username Field */}
+            {/* Username/Email Field */}
             <div>
               <label
                 htmlFor="username"
                 className={`block text-sm font-medium mb-2 ${
-                  isDarkMode ? 'text-gray-300' : 'text-gray-700'
+                  isDarkMode ? "text-gray-300" : "text-gray-700"
                 }`}
               >
-                Tên đăng nhập
+                Tên đăng nhập hoặc Email
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <User className={`h-5 w-5 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`} />
+                  <User
+                    className={`h-5 w-5 ${
+                      isDarkMode ? "text-gray-500" : "text-gray-400"
+                    }`}
+                  />
                 </div>
                 <input
                   id="username"
@@ -558,11 +607,11 @@ export default function Login() {
                   onChange={handleInputChange}
                   className={`block w-full pl-10 pr-3 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 ${
                     isDarkMode
-                      ? 'border-gray-600 bg-gray-700 text-white placeholder-gray-400 disabled:bg-gray-800 disabled:cursor-not-allowed'
-                      : 'border-gray-300 bg-white text-gray-900 placeholder-gray-500 disabled:bg-gray-100 disabled:cursor-not-allowed'
+                      ? "border-gray-600 bg-gray-700 text-white placeholder-gray-400 disabled:bg-gray-800 disabled:cursor-not-allowed"
+                      : "border-gray-300 bg-white text-gray-900 placeholder-gray-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
                   }`}
-                  placeholder="Nhập tên đăng nhập"
-                  autoComplete="username"
+                  placeholder="Nhập username hoặc email"
+                  autoComplete="username email"
                 />
               </div>
             </div>
@@ -572,27 +621,31 @@ export default function Login() {
               <label
                 htmlFor="password"
                 className={`block text-sm font-medium mb-2 ${
-                  isDarkMode ? 'text-gray-300' : 'text-gray-700'
+                  isDarkMode ? "text-gray-300" : "text-gray-700"
                 }`}
               >
                 Mật khẩu
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className={`h-5 w-5 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`} />
+                  <Lock
+                    className={`h-5 w-5 ${
+                      isDarkMode ? "text-gray-500" : "text-gray-400"
+                    }`}
+                  />
                 </div>
                 <input
                   id="password"
                   name="password"
-                  type={showPassword ? 'text' : 'password'}
+                  type={showPassword ? "text" : "password"}
                   required
                   disabled={isBlocked || isLoading}
                   value={credentials.password}
                   onChange={handleInputChange}
                   className={`block w-full pl-10 pr-12 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 ${
                     isDarkMode
-                      ? 'border-gray-600 bg-gray-700 text-white placeholder-gray-400 disabled:bg-gray-800 disabled:cursor-not-allowed'
-                      : 'border-gray-300 bg-white text-gray-900 placeholder-gray-500 disabled:bg-gray-100 disabled:cursor-not-allowed'
+                      ? "border-gray-600 bg-gray-700 text-white placeholder-gray-400 disabled:bg-gray-800 disabled:cursor-not-allowed"
+                      : "border-gray-300 bg-white text-gray-900 placeholder-gray-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
                   }`}
                   placeholder="Nhập mật khẩu"
                   autoComplete="current-password"
@@ -603,11 +656,15 @@ export default function Login() {
                   onClick={() => setShowPassword(!showPassword)}
                   className={`absolute inset-y-0 right-0 pr-3 flex items-center disabled:cursor-not-allowed transition-colors duration-200 ${
                     isDarkMode
-                      ? 'text-gray-500 hover:text-gray-300'
-                      : 'text-gray-400 hover:text-gray-600'
+                      ? "text-gray-500 hover:text-gray-300"
+                      : "text-gray-400 hover:text-gray-600"
                   }`}
                 >
-                  {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                  {showPassword ? (
+                    <EyeOff className="h-5 w-5" />
+                  ) : (
+                    <Eye className="h-5 w-5" />
+                  )}
                 </button>
               </div>
             </div>
@@ -622,12 +679,16 @@ export default function Login() {
                 checked={rememberMe}
                 onChange={(e) => setRememberMe(e.target.checked)}
                 className={`h-4 w-4 text-blue-600 focus:ring-blue-500 rounded disabled:cursor-not-allowed ${
-                  isDarkMode ? 'border-gray-600 bg-gray-700' : 'border-gray-300 bg-white'
+                  isDarkMode
+                    ? "border-gray-600 bg-gray-700"
+                    : "border-gray-300 bg-white"
                 }`}
               />
               <label
                 htmlFor="remember-me"
-                className={`ml-2 block text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
+                className={`ml-2 block text-sm ${
+                  isDarkMode ? "text-gray-300" : "text-gray-700"
+                }`}
               >
                 Ghi nhớ tên đăng nhập
               </label>
@@ -636,19 +697,21 @@ export default function Login() {
             {/* Login Button */}
             <button
               type="submit"
-              disabled={isBlocked || isLoading || connectionStatus !== 'connected'}
+              disabled={
+                isBlocked || isLoading || connectionStatus !== "connected"
+              }
               className={`w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white transition-colors ${
-                isBlocked || isLoading || connectionStatus !== 'connected'
-                  ? 'bg-gray-400 cursor-not-allowed'
+                isBlocked || isLoading || connectionStatus !== "connected"
+                  ? "bg-gray-400 cursor-not-allowed"
                   : isDarkMode
-                    ? 'bg-blue-500 hover:bg-blue-600 focus:ring-blue-400'
-                    : 'bg-blue-600 hover:bg-blue-700 focus:ring-blue-500'
+                  ? "bg-blue-500 hover:bg-blue-600 focus:ring-blue-400"
+                  : "bg-blue-600 hover:bg-blue-700 focus:ring-blue-500"
               } focus:outline-none focus:ring-2 focus:ring-offset-2`}
             >
               {isLoading ? (
                 <div className="flex items-center gap-2">
                   <RefreshCw className="w-4 h-4 animate-spin" />
-                  <span>{loadingMessage || 'Đang đăng nhập...'}</span>
+                  <span>{loadingMessage || "Đang đăng nhập..."}</span>
                 </div>
               ) : (
                 <div className="flex items-center gap-2">
@@ -687,7 +750,9 @@ export default function Login() {
               <span>Ghi log hoạt động</span>
             </div>
           </div>
-          <p className="mt-2 text-xs text-gray-400">© 2025 MIA Warehouse Management System</p>
+          <p className="mt-2 text-xs text-gray-400">
+            © 2025 MIA Warehouse Management System
+          </p>
         </div>
       </div>
     </div>

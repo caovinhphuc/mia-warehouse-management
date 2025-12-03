@@ -3,6 +3,7 @@
 /**
  * 🚀 GOOGLE APPS SCRIPT DEPLOYMENT HELPER
  * Script hỗ trợ deploy Google Apps Script cho MIA Warehouse Management System
+ * https://script.google.com/macros/s/AKfycbzJ7ZVmG3JyU0wQlBAfNxC1CK9eUAqrHGKvf_BVUT8eIQYT0TsYL7Jp39kQQidOrPft/exec
  */
 
 const fs = require("fs");

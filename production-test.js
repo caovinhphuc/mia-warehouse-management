@@ -51,7 +51,9 @@ async function testProductionDeployment() {
     const sheetsTest = await testGoogleSheetsAPI();
     results.googleSheets = sheetsTest.success;
     console.log(
-      `   ${results.googleSheets ? "✅" : "❌"} Google Sheets: ${sheetsTest.message}`
+      `   ${results.googleSheets ? "✅" : "❌"} Google Sheets: ${
+        sheetsTest.message
+      }`
     );
     if (sheetsTest.users) {
       console.log(`   📊 Found ${sheetsTest.users} users in database`);
@@ -66,7 +68,9 @@ async function testProductionDeployment() {
       const scriptTest = await testAppsScript();
       results.appsScript = scriptTest.success;
       console.log(
-        `   ${results.appsScript ? "✅" : "❌"} Apps Script: ${scriptTest.message}`
+        `   ${results.appsScript ? "✅" : "❌"} Apps Script: ${
+          scriptTest.message
+        }`
       );
     } catch (error) {
       console.log(`   ❌ Apps Script Error: ${error.message}`);
@@ -82,7 +86,9 @@ async function testProductionDeployment() {
   results.integration = integrationScore >= 2; // At least Vercel + Google Sheets
 
   console.log(
-    `   ${results.integration ? "✅" : "❌"} Integration Score: ${integrationScore}/4`
+    `   ${
+      results.integration ? "✅" : "❌"
+    } Integration Score: ${integrationScore}/4`
   );
 
   // Summary
