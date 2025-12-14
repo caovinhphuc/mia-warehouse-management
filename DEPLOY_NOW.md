@@ -65,7 +65,7 @@ npm install -g vercel
 ### **Deploy:**
 
 ```bash
-cd /Users/phuccao/Documents/GitHub/mia-warehouse-management
+cd /Users/phuccao/Projects/fullstack/mia-warehouse-management
 vercel --prod
 ```
 
