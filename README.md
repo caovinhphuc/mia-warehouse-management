@@ -4,7 +4,7 @@
 
 ## 🚀 Live Demo
 
-- **Production**: <https://warehouse-management-template-jsx.vercel.app/login>
+- **Production**: <https://mia-warehouse-management-ax3w.vercel.app/login>
 - **Features**: Real-time dashboard, Order management, Analytics, Automation
 
 ## 🎯 Current Status
