@@ -5,7 +5,7 @@
 - ✅ Code đã được commit: `🚀 Deploy: Update authentication to support email/login + latest features`
 - ✅ Code đã được push lên GitHub: [https://github.com/caovinhphuc/mia-warehouse-management](https://github.com/caovinhphuc/mia-warehouse-management)
 - ✅ Repository: `caovinhphuc/mia-warehouse-management`
-- 🌐 Vercel URL hiện tại: [https://warehouse-management-template-jsx.vercel.app/login](https://warehouse-management-template-jsx.vercel.app/login)
+- 🌐 Vercel URL hiện tại: [https://mia-warehouse-management-ax3w.vercel.app/login](https://warehouse-management-template-jsx.vercel.app/login)
 
 ---
 
@@ -42,8 +42,9 @@
 ```
 REACT_APP_GOOGLE_SHEETS_API_KEY=AIzaSyB_MwjhFxQtxnihpZTa95XH0BCI9MXihh8
 REACT_APP_GOOGLE_SHEETS_ID=1m2B2ODXuuatnW0EKExdVeCa1WwvF52bZOhS7DGqG6Vg
-REACT_APP_AUDIT_WEBHOOK_URL=https://script.google.com/macros/s/AKfycbzJ7ZVmG3JyU0wQlBAfNxC1CK9eUAqrHGKvf_BVUT8eIQYT0TsYL7Jp39kQQidOrPft/exec
-REACT_APP_PROFILE_UPDATE_WEBHOOK_URL=https://script.google.com/macros/s/AKfycbzJ7ZVmG3JyU0wQlBAfNxC1CK9eUAqrHGKvf_BVUT8eIQYT0TsYL7Jp39kQQidOrPft/exec
+REACT_APP_AUDIT_WEBHOOK_URL=https://script.google.com/macros/s/AKfycbwUdvTeCpEEvqdUb00IMnwuSSdIoOGlIuaLYoEWY4Zf-k1hnHTFCBVsI4QmZmFBBaOd/exec
+
+REACT_APP_PROFILE_UPDATE_WEBHOOK_URL=https://script.google.com/macros/s/AKfycbwUdvTeCpEEvqdUb00IMnwuSSdIoOGlIuaLYoEWY4Zf-k1hnHTFCBVsI4QmZmFBBaOd/exec
 NODE_ENV=production
 GENERATE_SOURCEMAP=false
 ```

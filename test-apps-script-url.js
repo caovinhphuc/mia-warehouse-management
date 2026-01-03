@@ -8,7 +8,7 @@
 const https = require("https");
 
 const APPS_SCRIPT_URL =
-  "https://script.google.com/macros/s/AKfycbzJ7ZVmG3JyU0wQlBAfNxC1CK9eUAqrHGKvf_BVUT8eIQYT0TsYL7Jp39kQQidOrPft/exec";
+  "https://script.google.com/macros/s/AKfycbwUdvTeCpEEvqdUb00IMnwuSSdIoOGlIuaLYoEWY4Zf-k1hnHTFCBVsI4QmZmFBBaOd/exec";
 
 console.log("🧪 Testing Google Apps Script URL...\n");
 console.log(`URL: ${APPS_SCRIPT_URL}\n`);
