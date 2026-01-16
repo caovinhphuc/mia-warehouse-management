@@ -98,5 +98,6 @@ Generated: ${new Date().toISOString()}
 Support: caovinhphuc.ios@gmail.com
 `;
 
+console.log("📄 Chi tiết instructions đã lưu trong: ${instructionsPath}");
 fs.writeFileSync(instructionsPath, instructions);
 console.log(`📄 Chi tiết instructions đã lưu trong: ${instructionsPath}`);
