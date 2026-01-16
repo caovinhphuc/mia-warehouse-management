@@ -5,7 +5,7 @@
 ### **Phương pháp 1: Script tự động** (Khuyên dùng)
 
 ```bash
-./deploy.sh
+ ./deploy.sh
 ```
 
 Script sẽ tự động:
