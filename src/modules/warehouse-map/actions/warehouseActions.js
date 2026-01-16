@@ -1,6 +1,7 @@
 // Warehouse Map Actions - Business Logic Layer
 import { generateSampleLocations, generateSampleInventory, generateSampleStatistics } from '../data/sampleData';
 import { exportToCSV, validateLocationCode } from '../utils/helpers';
+import logger from "../../../utils/logger";
 
 export class WarehouseActions {
   constructor() {
@@ -25,7 +26,7 @@ export class WarehouseActions {
       this.statistics = generateSampleStatistics();
       return { success: true };
     } catch (error) {
-      console.error('Error initializing data:', error);
+      logger.error('Error initializing data:', error);
       return { success: false, error: error.message };
     }
   }

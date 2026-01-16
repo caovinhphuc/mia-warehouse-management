@@ -6,6 +6,7 @@
  */
 
 import { API_CONFIG } from "./constants";
+import logger from "./logger";
 
 // ==================== ACTION TYPES ====================
 export const ActionTypes = {
@@ -96,7 +97,7 @@ const apiRequest = async (endpoint, options = {}) => {
     const result = await response.json();
     return result;
   } catch (error) {
-    console.error(`API request failed: ${endpoint}`, error);
+    logger.error(`API request failed: ${endpoint}`, error);
     throw error;
   }
 };

@@ -1,3 +1,4 @@
+import logger from "../utils/logger";
 // ==================== GOOGLE SHEETS AUTHENTICATION SERVICE ====================
 /**
  * Google Sheets Authentication Service for MIA Warehouse Management
@@ -66,7 +67,7 @@ export const verifyCredentials = async (username, password) => {
     clearTimeout(timeoutId);
 
     if (!response.ok) {
-      console.error(
+      logger.error(
         "Google Sheets API failed:",
         response.status,
         response.statusText
@@ -154,7 +155,7 @@ export const verifyCredentials = async (username, password) => {
       },
     };
   } catch (error) {
-    console.error("Google Sheets credentials verification failed:", error);
+    logger.error("Google Sheets credentials verification failed:", error);
 
     // Return authentication failure
     return {
@@ -207,9 +208,9 @@ export const testGoogleSheetsConnection = async () => {
     clearTimeout(timeoutId);
     return response.ok;
   } catch (error) {
-    console.error("Google Sheets connection test failed:", error);
+    logger.error("Google Sheets connection test failed:", error);
     if (error.name === "AbortError") {
-      console.log("Google Sheets connection timeout");
+      logger.info("Google Sheets connection timeout");
     }
     return false;
   }
@@ -239,7 +240,7 @@ export const logAuditEvent = async (eventData) => {
       ipAddress: eventData.ipAddress || getClientIP(),
     };
 
-    console.log("Logging audit event:", auditData);
+    logger.info("Logging audit event:", auditData);
 
     // Prefer serverless API (Service Account) if available
     try {
@@ -258,7 +259,7 @@ export const logAuditEvent = async (eventData) => {
 
     // If no webhook URL is configured, log locally only
     if (AUDIT_WEBHOOK_URL.includes("YOUR_SCRIPT_ID")) {
-      console.log("Audit Event (Local Only - Configure webhook):", auditData);
+      logger.info("Audit Event (Local Only - Configure webhook):", auditData);
       return { success: true, logged: "locally" };
     }
 
@@ -307,7 +308,7 @@ export const logAuditEvent = async (eventData) => {
         return { success: true, logged: "sheets_api" };
       }
     } catch (appendError) {
-      console.warn(
+      logger.warn(
         "Direct Sheets append failed:",
         appendError?.message || appendError
       );
@@ -316,7 +317,7 @@ export const logAuditEvent = async (eventData) => {
     // If we reach here, we at least attempted webhook
     return { success: true, logged: "webhook_only" };
   } catch (error) {
-    console.error("Failed to log audit event:", error);
+    logger.error("Failed to log audit event:", error);
     return { success: false, error: error.message };
   }
 };
@@ -382,7 +383,7 @@ export const endSession = async (sessionId) => {
   try {
     localStorage.removeItem(`session_${sessionId}`);
   } catch (error) {
-    console.error("Failed to end session:", error);
+    logger.error("Failed to end session:", error);
   }
 };
 

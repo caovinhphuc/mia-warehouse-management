@@ -5,6 +5,7 @@
  */
 
 import { useCallback, useEffect, useRef } from "react";
+import logger from "./logger";
 
 /**
  * Custom hook to track and report application performance metrics
@@ -24,7 +25,7 @@ export const usePerformanceMonitor = () => {
   useEffect(() => {
     // Check if Performance API is available
     if (!window.performance) {
-      console.warn("Performance API not supported in this browser");
+      logger.warn("Performance API not supported in this browser");
       return;
     }
 
@@ -94,7 +95,7 @@ export const usePerformanceMonitor = () => {
         resourceObserver.disconnect();
       };
     } catch (error) {
-      console.warn("PerformanceObserver not supported", error);
+      logger.warn("PerformanceObserver not supported", error);
     }
   }, []);
 

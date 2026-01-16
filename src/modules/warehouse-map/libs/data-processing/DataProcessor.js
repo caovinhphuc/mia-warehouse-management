@@ -1,3 +1,4 @@
+import logger from "../../../../utils/logger";
 /**
  * DataProcessor - Advanced data processing and analysis library
  * Handles data transformation, filtering, sorting, and analytics
@@ -22,7 +23,7 @@ export class DataProcessor {
   initialize() {
     this.registerDefaultTransformers();
     this.registerDefaultValidators();
-    console.log('[DataProcessor] Initialized');
+    logger.info('[DataProcessor] Initialized');
   }
 
   /**
@@ -157,7 +158,7 @@ export class DataProcessor {
           result[key] = [...new Set(values)].length;
           break;
         default:
-          console.warn(`Unknown aggregation operation: ${config.operation}`);
+          logger.warn(`Unknown aggregation operation: ${config.operation}`);
       }
     }
 
@@ -205,7 +206,7 @@ export class DataProcessor {
         analysis.inventoryStats = this.calculateInventoryStats(data);
         break;
       default:
-        console.warn(`Unknown analysis type: ${analysisType}`);
+        logger.warn(`Unknown analysis type: ${analysisType}`);
     }
 
     return analysis;

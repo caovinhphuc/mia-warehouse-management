@@ -1,3 +1,4 @@
+import logger from "../../../../utils/logger";
 /**
  * WarehouseEngine - Core warehouse management engine
  * Handles all warehouse operations, state management, and business logic
@@ -33,7 +34,7 @@ export class WarehouseEngine {
    */
   initialize() {
     this.emit('engine:initialized', { engine: this });
-    console.log('[WarehouseEngine] Initialized with config:', this.config);
+    logger.info('[WarehouseEngine] Initialized with config:', this.config);
   }
 
   /**
@@ -41,17 +42,17 @@ export class WarehouseEngine {
    */
   createLocation(locationData) {
     // TODO: Implement location creation
-    console.log('[WarehouseEngine] Creating location:', locationData);
+    logger.info('[WarehouseEngine] Creating location:', locationData);
   }
 
   updateLocation(locationId, updates) {
     // TODO: Implement location update
-    console.log('[WarehouseEngine] Updating location:', locationId, updates);
+    logger.info('[WarehouseEngine] Updating location:', locationId, updates);
   }
 
   deleteLocation(locationId) {
     // TODO: Implement location deletion
-    console.log('[WarehouseEngine] Deleting location:', locationId);
+    logger.info('[WarehouseEngine] Deleting location:', locationId);
   }
 
   /**
@@ -59,17 +60,17 @@ export class WarehouseEngine {
    */
   addInventory(locationId, item, quantity) {
     // TODO: Implement inventory addition
-    console.log('[WarehouseEngine] Adding inventory:', { locationId, item, quantity });
+    logger.info('[WarehouseEngine] Adding inventory:', { locationId, item, quantity });
   }
 
   removeInventory(locationId, item, quantity) {
     // TODO: Implement inventory removal
-    console.log('[WarehouseEngine] Removing inventory:', { locationId, item, quantity });
+    logger.info('[WarehouseEngine] Removing inventory:', { locationId, item, quantity });
   }
 
   moveInventory(fromLocationId, toLocationId, item, quantity) {
     // TODO: Implement inventory movement
-    console.log('[WarehouseEngine] Moving inventory:', { fromLocationId, toLocationId, item, quantity });
+    logger.info('[WarehouseEngine] Moving inventory:', { fromLocationId, toLocationId, item, quantity });
   }
 
   /**
@@ -77,12 +78,12 @@ export class WarehouseEngine {
    */
   createZone(zoneData) {
     // TODO: Implement zone creation
-    console.log('[WarehouseEngine] Creating zone:', zoneData);
+    logger.info('[WarehouseEngine] Creating zone:', zoneData);
   }
 
   updateZone(zoneId, updates) {
     // TODO: Implement zone update
-    console.log('[WarehouseEngine] Updating zone:', zoneId, updates);
+    logger.info('[WarehouseEngine] Updating zone:', zoneId, updates);
   }
 
   /**
@@ -90,13 +91,13 @@ export class WarehouseEngine {
    */
   calculateStatistics() {
     // TODO: Implement statistics calculation
-    console.log('[WarehouseEngine] Calculating statistics...');
+    logger.info('[WarehouseEngine] Calculating statistics...');
     return this.statistics;
   }
 
   generateReport(type, options = {}) {
     // TODO: Implement report generation
-    console.log('[WarehouseEngine] Generating report:', type, options);
+    logger.info('[WarehouseEngine] Generating report:', type, options);
   }
 
   /**
@@ -104,12 +105,12 @@ export class WarehouseEngine {
    */
   exportData(format = 'json') {
     // TODO: Implement data export
-    console.log('[WarehouseEngine] Exporting data in format:', format);
+    logger.info('[WarehouseEngine] Exporting data in format:', format);
   }
 
   importData(data, format = 'json') {
     // TODO: Implement data import
-    console.log('[WarehouseEngine] Importing data from format:', format);
+    logger.info('[WarehouseEngine] Importing data from format:', format);
   }
 
   /**
@@ -133,12 +134,12 @@ export class WarehouseEngine {
    */
   searchLocations(query, filters = {}) {
     // TODO: Implement location search
-    console.log('[WarehouseEngine] Searching locations:', query, filters);
+    logger.info('[WarehouseEngine] Searching locations:', query, filters);
   }
 
   searchInventory(query, filters = {}) {
     // TODO: Implement inventory search
-    console.log('[WarehouseEngine] Searching inventory:', query, filters);
+    logger.info('[WarehouseEngine] Searching inventory:', query, filters);
   }
 
   /**
@@ -146,13 +147,13 @@ export class WarehouseEngine {
    */
   validateLocation(locationData) {
     // TODO: Implement location validation
-    console.log('[WarehouseEngine] Validating location:', locationData);
+    logger.info('[WarehouseEngine] Validating location:', locationData);
     return { isValid: true, errors: [] };
   }
 
   validateInventory(inventoryData) {
     // TODO: Implement inventory validation
-    console.log('[WarehouseEngine] Validating inventory:', inventoryData);
+    logger.info('[WarehouseEngine] Validating inventory:', inventoryData);
     return { isValid: true, errors: [] };
   }
 }

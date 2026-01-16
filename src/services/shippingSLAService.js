@@ -1,3 +1,4 @@
+import logger from "../utils/logger";
 /**
  * Shipping SLA API Service
  * Tích hợp với backend automation_bridge.py
@@ -51,7 +52,7 @@ class ShippingSLAService {
       const data = await response.json();
       return data;
     } catch (error) {
-      console.error(`API call failed for ${endpoint}:`, error);
+      logger.error(`API call failed for ${endpoint}:`, error);
 
       // Provide user-friendly error message
       if (
@@ -84,7 +85,7 @@ class ShippingSLAService {
 
       return await response.json();
     } catch (error) {
-      console.error("Upload orders file failed:", error);
+      logger.error("Upload orders file failed:", error);
       throw error;
     }
   }
@@ -178,7 +179,7 @@ class ShippingSLAService {
           timestamp: new Date(),
         });
       } catch (error) {
-        console.error("Real-time update failed:", error);
+        logger.error("Real-time update failed:", error);
       }
     }, interval);
 

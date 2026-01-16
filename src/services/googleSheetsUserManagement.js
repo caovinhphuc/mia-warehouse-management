@@ -15,6 +15,7 @@
  */
 
 import { GOOGLE_SHEETS_CONFIG } from './googleSheetsAuth';
+import logger from "../utils/logger";
 
 // ==================== USER MANAGEMENT FUNCTIONS ====================
 
@@ -40,7 +41,7 @@ export const fetchAllUsers = async () => {
 
     return users;
   } catch (error) {
-    console.error('Error fetching users:', error);
+    logger.error('Error fetching users:', error);
     throw error;
   }
 };
@@ -102,7 +103,7 @@ export const createUser = async (userData) => {
     await logUserActivity('CREATE_USER', newUserId, 'admin', `Created user: ${userData.name}`);
     return newUser;
   } catch (error) {
-    console.error('Error creating user:', error);
+    logger.error('Error creating user:', error);
     throw error;
   }
 };
@@ -202,7 +203,7 @@ export const updateUser = async (userId, updateData) => {
 
     return updatedUser;
   } catch (error) {
-    console.error('Error updating user:', error);
+    logger.error('Error updating user:', error);
     throw error;
   }
 };
@@ -226,7 +227,7 @@ export const deleteUser = async (userId) => {
     await logUserActivity('DELETE_USER', userId, 'admin', `Deleted user: ${user.name}`);
     return true;
   } catch (error) {
-    console.error('Error deleting user:', error);
+    logger.error('Error deleting user:', error);
     throw error;
   }
 };
@@ -249,7 +250,7 @@ export const updateUserStatus = async (userId, status) => {
 
     return updatedUser;
   } catch (error) {
-    console.error('Error updating user status:', error);
+    logger.error('Error updating user status:', error);
     throw error;
   }
 };
@@ -273,7 +274,7 @@ export const resetUserPassword = async (userId, newPassword) => {
 
     return true;
   } catch (error) {
-    console.error('Error resetting password:', error);
+    logger.error('Error resetting password:', error);
     throw error;
   }
 };
@@ -305,7 +306,7 @@ export const getUserActivityLogs = async (userId = null, limit = 50) => {
     // Sort by timestamp (newest first) and limit
     return logs.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)).slice(0, limit);
   } catch (error) {
-    console.error('Error fetching activity logs:', error);
+    logger.error('Error fetching activity logs:', error);
     return [];
   }
 };
@@ -423,7 +424,7 @@ const logUserActivity = async (eventType, userId, performedBy, details) => {
       },
     );
   } catch (error) {
-    console.error('Failed to log user activity:', error);
+    logger.error('Failed to log user activity:', error);
   }
 };
 
@@ -478,7 +479,7 @@ export const getUserProfile = async (userId) => {
       joinDate: user.createdAt || new Date('2023-01-15'),
     };
   } catch (error) {
-    console.error('Error fetching user profile:', error);
+    logger.error('Error fetching user profile:', error);
     throw error;
   }
 };
@@ -506,7 +507,7 @@ export const updateUserProfile = async (userId, profileData) => {
     // Return updated profile
     return await getUserProfile(userId);
   } catch (error) {
-    console.error('Error updating user profile:', error);
+    logger.error('Error updating user profile:', error);
     throw error;
   }
 };

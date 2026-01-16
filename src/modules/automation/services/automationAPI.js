@@ -1,3 +1,4 @@
+import logger from "../../../utils/logger";
 /**
  * Automation API Service
  * Giao tiếp với Python automation system thông qua API
@@ -32,7 +33,7 @@ class AutomationAPI {
 
       return await response.json();
     } catch (error) {
-      console.error('API Request failed:', error);
+      logger.error('API Request failed:', error);
       throw error;
     }
   }

@@ -1,3 +1,4 @@
+import logger from "../utils/logger";
 /**
  * 🔧 UNIFIED GOOGLE SHEETS SERVICE
  * Dịch vụ thống nhất cho Google Sheets integration
@@ -78,7 +79,7 @@ class CacheManager {
 // ==================== ERROR HANDLER ====================
 class ErrorHandler {
   static handle(error, context = "") {
-    console.error(`[GoogleSheetsService] ${context}:`, error);
+    logger.error(`[GoogleSheetsService] ${context}:`, error);
 
     if (error.name === "AbortError") {
       return {
@@ -146,7 +147,7 @@ class UnifiedGoogleSheetsService {
 
   validateConfig() {
     if (!this.config.API_KEY || this.config.API_KEY.trim() === "") {
-      console.error(
+      logger.error(
         "[GoogleSheetsService] ⚠️ API Key chưa được cấu hình!",
         "\nVui lòng thêm REACT_APP_GOOGLE_SHEETS_API_KEY vào file .env hoặc Vercel Environment Variables"
       );
@@ -369,11 +370,11 @@ class UnifiedGoogleSheetsService {
         });
       }
 
-      console.log(
+      logger.info(
         `[UnifiedGoogleSheetsService] Processed ${batch.length} audit logs`
       );
     } catch (error) {
-      console.error(
+      logger.error(
         "[UnifiedGoogleSheetsService] Audit processing failed:",
         error
       );

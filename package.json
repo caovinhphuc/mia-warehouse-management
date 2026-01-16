@@ -24,16 +24,32 @@
     "start": "react-scripts start",
     "build": "GENERATE_SOURCEMAP=false react-scripts build",
     "test": "react-scripts test",
+    "deploy": "sh deploy.sh",
+    "start-dev": "sh start-dev.sh",
+    "test-server": "node test-server.js",
+    "test-apps-script": "node test-apps-script.js",
+    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\"",
+    "format:check": "prettier --check \"src/**/*.{js,jsx,ts,tsx}\"",
+    "test:watch": "react-scripts test --watch",
     "eject": "react-scripts eject",
-    "build:vercel": "GENERATE_SOURCEMAP=true npm run build"
+    "build:vercel": "GENERATE_SOURCEMAP=true npm run build",
+    "deploy:vercel": "vercel --prod",
+    "postinstall": "npx patch-package",
+    "lint": "eslint \"src/**/*.{js,jsx,ts,tsx}\"",
+    "lint:fix": "eslint \"src/**/*.{js,jsx,ts,tsx}\" --fix"
   },
-  "homepage": ".",
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx}": [
+      "eslint --fix"
+    ]
+  },
   "eslintConfig": {
     "extends": [
       "react-app",
       "react-app/jest"
     ]
   },
+  "homepage": ".",
   "browserslist": {
     "production": [
       ">0.2%",
@@ -50,6 +66,7 @@
     "@tailwindcss/forms": "^0.5.10",
     "autoprefixer": "^10.4.22",
     "postcss": "^8.5.6",
+    "postcss-loader": "^7.3.4",
     "tailwindcss": "^3.4.18"
   },
   "overrides": {

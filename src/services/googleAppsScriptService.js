@@ -1,3 +1,4 @@
+import logger from "../utils/logger";
 // Service để gọi Google Apps Script cho việc update profile
 // Thay thế cho Google Sheets API direct update
 
@@ -25,9 +26,9 @@ const GOOGLE_APPS_SCRIPT_CONFIG = {
  */
 export const updateUserProfileViaScript = async (userId, profileData) => {
   try {
-    console.log('🔄 Updating user profile via Google Apps Script...');
-    console.log('User ID:', userId);
-    console.log('Profile data:', profileData);
+    logger.info('🔄 Updating user profile via Google Apps Script...');
+    logger.info('User ID:', userId);
+    logger.info('Profile data:', profileData);
 
     const webAppUrl = GOOGLE_APPS_SCRIPT_CONFIG.WEB_APP_URL;
 
@@ -35,7 +36,7 @@ export const updateUserProfileViaScript = async (userId, profileData) => {
       // Fallback: use existing webhook URL pattern
       const fallbackUrl = GOOGLE_APPS_SCRIPT_CONFIG.FALLBACK_URL;
       if (fallbackUrl) {
-        console.log('⚠️ Using fallback webhook URL for profile update');
+        logger.info('⚠️ Using fallback webhook URL for profile update');
       } else {
         throw new Error(
           'Google Apps Script Web App URL not configured. Please deploy the script and update the environment variable.',
@@ -58,7 +59,7 @@ export const updateUserProfileViaScript = async (userId, profileData) => {
       timestamp: new Date().toISOString(),
     };
 
-    console.log('📡 Sending request to Google Apps Script:', requestData);
+    logger.info('📡 Sending request to Google Apps Script:', requestData);
 
     const response = await fetch(webAppUrl, {
       method: 'POST',
@@ -68,16 +69,16 @@ export const updateUserProfileViaScript = async (userId, profileData) => {
       body: JSON.stringify(requestData),
     });
 
-    console.log('📊 Response status:', response.status);
+    logger.info('📊 Response status:', response.status);
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('❌ Google Apps Script error:', errorText);
+      logger.error('❌ Google Apps Script error:', errorText);
       throw new Error(`Failed to update profile: ${response.status} - ${errorText}`);
     }
 
     const result = await response.json();
-    console.log('✅ Profile update result:', result);
+    logger.info('✅ Profile update result:', result);
 
     if (result.success) {
       return {
@@ -89,7 +90,7 @@ export const updateUserProfileViaScript = async (userId, profileData) => {
       throw new Error(result.error || 'Unknown error occurred');
     }
   } catch (error) {
-    console.error('❌ Error updating profile via script:', error);
+    logger.error('❌ Error updating profile via script:', error);
     throw error;
   }
 };
@@ -101,7 +102,7 @@ export const updateUserProfileViaScript = async (userId, profileData) => {
  */
 export const getUserProfileViaScript = async (userId) => {
   try {
-    console.log('📖 Fetching user profile via Google Apps Script...');
+    logger.info('📖 Fetching user profile via Google Apps Script...');
 
     const webAppUrl = GOOGLE_APPS_SCRIPT_CONFIG.WEB_APP_URL;
 
@@ -132,7 +133,7 @@ export const getUserProfileViaScript = async (userId) => {
       throw new Error(result.error || 'Failed to fetch profile');
     }
   } catch (error) {
-    console.error('❌ Error fetching profile via script:', error);
+    logger.error('❌ Error fetching profile via script:', error);
     throw error;
   }
 };
@@ -143,15 +144,15 @@ export const getUserProfileViaScript = async (userId) => {
  */
 export const testGoogleAppsScriptConnection = async () => {
   try {
-    console.log('🧪 Testing Google Apps Script connection...');
+    logger.info('🧪 Testing Google Apps Script connection...');
 
     // Try to get admin profile as test
     await getUserProfileViaScript('admin');
 
-    console.log('✅ Google Apps Script connection successful');
+    logger.info('✅ Google Apps Script connection successful');
     return true;
   } catch (error) {
-    console.error('❌ Google Apps Script connection failed:', error.message);
+    logger.error('❌ Google Apps Script connection failed:', error.message);
     return false;
   }
 };
@@ -163,11 +164,11 @@ export const testGoogleAppsScriptConnection = async () => {
  * @returns {Promise<Object>} Updated profile
  */
 export const updateUserProfileEnhanced = async (userId, profileData) => {
-  console.log('🔄 Starting enhanced profile update...');
+  logger.info('🔄 Starting enhanced profile update...');
 
   // Check if fallback mode is enabled (for testing when Google Apps Script has issues)
   if (GOOGLE_APPS_SCRIPT_CONFIG.ENABLE_FALLBACK_MODE) {
-    console.log('⚠️ Fallback mode enabled - using localStorage only');
+    logger.info('⚠️ Fallback mode enabled - using localStorage only');
 
     try {
       const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
@@ -179,7 +180,7 @@ export const updateUserProfileEnhanced = async (userId, profileData) => {
 
       localStorage.setItem('currentUser', JSON.stringify(updatedUser));
 
-      console.log('✅ Profile updated in localStorage (fallback mode)');
+      logger.info('✅ Profile updated in localStorage (fallback mode)');
       return {
         success: true,
         data: updatedUser,
@@ -187,24 +188,24 @@ export const updateUserProfileEnhanced = async (userId, profileData) => {
         method: 'localStorage-fallback',
       };
     } catch (fallbackError) {
-      console.error('❌ Fallback mode failed:', fallbackError.message);
+      logger.error('❌ Fallback mode failed:', fallbackError.message);
       throw new Error('Không thể cập nhật thông tin. Vui lòng thử lại sau.');
     }
   }
 
   try {
     // Method 1: Try Google Apps Script (preferred)
-    console.log('🎯 Method 1: Trying Google Apps Script...');
+    logger.info('🎯 Method 1: Trying Google Apps Script...');
     const result = await updateUserProfileViaScript(userId, profileData);
 
-    console.log('✅ Profile updated successfully via Google Apps Script');
+    logger.info('✅ Profile updated successfully via Google Apps Script');
     return result;
   } catch (scriptError) {
-    console.warn('⚠️ Google Apps Script failed, trying fallback methods...', scriptError.message);
+    logger.warn('⚠️ Google Apps Script failed, trying fallback methods...', scriptError.message);
 
     try {
       // Method 2: Try direct Google Sheets API (read-only, so this will fail but good for testing)
-      console.log('🎯 Method 2: Testing Google Sheets API connectivity...');
+      logger.info('🎯 Method 2: Testing Google Sheets API connectivity...');
 
       // At least verify we can read the data
       const API_KEY = process.env.REACT_APP_GOOGLE_SHEETS_API_KEY;
@@ -215,7 +216,7 @@ export const updateUserProfileEnhanced = async (userId, profileData) => {
       );
 
       if (testResponse.ok) {
-        console.log('✅ Google Sheets API connection working (read-only)');
+        logger.info('✅ Google Sheets API connection working (read-only)');
 
         // Simulate successful update for now
         return {
@@ -226,11 +227,11 @@ export const updateUserProfileEnhanced = async (userId, profileData) => {
         };
       }
     } catch (sheetsError) {
-      console.error('❌ Google Sheets API also failed:', sheetsError.message);
+      logger.error('❌ Google Sheets API also failed:', sheetsError.message);
     }
 
     // Method 3: Local storage fallback
-    console.log('🎯 Method 3: Using localStorage fallback...');
+    logger.info('🎯 Method 3: Using localStorage fallback...');
 
     try {
       const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
@@ -242,7 +243,7 @@ export const updateUserProfileEnhanced = async (userId, profileData) => {
 
       localStorage.setItem('currentUser', JSON.stringify(updatedUser));
 
-      console.log('✅ Profile updated in localStorage (fallback)');
+      logger.info('✅ Profile updated in localStorage (fallback)');
       return {
         success: true,
         data: updatedUser,
@@ -250,7 +251,7 @@ export const updateUserProfileEnhanced = async (userId, profileData) => {
         method: 'localStorage',
       };
     } catch (localError) {
-      console.error('❌ All update methods failed:', localError.message);
+      logger.error('❌ All update methods failed:', localError.message);
       throw new Error('Không thể cập nhật thông tin. Vui lòng thử lại sau.');
     }
   }

@@ -4,6 +4,7 @@
  */
 import { useState, useEffect, useCallback } from 'react';
 import shippingSLAService from '../services/shippingSLAService';
+import logger from "../utils/logger";
 
 export const useShippingSLAData = (
   autoRefresh = true,
@@ -233,7 +234,7 @@ export const useShippingSLAData = (
           },
         }));
       } catch (error) {
-        console.error('Failed to load data:', error);
+        logger.error('Failed to load data:', error);
         setState((prev) => ({
           ...prev,
           loading: false,
@@ -275,7 +276,7 @@ export const useShippingSLAData = (
 
       return response;
     } catch (error) {
-      console.error('Failed to load demo data:', error);
+      logger.error('Failed to load demo data:', error);
       setState((prev) => ({
         ...prev,
         loading: false,
@@ -317,7 +318,7 @@ export const useShippingSLAData = (
 
         return response;
       } catch (error) {
-        console.error('Failed to upload file:', error);
+        logger.error('Failed to upload file:', error);
         setState((prev) => ({
           ...prev,
           loading: false,
@@ -347,7 +348,7 @@ export const useShippingSLAData = (
 
         return response;
       } catch (error) {
-        console.error('Bulk action failed:', error);
+        logger.error('Bulk action failed:', error);
         throw error;
       }
     },
@@ -366,7 +367,7 @@ export const useShippingSLAData = (
         );
         return response;
       } catch (error) {
-        console.error('Export failed:', error);
+        logger.error('Export failed:', error);
         throw error;
       }
     },
@@ -420,7 +421,7 @@ export const useShippingSLAData = (
       const response = await shippingSLAService.checkDataStatus();
       return response.data;
     } catch (error) {
-      console.error('Failed to check data status:', error);
+      logger.error('Failed to check data status:', error);
       return { hasData: false, orderCount: 0, isEmpty: true };
     }
   }, []);
@@ -436,7 +437,7 @@ export const useShippingSLAData = (
         }
         // If no data, user needs to manually load demo or upload file
       } catch (error) {
-        console.error('Failed to initialize data:', error);
+        logger.error('Failed to initialize data:', error);
       }
     };
 

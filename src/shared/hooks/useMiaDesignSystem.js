@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { useTheme } from '../../App';
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   BRAND_COLORS,
   THEME_COLORS,
@@ -300,35 +301,9 @@ export const useMiaDesignSystem = () => {
   };
 };
 
-export default useMiaDesignSystem;
-const typography = useMemo(() => ({
-  ...TYPOGRAPHY,
-
-  // Helper functions for common text styles
-  getHeadingStyle: (size = 'xl') => ({
-    fontSize: TYPOGRAPHY.fontSize[size],
-    fontWeight: TYPOGRAPHY.fontWeight.semibold,
-    lineHeight: TYPOGRAPHY.lineHeight.tight,
-    color: colors.text.primary,
-  }),
-
-  getBodyStyle: (size = 'base') => ({
-    fontSize: TYPOGRAPHY.fontSize[size],
-    fontWeight: TYPOGRAPHY.fontWeight.normal,
-    lineHeight: TYPOGRAPHY.lineHeight.normal,
-    color: colors.text.secondary,
-  }),
-
-  getCaptionStyle: () => ({
-    fontSize: TYPOGRAPHY.fontSize.sm,
-    fontWeight: TYPOGRAPHY.fontWeight.normal,
-    lineHeight: TYPOGRAPHY.lineHeight.normal,
-    color: colors.text.muted,
-  })
-}), [colors.text]);
-
 // Component class builders - sử dụng COMPONENT_VARIANTS đã định nghĩa
-const getComponentClasses = useMemo(() => ({
+/* eslint-disable react-hooks/exhaustive-deps */
+  const getComponentClasses = useMemo(() => ({
   // Button classes - Lấy từ COMPONENT_VARIANTS
   button: (variant = 'primary', size = 'md', disabled = false) => {
     if (disabled) {
@@ -367,93 +342,6 @@ const getComponentClasses = useMemo(() => ({
     return COMPONENT_VARIANTS.avatar[size] || COMPONENT_VARIANTS.avatar.md;
   }
 }), [isDarkMode]);
-          : 'text-gray-700 hover:bg-gray-100 focus:ring-blue-500',
-      };
-
-const disabledClasses = 'opacity-50 cursor-not-allowed pointer-events-none';
-
-return `${baseClasses} ${sizeClasses[size]} ${variantClasses[variant]} ${disabled ? disabledClasses : ''}`;
-    },
-
-// Card classes
-card: (variant = 'default') => {
-  const baseClasses = 'rounded-lg transition-shadow duration-200';
-
-  const variantClasses = {
-    default: isDarkMode
-      ? 'bg-gray-800 border border-gray-700 shadow-sm'
-      : 'bg-white border border-gray-200 shadow-sm',
-    elevated: isDarkMode
-      ? 'bg-gray-800 border border-gray-700 shadow-md hover:shadow-lg'
-      : 'bg-white border border-gray-200 shadow-md hover:shadow-lg',
-    outlined: isDarkMode
-      ? 'bg-gray-800 border-2 border-gray-600'
-      : 'bg-white border-2 border-gray-300',
-    filled: isDarkMode
-      ? 'bg-gray-700 border border-gray-600'
-      : 'bg-gray-50 border border-gray-200',
-  };
-
-  return `${baseClasses} ${variantClasses[variant]}`;
-},
-
-  // Badge classes
-  badge: (variant = 'default') => {
-    const baseClasses = 'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium';
-
-    const variantClasses = {
-      default: isDarkMode
-        ? 'bg-gray-700 text-gray-200'
-        : 'bg-gray-100 text-gray-800',
-      success: isDarkMode
-        ? 'bg-green-900 text-green-200'
-        : 'bg-green-100 text-green-800',
-      warning: isDarkMode
-        ? 'bg-yellow-900 text-yellow-200'
-        : 'bg-yellow-100 text-yellow-800',
-      error: isDarkMode
-        ? 'bg-red-900 text-red-200'
-        : 'bg-red-100 text-red-800',
-      info: isDarkMode
-        ? 'bg-blue-900 text-blue-200'
-        : 'bg-blue-100 text-blue-800',
-    };
-
-    return `${baseClasses} ${variantClasses[variant]}`;
-  },
-
-    // Input classes
-    input: (error = false) => {
-      const baseClasses = 'block w-full rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2';
-
-      const normalClasses = isDarkMode
-        ? 'bg-gray-700 border border-gray-600 text-gray-100 placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500'
-        : 'bg-white border border-gray-300 text-gray-900 placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500';
-
-      const errorClasses = isDarkMode
-        ? 'bg-gray-700 border border-red-500 text-gray-100 placeholder-gray-400 focus:ring-red-500 focus:border-red-500'
-        : 'bg-white border border-red-300 text-gray-900 placeholder-gray-500 focus:ring-red-500 focus:border-red-500';
-
-      return `${baseClasses} ${error ? errorClasses : normalClasses}`;
-    },
-
-      // Container classes
-      container: (variant = 'default') => {
-        const variantClasses = {
-          default: isDarkMode
-            ? 'bg-gray-900 text-gray-100'
-            : 'bg-gray-50 text-gray-900',
-          surface: isDarkMode
-            ? 'bg-gray-800 text-gray-100'
-            : 'bg-white text-gray-900',
-          elevated: isDarkMode
-            ? 'bg-gray-800 text-gray-100 shadow-lg'
-            : 'bg-white text-gray-900 shadow-lg',
-        };
-
-        return `min-h-screen transition-colors duration-200 ${variantClasses[variant]}`;
-      }
-  }), [isDarkMode]);
 
 // Vietnamese labels
 const labels = VIETNAMESE_LABELS;

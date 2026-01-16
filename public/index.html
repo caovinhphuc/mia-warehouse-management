@@ -1,13 +1,164 @@
 <!DOCTYPE html>
 <html lang="vi">
   <head>
+    <!-- ==================== BASIC META TAGS ==================== -->
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="/src/styles/tailwind.css" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>MIA Warehouse Management</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover"
+    />
+
+    <!-- ==================== PRIMARY META TAGS ==================== -->
+    <title>MIA Warehouse Management System - Hệ thống quản lý kho vận</title>
+    <meta
+      name="title"
+      content="Warehouse Management System - Hệ thống quản lý kho vận"
+    />
+    <meta
+      name="description"
+      content="Hệ thống quản lý kho vận hiện đại với dashboard trực quan, quản lý đơn hàng, nhân viên và báo cáo thời gian thực"
+    />
+    <meta
+      name="keywords"
+      content="warehouse, management, system, kho vận, quản lý, dashboard, đơn hàng, nhân viên"
+    />
+    <meta name="author" content="Warehouse Management Team" />
+    <meta name="robots" content="index, follow" />
+    <meta name="language" content="Vietnamese" />
+
+    <!-- ==================== OPEN GRAPH / FACEBOOK ==================== -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="%PUBLIC_URL%" />
+    <meta property="og:title" content="Warehouse Management System" />
+    <meta
+      property="og:description"
+      content="Hệ thống quản lý kho vận hiện đại với dashboard trực quan"
+    />
+    <meta property="og:image" content="%PUBLIC_URL%/logo512.png" />
+    <meta property="og:locale" content="vi_VN" />
+
+    <!-- ==================== TWITTER ==================== -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="%PUBLIC_URL%" />
+    <meta property="twitter:title" content="Warehouse Management System" />
+    <meta
+      property="twitter:description"
+      content="Hệ thống quản lý kho vận hiện đại với dashboard trực quan"
+    />
+    <meta property="twitter:image" content="%PUBLIC_URL%/logo512.png" />
+
+    <!-- ==================== FAVICON & ICONS ==================== -->
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+
+    <!-- ==================== THEME & COLORS ==================== -->
+    <meta name="theme-color" content="#1f2937" />
+    <meta name="msapplication-TileColor" content="#1f2937" />
+    <meta
+      name="msapplication-config"
+      content="%PUBLIC_URL%/browserconfig.xml"
+    />
+
+    <!-- ==================== SECURITY HEADERS ==================== -->
+    <!-- Content Security Policy (CSP) - Adjust based on your needs -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:;"
+    />
+
+    <!-- ==================== PERFORMANCE & PREFETCH ==================== -->
+    <!-- Preconnect to external domains if needed -->
+    <!-- <link rel="preconnect" href="https://fonts.googleapis.com" /> -->
+    <!-- <link rel="dns-prefetch" href="https://fonts.googleapis.com" /> -->
+
+    <!-- ==================== ACCESSIBILITY ==================== -->
+    <meta name="color-scheme" content="light dark" />
+
+    <!-- ==================== PWA SUPPORT ==================== -->
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <meta name="apple-mobile-web-app-title" content="Warehouse System" />
+
+    <!-- ==================== ANALYTICS (Optional) ==================== -->
+    <!-- Add your analytics scripts here if needed -->
+    <!-- Example: Google Analytics, Facebook Pixel, etc. -->
   </head>
   <body>
+    <!-- ==================== NOSCRIPT FALLBACK ==================== -->
+    <noscript>
+      <div
+        style="
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: #f3f4f6;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 9999;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
+            'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
+            'Helvetica Neue', sans-serif;
+        "
+      >
+        <div style="text-align: center; padding: 2rem; max-width: 600px">
+          <h1 style="color: #111827; margin-bottom: 1rem">
+            JavaScript Required
+          </h1>
+          <p style="color: #4b5563; margin-bottom: 1rem">
+            Bạn cần bật JavaScript để chạy ứng dụng này.
+          </p>
+          <p style="color: #6b7280; font-size: 0.875rem">
+            Please enable JavaScript to run this application.
+          </p>
+        </div>
+      </div>
+    </noscript>
+
+    <!-- ==================== ROOT CONTAINER ==================== -->
     <div id="root"></div>
+
+    <!-- ==================== ERROR HANDLING ==================== -->
+    <script>
+      // Global error handler for unhandled errors
+      window.addEventListener("error", (event) => {
+        console.error("Global Error:", event.error);
+        // TODO: Send to error tracking service (e.g., Sentry, LogRocket)
+        // Example: errorTracking.captureException(event.error);
+      });
+
+      // Handle unhandled promise rejections
+      window.addEventListener("unhandledrejection", (event) => {
+        console.error("Unhandled Promise Rejection:", event.reason);
+        // TODO: Send to error tracking service
+        // Example: errorTracking.captureException(event.reason);
+      });
+
+      // Performance monitoring
+      if ("performance" in window && "PerformanceObserver" in window) {
+        try {
+          const observer = new PerformanceObserver((list) => {
+            for (const entry of list.getEntries()) {
+              // Log long tasks (blocking main thread > 50ms)
+              if (entry.entryType === "longtask") {
+                console.warn("Long Task Detected:", entry);
+              }
+            }
+          });
+          observer.observe({ entryTypes: ["longtask"] });
+        } catch (e) {
+          // PerformanceObserver not supported
+          console.warn("PerformanceObserver not supported");
+        }
+      }
+    </script>
   </body>
-  <script src="/src/index.jsx"></script>
 </html>

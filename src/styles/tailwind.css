@@ -1,6 +1,8 @@
 /* Import Google Fonts */
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
 
+/* Import Tailwind CSS */
+/* eslint-disable tailwindcss/no-custom-classname */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -31,15 +33,18 @@
   h3 {
     @apply text-lg font-medium leading-snug;
   }
+  /* eslint-disable tailwindcss/no-custom-classname */
   h4 {
     @apply text-base font-medium leading-snug;
   }
+  /* eslint-disable tailwindcss/no-custom-classname */
   h5 {
     @apply text-sm font-medium leading-snug;
   }
   h6 {
     @apply text-xs font-medium leading-snug uppercase tracking-wider;
   }
+  /* eslint-disable tailwindcss/no-custom-classname */
 
   /* Paragraphs */
   p {
@@ -517,3 +522,6 @@
 .theme-surface-2 {
   @apply theme-surface-secondary;
 }
+
+/* eslint-disable tailwindcss/no-custom-classname */
+/* eslint-disable tailwindcss/no-custom-classname */

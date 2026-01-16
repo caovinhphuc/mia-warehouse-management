@@ -1,3 +1,4 @@
+import logger from "../../../utils/logger";
 // ==================== SOUND HELPERS ====================
 // File: src/modules/alerts/utils/soundHelpers.js
 // Utilities for alert sound notifications
@@ -42,7 +43,7 @@ export const playNotificationSound = (type = 'info') => {
     oscillator.start(audioContext.currentTime);
     oscillator.stop(audioContext.currentTime + 0.3);
   } catch (error) {
-    console.warn('Could not play notification sound:', error);
+    logger.warn('Could not play notification sound:', error);
   }
 };
 

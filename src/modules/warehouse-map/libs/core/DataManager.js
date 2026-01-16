@@ -1,3 +1,4 @@
+import logger from "../../../../utils/logger";
 /**
  * DataManager - Centralized data management system
  * Handles data persistence, caching, and synchronization
@@ -32,7 +33,7 @@ export class DataManager {
       this.startAutoSync();
     }
 
-    console.log('[DataManager] Initialized with config:', this.config);
+    logger.info('[DataManager] Initialized with config:', this.config);
   }
 
   /**
@@ -68,10 +69,10 @@ export class DataManager {
       // Save to persistent storage
       this.saveToStorage(key, dataPacket);
 
-      console.log('[DataManager] Saved data for key:', key);
+      logger.info('[DataManager] Saved data for key:', key);
       return true;
     } catch (error) {
-      console.error('[DataManager] Error saving data:', error);
+      logger.error('[DataManager] Error saving data:', error);
       return false;
     }
   }
@@ -81,7 +82,7 @@ export class DataManager {
       // Try cache first
       if (this.cache.has(key)) {
         const packet = this.cache.get(key);
-        console.log('[DataManager] Loaded from cache:', key);
+        logger.info('[DataManager] Loaded from cache:', key);
         return packet.data;
       }
 
@@ -89,14 +90,14 @@ export class DataManager {
       const packet = this.loadFromStorage(key);
       if (packet) {
         this.cache.set(key, packet);
-        console.log('[DataManager] Loaded from storage:', key);
+        logger.info('[DataManager] Loaded from storage:', key);
         return packet.data;
       }
 
-      console.log('[DataManager] No data found for key:', key);
+      logger.info('[DataManager] No data found for key:', key);
       return defaultValue;
     } catch (error) {
-      console.error('[DataManager] Error loading data:', error);
+      logger.error('[DataManager] Error loading data:', error);
       return defaultValue;
     }
   }
@@ -105,10 +106,10 @@ export class DataManager {
     try {
       this.cache.delete(key);
       this.removeFromStorage(key);
-      console.log('[DataManager] Removed data for key:', key);
+      logger.info('[DataManager] Removed data for key:', key);
       return true;
     } catch (error) {
-      console.error('[DataManager] Error removing data:', error);
+      logger.error('[DataManager] Error removing data:', error);
       return false;
     }
   }
@@ -146,10 +147,10 @@ export class DataManager {
         break;
       case 'indexedDB':
         // TODO: Implement IndexedDB
-        console.log('[DataManager] IndexedDB not implemented yet');
+        logger.info('[DataManager] IndexedDB not implemented yet');
         break;
       default:
-        console.warn('[DataManager] Unknown storage type:', this.config.storageType);
+        logger.warn('[DataManager] Unknown storage type:', this.config.storageType);
     }
   }
 
@@ -164,14 +165,14 @@ export class DataManager {
           return sessionData ? JSON.parse(sessionData) : null;
         case 'indexedDB':
           // TODO: Implement IndexedDB
-          console.log('[DataManager] IndexedDB not implemented yet');
+          logger.info('[DataManager] IndexedDB not implemented yet');
           return null;
         default:
-          console.warn('[DataManager] Unknown storage type:', this.config.storageType);
+          logger.warn('[DataManager] Unknown storage type:', this.config.storageType);
           return null;
       }
     } catch (error) {
-      console.error('[DataManager] Error loading from storage:', error);
+      logger.error('[DataManager] Error loading from storage:', error);
       return null;
     }
   }
@@ -186,10 +187,10 @@ export class DataManager {
         break;
       case 'indexedDB':
         // TODO: Implement IndexedDB
-        console.log('[DataManager] IndexedDB not implemented yet');
+        logger.info('[DataManager] IndexedDB not implemented yet');
         break;
       default:
-        console.warn('[DataManager] Unknown storage type for removal:', this.config.storageType);
+        logger.warn('[DataManager] Unknown storage type for removal:', this.config.storageType);
         break;
     }
   }
@@ -210,7 +211,7 @@ export class DataManager {
       return;
     }
 
-    console.log('[DataManager] Processing sync queue:', this.syncQueue.length, 'items');
+    logger.info('[DataManager] Processing sync queue:', this.syncQueue.length, 'items');
     // TODO: Implement actual sync logic
     this.syncQueue = [];
   }
@@ -226,7 +227,7 @@ export class DataManager {
    */
   clearCache() {
     this.cache.clear();
-    console.log('[DataManager] Cache cleared');
+    logger.info('[DataManager] Cache cleared');
   }
 
   getCacheStats() {
@@ -252,7 +253,7 @@ export class DataManager {
       this.cache.set(key, packet);
       this.saveToStorage(key, packet);
     }
-    console.log('[DataManager] Imported data for', Object.keys(data).length, 'keys');
+    logger.info('[DataManager] Imported data for', Object.keys(data).length, 'keys');
   }
 }
 

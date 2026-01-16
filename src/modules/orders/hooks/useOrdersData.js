@@ -3,6 +3,7 @@
 // Custom hook to manage orders data with real-time updates
 
 import { useState, useEffect, useCallback, useRef } from 'react';
+import logger from "../../../utils/logger";
 
 // Mock service for now - replace with actual Google Sheets service
 const mockGoogleSheetsService = {
@@ -205,7 +206,7 @@ export const useOrdersData = (config = {}) => {
       setLastSync(new Date());
     } catch (err) {
       setError(err.message);
-      console.error('Failed to load orders data:', err);
+      logger.error('Failed to load orders data:', err);
     } finally {
       setLoading(false);
     }
@@ -234,7 +235,7 @@ export const useOrdersData = (config = {}) => {
 
         return true;
       } catch (err) {
-        console.error('Failed to update order:', err);
+        logger.error('Failed to update order:', err);
         // Reload data on failure
         await loadData();
         return false;

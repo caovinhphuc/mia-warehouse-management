@@ -1,3 +1,4 @@
+import logger from "../../../../utils/logger";
 /**
  * WarehouseVisualizer - Interactive warehouse map visualization library
  * Handles 2D/3D warehouse layout rendering and interactions
@@ -40,7 +41,7 @@ export class WarehouseVisualizer {
     this.createSVGCanvas();
     this.setupInteractions();
     this.render();
-    console.log('[WarehouseVisualizer] Initialized');
+    logger.info('[WarehouseVisualizer] Initialized');
   }
 
   /**
@@ -141,7 +142,7 @@ export class WarehouseVisualizer {
     this.renderLocations(data.locations || []);
     this.renderConnections(data.connections || []);
 
-    console.log('[WarehouseVisualizer] Rendered warehouse layout');
+    logger.info('[WarehouseVisualizer] Rendered warehouse layout');
   }
 
   /**
@@ -421,7 +422,7 @@ export class WarehouseVisualizer {
       this.container.innerHTML = '';
     }
     this.eventHandlers.clear();
-    console.log('[WarehouseVisualizer] Destroyed');
+    logger.info('[WarehouseVisualizer] Destroyed');
   }
 }
 
