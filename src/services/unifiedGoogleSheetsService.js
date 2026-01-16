@@ -88,10 +88,23 @@ class ErrorHandler {
       };
     }
 
-    if (error.status === 403) {
+    // Handle missing API key
+    if (error.code === "MISSING_API_KEY") {
       return {
         success: false,
-        error: "Không có quyền truy cập. Kiểm tra API key và permissions.",
+        error:
+          error.message ||
+          "API Key chưa được cấu hình. Vui lòng liên hệ quản trị viên.",
+        code: "MISSING_API_KEY",
+      };
+    }
+
+    if (error.status === 403 || error.code === "PERMISSION_DENIED") {
+      return {
+        success: false,
+        error:
+          error.message ||
+          "Không có quyền truy cập. Kiểm tra API key và permissions.",
         code: "PERMISSION_DENIED",
       };
     }
@@ -106,7 +119,9 @@ class ErrorHandler {
 
     return {
       success: false,
-      error: "Lỗi kết nối với Google Sheets. Vui lòng kiểm tra mạng.",
+      error:
+        error.message ||
+        "Lỗi kết nối với Google Sheets. Vui lòng kiểm tra mạng.",
       code: "CONNECTION_ERROR",
     };
   }
@@ -120,14 +135,38 @@ class UnifiedGoogleSheetsService {
     this.auditQueue = [];
     this.isProcessingQueue = false;
 
+    // Validate configuration
+    this.validateConfig();
+
     // Initialize auto-processing
     this.startAutoProcessing();
+  }
+
+  // ==================== CONFIGURATION VALIDATION ====================
+
+  validateConfig() {
+    if (!this.config.API_KEY || this.config.API_KEY.trim() === "") {
+      console.error(
+        "[GoogleSheetsService] ⚠️ API Key chưa được cấu hình!",
+        "\nVui lòng thêm REACT_APP_GOOGLE_SHEETS_API_KEY vào file .env hoặc Vercel Environment Variables"
+      );
+    }
   }
 
   // ==================== CORE API METHODS ====================
 
   async makeRequest(endpoint, options = {}) {
     const { retries = 0, useCache = true, cacheKey = null } = options;
+
+    // Validate API key before making request
+    if (!this.config.API_KEY || this.config.API_KEY.trim() === "") {
+      const error = new Error(
+        "API Key chưa được cấu hình. Vui lòng thêm REACT_APP_GOOGLE_SHEETS_API_KEY vào file .env hoặc Vercel Environment Variables."
+      );
+      error.code = "MISSING_API_KEY";
+      error.status = 403;
+      throw error;
+    }
 
     // Check cache first
     if (useCache && cacheKey) {
@@ -154,11 +193,25 @@ class UnifiedGoogleSheetsService {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(
-          `API Error: ${response.status} - ${
-            errorData.error?.message || "Unknown error"
-          }`
-        );
+        const errorMessage = errorData.error?.message || "Unknown error";
+
+        // Special handling for 403 errors (missing API key or permission denied)
+        if (response.status === 403) {
+          const error = new Error(
+            errorMessage.includes("unregistered callers") ||
+            errorMessage.includes("API key") ||
+            (endpoint.includes("key=") &&
+              !endpoint.includes("key=" + this.config.API_KEY))
+              ? "API Key chưa được cấu hình hoặc không hợp lệ. Vui lòng kiểm tra REACT_APP_GOOGLE_SHEETS_API_KEY trong file .env hoặc Vercel Environment Variables."
+              : `Không có quyền truy cập: ${errorMessage}`
+          );
+          error.code =
+            response.status === 403 ? "PERMISSION_DENIED" : "API_ERROR";
+          error.status = response.status;
+          throw error;
+        }
+
+        throw new Error(`API Error: ${response.status} - ${errorMessage}`);
       }
 
       const data = await response.json();
@@ -170,6 +223,14 @@ class UnifiedGoogleSheetsService {
 
       return data;
     } catch (error) {
+      // Don't retry if it's a configuration error
+      if (
+        error.code === "MISSING_API_KEY" ||
+        error.code === "PERMISSION_DENIED"
+      ) {
+        throw error;
+      }
+
       if (retries < this.config.RETRY_ATTEMPTS) {
         await this.sleep(1000 * (retries + 1)); // Exponential backoff
         return this.makeRequest(endpoint, { ...options, retries: retries + 1 });

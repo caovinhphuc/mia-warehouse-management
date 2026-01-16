@@ -66,7 +66,7 @@ npm install -g vercel
 ### **Deploy:**
 
 ```bash
-cd /Users/phuccao/Projects/fullstack/mia-warehouse-management
+cd /Users/phuccao/Projects/fullstack/mia-warehouse-management # Replace with your project path if not the same
 vercel --prod
 ```
 

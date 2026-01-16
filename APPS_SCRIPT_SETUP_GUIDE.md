@@ -3,7 +3,7 @@
 ## 📋 URL Hiện Tại
 
 ```
-https://script.google.com/macros/s/AKfycbzJ7ZVmG3JyU0wQlBAfNxC1CK9eUAqrHGKvf_BVUT8eIQYT0TsYL7Jp39kQQidOrPft/exec
+https://script.googleusercontent.com/macros/echo?user_content_key=AehSKLiDhVSSLP3KeRzSO0BoBCP9nNO4_rxs_hMIE5YClGbQEzVHLIO7SMsuZKz2sHD5XCs3JWBW6nBjJE9reSfjJf9rSqreZK6zXZD4_TlpJqc7cD1b1tIdoTaGago35TaTec48s9dwefxq-v11NG0lR5ZhGuawFC8tCOKNTjXFUvBjSOWgCYHIhVG00kkjtZYtytYQEV7vM4CiW3-M1oNTDbB3mddaxk0APUxpvaoGQzqz6xRvtXN_PUbr4tUSS8JnhgchULVzQObCdQy7uccoO3OboMYemQ&lib=MsHwTjT6IdVPYQvJGqMBEz6WlMQveogDQ
 ```
 
 ## ⚠️ Vấn Đề Hiện Tại
@@ -67,8 +67,7 @@ Sau khi URL hoạt động:
 1. **Local development** (.env file):
 
 ```env
-REACT_APP_AUDIT_WEBHOOK_URL=https://script.google.com/macros/s/AKfycbzJ7ZVmG3JyU0wQlBAfNxC1CK9eUAqrHGKvf_BVUT8eIQYT0TsYL7Jp39kQQidOrPft/exec
-REACT_APP_PROFILE_UPDATE_WEBHOOK_URL=https://script.google.com/macros/s/AKfycbzJ7ZVmG3JyU0wQlBAfNxC1CK9eUAqrHGKvf_BVUT8eIQYT0TsYL7Jp39kQQidOrPft/exec
+REACT_APP_AUDIT_WEBHOOK_URL=https://script.googleusercontent.com/macros/echo?user_content_key=AehSKLiDhVSSLP3KeRzSO0BoBCP9nNO4_rxs_hMIE5YClGbQEzVHLIO7SMsuZKz2sHD5XCs3JWBW6nBjJE9reSfjJf9rSqreZK6zXZD4_TlpJqc7cD1b1tIdoTaGago35TaTec48s9dwefxq-v11NG0lR5ZhGuawFC8tCOKNTjXFUvBjSOWgCYHIhVG00kkjtZYtytYQEV7vM4CiW3-M1oNTDbB3mddaxk0APUxpvaoGQzqz6xRvtXN_PUbr4tUSS8JnhgchULVzQObCdQy7uccoO3OboMYemQ&lib=MsHwTjT6IdVPYQvJGqMBEz6WlMQveogDQ
 ```
 
 2. **Production** (Vercel):
@@ -82,10 +81,10 @@ REACT_APP_PROFILE_UPDATE_WEBHOOK_URL=https://script.google.com/macros/s/AKfycbzJ
 
 ```bash
 # GET request
-curl "https://script.google.com/macros/s/AKfycbzJ7ZVmG3JyU0wQlBAfNxC1CK9eUAqrHGKvf_BVUT8eIQYT0TsYL7Jp39kQQidOrPft/exec"
+curl "https://script.googleusercontent.com/macros/echo?user_content_key=AehSKLiDhVSSLP3KeRzSO0BoBCP9nNO4_rxs_hMIE5YClGbQEzVHLIO7SMsuZKz2sHD5XCs3JWBW6nBjJE9reSfjJf9rSqreZK6zXZD4_TlpJqc7cD1b1tIdoTaGago35TaTec48s9dwefxq-v11NG0lR5ZhGuawFC8tCOKNTjXFUvBjSOWgCYHIhVG00kkjtZYtytYQEV7vM4CiW3-M1oNTDbB3mddaxk0APUxpvaoGQzqz6xRvtXN_PUbr4tUSS8JnhgchULVzQObCdQy7uccoO3OboMYemQ&lib=MsHwTjT6IdVPYQvJGqMBEz6WlMQveogDQ
 
 # POST request (audit log)
-curl -X POST "https://script.google.com/macros/s/AKfycbzJ7ZVmG3JyU0wQlBAfNxC1CK9eUAqrHGKvf_BVUT8eIQYT0TsYL7Jp39kQQidOrPft/exec" \
+curl -X POST "https://script.googleusercontent.com/macros/echo?user_content_key=AehSKLiDhVSSLP3KeRzSO0BoBCP9nNO4_rxs_hMIE5YClGbQEzVHLIO7SMsuZKz2sHD5XCs3JWBW6nBjJE9reSfjJf9rSqreZK6zXZD4_TlpJqc7cD1b1tIdoTaGago35TaTec48s9dwefxq-v11NG0lR5ZhGuawFC8tCOKNTjXFUvBjSOWgCYHIhVG00kkjtZYtytYQEV7vM4CiW3-M1oNTDbB3mddaxk0APUxpvaoGQzqz6xRvtXN_PUbr4tUSS8JnhgchULVzQObCdQy7uccoO3OboMYemQ&lib=MsHwTjT6IdVPYQvJGqMBEz6WlMQveogDQ" \
   -H "Content-Type: application/json" \
   -d '{
     "timestamp": "2025-01-02T00:00:00.000Z",
