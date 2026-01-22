@@ -96,7 +96,7 @@ Environment: Production
 1. Mở URL production của bạn
 2. Vào Login page
 3. Kiểm tra connection status: **🟢 Connected**
-4. Thử đăng nhập với: `admin` / `admin1234`
+4. Thử đăng nhập với: `admin` / `admin12345`
 
 ---
 
