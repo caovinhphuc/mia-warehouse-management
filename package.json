@@ -2,9 +2,7 @@
   "name": "warehouse-management-mia-warehouse",
   "version": "1.0.0",
   "private": true,
-  "author": "MIA Warehouse Management",
-  "homepage": "https://warehouse-management-mia-warehouse.vercel.app/login",
-  "repository": {
+  "author": "MIA Warehouse Management",  "repository": {
     "type": "git",
     "url": "https://github.com/caovinhphuc/warehouse-management-mia-warehouse.git"
   },
