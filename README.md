@@ -1,29 +1,27 @@
 # MIA Warehouse Management System
 
-🏭 **Modern React + Google Sheets warehouse management system**
+🏭 **Modern React warehouse management system (CRA / react-scripts) + Google Sheets**
 
 ## 🚀 Live Demo
-
-- **Production**: <https://mia-warehouse-management-ax3w.vercel.app/login>
-- **Features**: Real-time dashboard, Order management, Analytics, Automation
-
-## 🎯 Current Status
-
-✅ **Vercel Deployment**: Active
-✅ **GitHub Integration**: Connected
-✅ **Auto-Deploy**: Enabled
-
-## 📋 Next Steps
-
-1. Configure Google Sheets API
-2. Deploy Google Apps Script
-3. Production testing
+- **Production**: https://mia-warehouse-management-ax3w.vercel.app/login
 
 ## 🔧 Tech Stack
-
-- **Frontend**: React.js, TailwindCSS, Chart.js
-- **Backend**: Google Sheets API, Apps Script
+- **Frontend**: React (react-scripts), TailwindCSS, Chart.js
+- **Backend**: Google Sheets API, Google Apps Script
 - **Deployment**: Vercel
 - **Version Control**: GitHub
 
-Built with ❤️ by MIA Team
+## ✅ Requirements
+- **Node.js 22** (recommended via `mise`)
+- **npm** (this repo uses `package-lock.json`)
+
+## 🧰 Local Development
+```bash
+# 1) Install the pinned Node version
+mise install
+
+# 2) Install dependencies (reproducible)
+npm ci
+
+# 3) Run dev server
+npm start
