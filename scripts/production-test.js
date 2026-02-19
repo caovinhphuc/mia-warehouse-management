@@ -47,7 +47,7 @@ const CONFIG = {
   // Test credentials for login with admin account
   TEST_USER: {
     username: "admin",
-    password: "admin1234",
+    password: "admin12345",
   },
 };
 
@@ -163,7 +163,7 @@ async function testProductionDeployment() {
       ? CONFIG.VERCEL_URL + "/login"
       : "https://" + CONFIG.VERCEL_URL + "/login";
     console.log("   📱 Test login at: " + loginUrl);
-    console.log("   👤 Username: admin, Password: admin1234");
+    console.log("   👤 Username: admin, Password: admin12345");
   }
 
   return results;

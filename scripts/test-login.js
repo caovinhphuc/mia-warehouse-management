@@ -208,8 +208,8 @@ async function runTests() {
 
   if (connectionTest.success) {
     // Test with default credentials
-    console.log("\n5️⃣ Testing default credentials (admin/admin1234)...");
-    await testUserCredentials("admin", "admin1234");
+    console.log("\n5️⃣ Testing default credentials (admin/admin12345)...");
+    await testUserCredentials("admin", "admin12345");
   }
 
   console.log("\n" + "=".repeat(50));
