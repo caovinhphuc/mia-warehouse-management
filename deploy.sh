@@ -80,6 +80,8 @@ echo ""
 echo -e "${GREEN}📤 Bước 5: Push lên GitHub...${NC}"
 read -p "Push lên GitHub? (y/n) " -n 1 -r
 echo
+# Xóa ký tự thừa trong buffer (tránh bước 6 đọc nhầm)
+read -r DUMMY 2>/dev/null || true
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     git push origin main
     echo -e "${GREEN}✅ Đã push lên GitHub thành công!${NC}"
