@@ -56,19 +56,19 @@ git push -u origin main
 
 1. **Project Name**: `mia-warehouse-management`
 2. **Framework**: Create React App (auto-detect)
-3. **Build Command**: `npm run build` (default)
+3. **Build Command**: `npm run build` (đã cấu hình trong `vercel.json`)
 4. **Output Directory**: `build` (default)
-5. **Install Command**: `npm install` (default)
+5. **Install Command**: `npm ci` (đã cấu hình trong `vercel.json` — dùng npm, không pnpm)
 
 #### 2.4 Environment Variables - **QUAN TRỌNG!**
 
 Click **"Environment Variables"** và thêm từng cái:
 
 ```env
-REACT_APP_GOOGLE_SHEETS_API_KEY = AIzaSyB_MwjhFxQtxnihpZTa95XH0BCI9MXihh8
-REACT_APP_GOOGLE_SHEETS_ID = 1m2B2ODXuuatnW0EKExdVeCa1WwvF52bZOhS7DGqG6Vg
-NODE_ENV = production
-GENERATE_SOURCEMAP = false
+REACT_APP_GOOGLE_SHEETS_API_KEY=<API_KEY_CỦA_BẠN>
+REACT_APP_GOOGLE_SHEETS_ID=<SHEET_ID_CỦA_BẠN>
+NODE_ENV=production
+GENERATE_SOURCEMAP=false
 ```
 
 #### 2.5 Deploy
@@ -89,8 +89,8 @@ GENERATE_SOURCEMAP = false
 
 #### 3.2 Copy Code
 
-1. Mở file `Code.gs` trong project này
-2. Copy **TOÀN BỘ** nội dung (275 dòng)
+1. Mở file `fixed-apps-script.gs` hoặc `Code.gs` trong project này
+2. Copy **TOÀN BỘ** nội dung
 3. Paste vào Apps Script editor (thay thế code mặc định)
 4. **Ctrl+S** để save
 
@@ -148,11 +148,11 @@ REACT_APP_PROFILE_UPDATE_WEBHOOK_URL = [PASTE_YOUR_WEB_APP_URL_HERE]
 
 ## 🎉 **HOÀN THÀNH!**
 
-### **✅ URLs của bạn:**
+### **✅ URLs:**
 
-- **🌐 Live App**: `https://mia-warehouse-management-[random].vercel.app`
-- **🐙 GitHub**: `https://github.com/YOUR_USERNAME/mia-warehouse-management`
-- **📊 Google Sheets**: <https://docs.google.com/spreadsheets/d/1m2B2ODXuuatnW0EKExdVeCa1WwvF52bZOhS7DGqG6Vg>
+- **🌐 Live App**: `https://mia-warehouse-management-xi.vercel.app`
+- **🐙 GitHub**: `https://github.com/caovinhphuc/mia-warehouse-management`
+- **📊 Google Sheets**: <https://docs.google.com/spreadsheets/d/SHEET_ID>
 - **⚙️ Apps Script**: `https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec`
 
 ### **✅ Test Accounts:**

@@ -3,12 +3,30 @@
 ## ⚠️ Vấn Đề
 
 Lỗi: `TypeError: atLeastNode is not a function`
-- Node.js v25.2.1 quá mới
-- Không tương thích với `react-scripts 5.0.1`
+- Node.js quá mới hoặc không tương thích
+- `react-scripts 5.0.1` cần Node 18–20 (hoặc 22 với overrides trong package.json)
 
 ## ✅ Giải Pháp
 
-### Giải Pháp 1: Sử dụng nvm (Khuyến Nghị)
+### Giải Pháp 1: Sử dụng mise (Khuyến nghị - dự án đã có mise.toml)
+
+```bash
+# Cài mise nếu chưa có: https://mise.jdx.dev
+# Cài Node 22 như cấu hình trong mise.toml
+mise install
+
+# Verify
+node --version  # v22.x.x
+
+# Reinstall dependencies
+rm -rf node_modules
+npm install
+
+# Start
+npm start
+```
+
+### Giải Pháp 2: Sử dụng nvm
 
 ```bash
 # Cài đặt nvm nếu chưa có
@@ -29,7 +47,7 @@ npm install
 npm start
 ```
 
-### Giải Pháp 2: Update react-scripts
+### Giải Pháp 3: Update react-scripts
 
 ```bash
 # Update react-scripts lên version mới hơn
@@ -43,7 +61,7 @@ npm install
 npm start
 ```
 
-### Giải Pháp 3: Sử dụng Yarn (Alternative)
+### Giải Pháp 4: Sử dụng Yarn (Alternative)
 
 ```bash
 # Cài yarn
@@ -67,14 +85,21 @@ yarn start
 
 ## 🎯 Khuyến Nghị
 
-**Sử dụng Node.js 18 LTS** - tương thích tốt nhất với `react-scripts 5.0.1`
+**Dự án dùng mise + Node 22** (xem `mise.toml`). Cách đơn giản nhất:
 
 ```bash
-nvm install 18
-nvm use 18
+mise install
+npm start
+```
+
+**Nếu dùng nvm**: Node 18 LTS hoặc 20 LTS tương thích tốt với `react-scripts 5.0.1`:
+
+```bash
+nvm install 20
+nvm use 20
 npm start
 ```
 
 ---
 
-**Cập nhật:** 2025-01-02
+**Cập nhật:** 2025-03-07

@@ -18,7 +18,7 @@
 
 ```
 Name: REACT_APP_GOOGLE_SHEETS_API_KEY
-Value: AIzaSyB_MwjhFxQtxnihpZTa95XH0BCI9MXihh8
+Value: <API_KEY_LẤY_TỪ_GOOGLE_CLOUD_CONSOLE>
 Environment: Production, Preview, Development
 ```
 
@@ -26,7 +26,7 @@ Environment: Production, Preview, Development
 
 ```
 Name: REACT_APP_GOOGLE_SHEETS_ID
-Value: 1m2B2ODXuuatnW0EKExdVeCa1WwvF52bZOhS7DGqG6Vg
+Value: <SHEET_ID_TỪ_URL_GOOGLE_SHEETS>
 Environment: Production, Preview, Development
 ```
 
@@ -38,7 +38,7 @@ Environment: Production, Preview, Development
 
 ```
 Name: REACT_APP_AUDIT_WEBHOOK_URL
-Value: https://script.google.com/macros/s/AKfycbzJ7ZVmG3JyU0wQlBAfNxC1CK9eUAqrHGKvf_BVUT8eIQYT0TsYL7Jp39kQQidOrPft/exec
+Value: https://script.google.com/macros/s/<YOUR_APPS_SCRIPT_ID>/exec
 Environment: Production, Preview, Development
 ```
 
@@ -46,7 +46,7 @@ Environment: Production, Preview, Development
 
 ```
 Name: REACT_APP_PROFILE_UPDATE_WEBHOOK_URL
-Value: https://script.google.com/macros/s/AKfycbzJ7ZVmG3JyU0wQlBAfNxC1CK9eUAqrHGKvf_BVUT8eIQYT0TsYL7Jp39kQQidOrPft/exec
+Value: https://script.google.com/macros/s/<YOUR_APPS_SCRIPT_ID>/exec
 Environment: Production, Preview, Development
 ```
 

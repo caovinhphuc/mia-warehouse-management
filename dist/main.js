@@ -15,7 +15,7 @@
   \**********************/
 () {
 
-eval("{throw new Error(\"Module parse failed: Unexpected token (8:12)\\nYou may need an appropriate loader to handle this file type, currently no loaders are configured to process this file. See https://webpack.js.org/concepts#loaders\\n| \\n| const root = ReactDOM.createRoot(document.getElementById(\\\"root\\\"));\\n> root.render(<App />);\\n| \");\n\n//# sourceURL=webpack://warehouse-management-mia-warehouse/./src/index.js?\n}");
+eval("{throw new Error(\"Module parse failed: Unexpected token (8:12)\\nYou may need an appropriate loader to handle this file type, currently no loaders are configured to process this file. See https://webpack.js.org/concepts#loaders\\n| \\n| const root = ReactDOM.createRoot(document.getElementById(\\\"root\\\"));\\n> root.render(<App />);\\n| \\n| \");\n\n//# sourceURL=webpack://warehouse-management-mia-warehouse/./src/index.js?\n}");
 
 /***/ }
 

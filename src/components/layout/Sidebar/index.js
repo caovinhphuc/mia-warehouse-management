@@ -5,30 +5,26 @@
  * Cập nhật: 08/06/2025 - Trưởng phòng Kho vận
  */
 
-import React, { useState } from 'react';
+import { useState } from 'react'
 // import { useTheme } from '../../../App'; // Import useTheme hook - Ready for dark mode styling
 import {
-  BarChart2,
-  Package,
-  Navigation,
-  Map,
-  Users,
-  Truck,
-  Archive,
-  TrendingUp,
   AlertTriangle,
+  Archive,
+  BarChart2,
+  Bot,
+  ChevronRight,
+  Map,
+  Navigation,
+  Package,
   Settings,
   Shield,
-  ChevronRight,
-  Bot,
-} from 'lucide-react';
+  TrendingUp,
+  Truck,
+  Users,
+} from 'lucide-react'
 
-export const Sidebar = ({
-  isOpen,
-  currentPath = '/dashboard',
-  onNavigate = () => {},
-}) => {
-  const [expandedSections, setExpandedSections] = useState(['main']);
+export const Sidebar = ({ isOpen, currentPath = '/dashboard', onNavigate = () => {} }) => {
+  const [expandedSections, setExpandedSections] = useState(['main'])
   // const { isDarkMode } = useTheme(); // Use theme hook - not used yet but ready for dark mode styling
 
   // Menu configuration cho hệ thống kho vận
@@ -39,10 +35,10 @@ export const Sidebar = ({
       items: [
         {
           id: 'dashboard',
-          label: 'Dashboard SLA',
+          label: 'Integration Dashboard',
           icon: BarChart2,
-          path: '/dashboard',
-          description: 'Tổng quan SLA và KPI',
+          path: '/integration-dashboard',
+          description: 'Bảng điều khiển tích hợp',
         },
         {
           id: 'orders',
@@ -156,17 +152,15 @@ export const Sidebar = ({
         },
       ],
     },
-  ];
+  ]
 
   const toggleSection = (sectionId) => {
     setExpandedSections((prev) =>
-      prev.includes(sectionId)
-        ? prev.filter((id) => id !== sectionId)
-        : [...prev, sectionId]
-    );
-  };
+      prev.includes(sectionId) ? prev.filter((id) => id !== sectionId) : [...prev, sectionId],
+    )
+  }
 
-  const isItemActive = (path) => currentPath === path;
+  const isItemActive = (path) => currentPath === path
 
   return (
     <>
@@ -195,12 +189,8 @@ export const Sidebar = ({
                 <Package size={20} className="text-white" />
               </div>
               <div>
-                <h2 className="text-lg font-bold text-gray-900 dark:text-white">
-                  MIA Warehouse
-                </h2>
-                <p className="text-xs text-gray-500 dark:text-gray-400">
-                  SLA Dashboard
-                </p>
+                <h2 className="text-lg font-bold text-gray-900 dark:text-white">MIA Warehouse</h2>
+                <p className="text-xs text-gray-500 dark:text-gray-400">SLA Dashboard</p>
               </div>
             </div>
           </div>
@@ -218,9 +208,7 @@ export const Sidebar = ({
                   <ChevronRight
                     size={14}
                     className={`transform transition-transform ${
-                      expandedSections.includes(section.section)
-                        ? 'rotate-90'
-                        : ''
+                      expandedSections.includes(section.section) ? 'rotate-90' : ''
                     }`}
                   />
                 </button>
@@ -229,8 +217,8 @@ export const Sidebar = ({
                 {expandedSections.includes(section.section) && (
                   <div className="mt-2 space-y-1">
                     {section.items.map((item) => {
-                      const Icon = item.icon;
-                      const isActive = isItemActive(item.path);
+                      const Icon = item.icon
+                      const isActive = isItemActive(item.path)
 
                       return (
                         <button
@@ -244,15 +232,11 @@ export const Sidebar = ({
                         >
                           <Icon
                             size={18}
-                            className={
-                              isActive ? 'text-blue-600 dark:text-blue-400' : ''
-                            }
+                            className={isActive ? 'text-blue-600 dark:text-blue-400' : ''}
                           />
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center justify-between">
-                              <p className="text-sm font-medium truncate">
-                                {item.label}
-                              </p>
+                              <p className="text-sm font-medium truncate">{item.label}</p>
                               {item.badge && (
                                 <span className="ml-2 px-2 py-0.5 text-xs bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 rounded-full">
                                   {item.badge}
@@ -264,7 +248,7 @@ export const Sidebar = ({
                             </p>
                           </div>
                         </button>
-                      );
+                      )
                     })}
                   </div>
                 )}
@@ -276,10 +260,7 @@ export const Sidebar = ({
           <div className="p-4 border-t border-gray-200 dark:border-gray-700">
             <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-lg p-3">
               <div className="flex items-center space-x-2 mb-2">
-                <Shield
-                  size={16}
-                  className="text-blue-600 dark:text-blue-400"
-                />
+                <Shield size={16} className="text-blue-600 dark:text-blue-400" />
                 <span className="text-sm font-medium text-blue-700 dark:text-blue-300">
                   MIA Warehouse v2.1
                 </span>
@@ -287,17 +268,14 @@ export const Sidebar = ({
               <p className="text-xs text-blue-600 dark:text-blue-400">
                 Google Sheets Integration Active
               </p>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                Cập nhật: 08/06/2025
-              </p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Cập nhật: 08/06/2025</p>
             </div>
           </div>
         </div>
       </aside>
     </>
-  );
-};
+  )
+}
 
-Sidebar.displayName = 'Sidebar';
-
+Sidebar.displayName = 'Sidebar'
 // This Sidebar component provides a responsive navigation menu for the MIA Warehouse Dashboard.

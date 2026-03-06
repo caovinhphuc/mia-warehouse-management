@@ -2,10 +2,9 @@
 
 ## ✅ Trạng thái hiện tại
 
-- ✅ Code đã được commit: `🚀 Deploy: Update authentication to support email/login + latest features`
-- ✅ Code đã được push lên GitHub: [https://github.com/caovinhphuc/mia-warehouse-management](https://github.com/caovinhphuc/mia-warehouse-management)
+- ✅ Code đã được commit và push lên GitHub
 - ✅ Repository: `caovinhphuc/mia-warehouse-management`
-- 🌐 Vercel URL hiện tại: [https://mia-warehouse-management-ax3w.vercel.app/login](https://warehouse-management-template-jsx.vercel.app/login)
+- 🌐 Vercel Production: [https://mia-warehouse-management-xi.vercel.app](https://mia-warehouse-management-xi.vercel.app)
 
 ---
 
@@ -40,14 +39,15 @@
 2. Thêm các biến sau:
 
 ```
-REACT_APP_GOOGLE_SHEETS_API_KEY=AIzaSyB_MwjhFxQtxnihpZTa95XH0BCI9MXihh8
-REACT_APP_GOOGLE_SHEETS_ID=1m2B2ODXuuatnW0EKExdVeCa1WwvF52bZOhS7DGqG6Vg
-REACT_APP_AUDIT_WEBHOOK_URL=https://script.google.com/macros/s/AKfycbwUdvTeCpEEvqdUb00IMnwuSSdIoOGlIuaLYoEWY4Zf-k1hnHTFCBVsI4QmZmFBBaOd/exec
-
-REACT_APP_PROFILE_UPDATE_WEBHOOK_URL=https://script.google.com/macros/s/AKfycbwUdvTeCpEEvqdUb00IMnwuSSdIoOGlIuaLYoEWY4Zf-k1hnHTFCBVsI4QmZmFBBaOd/exec
+REACT_APP_GOOGLE_SHEETS_API_KEY=<API_KEY_CỦA_BẠN>
+REACT_APP_GOOGLE_SHEETS_ID=<SHEET_ID_CỦA_BẠN>
+REACT_APP_AUDIT_WEBHOOK_URL=<WEBHOOK_URL_APPS_SCRIPT>
+REACT_APP_PROFILE_UPDATE_WEBHOOK_URL=<WEBHOOK_URL_APPS_SCRIPT>
 NODE_ENV=production
 GENERATE_SOURCEMAP=false
 ```
+
+> 📋 Chi tiết: `VERCEL_ENV_VARS.md`, `env.example`
 
 3. Chọn environment: **Production, Preview, Development**
 4. Click **"Save"**
@@ -66,7 +66,7 @@ npm install -g vercel
 ### **Deploy:**
 
 ```bash
-cd /Users/phuccao/Projects/fullstack/mia-warehouse-management # Replace with your project path if not the same
+# Trong thư mục project
 vercel --prod
 ```
 

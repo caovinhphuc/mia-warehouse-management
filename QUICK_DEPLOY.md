@@ -11,9 +11,10 @@
 Script sẽ tự động:
 
 1. ✅ Build test để đảm bảo không có lỗi
-2. ✅ Commit tất cả thay đổi
-3. ✅ Push lên GitHub
-4. ✅ Deploy lên Vercel (nếu có Vercel CLI)
+2. ✅ Kiểm tra và add file vào staging
+3. ✅ Commit (chỉ khi có thay đổi; bỏ qua nếu working tree clean)
+4. ✅ Hỏi xác nhận push lên GitHub
+5. ✅ Hỏi xác nhận deploy lên Vercel (nếu có Vercel CLI)
 
 ---
 
@@ -65,13 +66,15 @@ vercel --prod
 2. Thêm các biến sau:
 
 ```env
-REACT_APP_GOOGLE_SHEETS_API_KEY=AIzaSyB_MwjhFxQtxnihpZTa95XH0BCI9MXihh8
-REACT_APP_GOOGLE_SHEETS_ID=1m2B2ODXuuatnW0EKExdVeCa1WwvF52bZOhS7DGqG6Vg
-REACT_APP_AUDIT_WEBHOOK_URL=https://script.google.com/macros/s/AKfycbzJ7ZVmG3JyU0wQlBAfNxC1CK9eUAqrHGKvf_BVUT8eIQYT0TsYL7Jp39kQQidOrPft/exec
-REACT_APP_PROFILE_UPDATE_WEBHOOK_URL=https://script.google.com/macros/s/AKfycbzJ7ZVmG3JyU0wQlBAfNxC1CK9eUAqrHGKvf_BVUT8eIQYT0TsYL7Jp39kQQidOrPft/exec
+REACT_APP_GOOGLE_SHEETS_API_KEY=<API_KEY_CỦA_BẠN>
+REACT_APP_GOOGLE_SHEETS_ID=<SHEET_ID_CỦA_BẠN>
+REACT_APP_AUDIT_WEBHOOK_URL=<WEBHOOK_URL_APPS_SCRIPT>
+REACT_APP_PROFILE_UPDATE_WEBHOOK_URL=<WEBHOOK_URL_APPS_SCRIPT>
 NODE_ENV=production
 GENERATE_SOURCEMAP=false
 ```
+
+> 📋 Chi tiết biến env: xem `VERCEL_ENV_VARS.md` hoặc `env.example`
 
 3. Chọn environment: **Production, Preview, Development**
 4. Click **Save**
@@ -91,7 +94,10 @@ GENERATE_SOURCEMAP=false
 
 ## 🐛 Troubleshooting
 
-### **Build failed trên Vercel:**
+### **Build failed trên Vercel (`pnpm run build` exited with 1):**
+
+- Dự án dùng **npm** (có `vercel.json` bắt buộc `npm ci` và `npm run build`)
+- Nếu có `pnpm-lock.yaml`, Vercel có thể nhầm dùng pnpm → đã fix trong `vercel.json`
 
 ```bash
 # Test build local trước
@@ -109,6 +115,11 @@ npm run build
 - Kiểm tra API key trong Vercel
 - Verify Google Sheets ID đúng
 - Check permissions của Google Sheets
+
+### **Bước 6 "Bỏ qua deploy Vercel" dù chưa bấm n:**
+
+- Đã fix: buffer stdin sau bước 5 (push) để bước 6 đọc đúng input
+- Đảm bảo dùng `deploy.sh` mới nhất
 
 ---
 
