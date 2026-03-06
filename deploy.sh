@@ -58,19 +58,22 @@ echo ""
 # Step 3: Add all changes
 echo -e "${GREEN}📝 Bước 3: Thêm các file vào staging...${NC}"
 git add .
-echo -e "${GREEN}✅ Đã thêm tất cả file vào staging${NC}"
 echo ""
 
-# Step 4: Commit
+# Step 4: Commit (chỉ khi có thay đổi)
 echo -e "${GREEN}💾 Bước 4: Commit changes...${NC}"
-read -p "Nhập commit message (hoặc Enter để dùng message mặc định): " COMMIT_MSG
+if git diff --staged --quiet 2>/dev/null; then
+    echo -e "${YELLOW}⚠️  Không có thay đổi để commit (working tree clean). Bỏ qua bước commit.${NC}"
+else
+    read -p "Nhập commit message (hoặc Enter để dùng message mặc định): " COMMIT_MSG
 
-if [ -z "$COMMIT_MSG" ]; then
-    COMMIT_MSG="🚀 Deploy: Update authentication to support email/login + latest features"
+    if [ -z "$COMMIT_MSG" ]; then
+        COMMIT_MSG="🚀 Deploy: Update authentication to support email/login + latest features"
+    fi
+
+    git commit -m "$COMMIT_MSG"
+    echo -e "${GREEN}✅ Đã commit: $COMMIT_MSG${NC}"
 fi
-
-git commit -m "$COMMIT_MSG"
-echo -e "${GREEN}✅ Đã commit: $COMMIT_MSG${NC}"
 echo ""
 
 # Step 5: Push to GitHub
