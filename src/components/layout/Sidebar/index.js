@@ -11,15 +11,12 @@ import {
   AlertTriangle,
   Archive,
   BarChart2,
-  Bot,
   ChevronRight,
-  Map,
   Navigation,
   Package,
   Settings,
   Shield,
   TrendingUp,
-  Truck,
   Users,
 } from 'lucide-react'
 
@@ -37,17 +34,18 @@ export const Sidebar = ({ isOpen, currentPath = '/dashboard', onNavigate = () =>
           id: 'dashboard',
           label: 'Integration Dashboard',
           icon: BarChart2,
-          path: '/integration-dashboard',
+          path: '/dashboard',
           description: 'Bảng điều khiển tích hợp',
         },
-        {
-          id: 'orders',
-          label: 'Quản lý Đơn hàng',
-          icon: Package,
-          path: '/orders',
-          description: 'P1-P4 priority tracking',
-          badge: 'P1: 5',
-        },
+        // Ẩn tạm thời - bật lại khi cần
+        // {
+        //   id: 'orders',
+        //   label: 'Quản lý Đơn hàng',
+        //   icon: Package,
+        //   path: '/orders',
+        //   description: 'P1-P4 priority tracking',
+        //   badge: 'P1: 5',
+        // },
         {
           id: 'picking',
           label: 'Lấy hàng thông minh',
@@ -55,13 +53,14 @@ export const Sidebar = ({ isOpen, currentPath = '/dashboard', onNavigate = () =>
           path: '/picking',
           description: 'Route optimization & tracking',
         },
-        {
-          id: 'warehouse-map',
-          label: 'Bản đồ Kho',
-          icon: Map,
-          path: '/warehouse-map',
-          description: 'Layout và tối ưu hóa vị trí',
-        },
+        // Ẩn tạm thời - bật lại khi cần
+        // {
+        //   id: 'warehouse-map',
+        //   label: 'Bản đồ Kho',
+        //   icon: Map,
+        //   path: '/warehouse-map',
+        //   description: 'Layout và tối ưu hóa vị trí',
+        // },
       ],
     },
     {
@@ -88,13 +87,14 @@ export const Sidebar = ({ isOpen, currentPath = '/dashboard', onNavigate = () =>
       section: 'logistics',
       title: 'Logistics & Kho',
       items: [
-        {
-          id: 'transport',
-          label: 'Kho bãi & Vận chuyển',
-          icon: Truck,
-          path: '/transport',
-          description: 'Quản lý kho bãi và vận chuyển',
-        },
+        // Ẩn tạm thời - bật lại khi cần
+        // {
+        //   id: 'transport',
+        //   label: 'Kho bãi & Vận chuyển',
+        //   icon: Truck,
+        //   path: '/transport',
+        //   description: 'Quản lý kho bãi và vận chuyển',
+        // },
         {
           id: 'inventory',
           label: 'Tồn kho',
@@ -102,13 +102,14 @@ export const Sidebar = ({ isOpen, currentPath = '/dashboard', onNavigate = () =>
           path: '/inventory',
           description: 'Quản lý stock levels',
         },
-        {
-          id: 'shippingsla',
-          label: 'Hệ Thống SLA',
-          icon: Shield,
-          path: '/shippingsla',
-          description: 'Quản lý SLA vận chuyển và giám sát',
-        },
+        // Ẩn tạm thời - bật lại khi cần
+        // {
+        //   id: 'shippingsla',
+        //   label: 'Hệ Thống SLA',
+        //   icon: Shield,
+        //   path: '/shippingsla',
+        //   description: 'Quản lý SLA vận chuyển và giám sát',
+        // },
       ],
     },
     {
@@ -136,13 +137,14 @@ export const Sidebar = ({ isOpen, currentPath = '/dashboard', onNavigate = () =>
       section: 'system',
       title: 'Hệ thống',
       items: [
-        {
-          id: 'automation',
-          label: 'ONE Automation',
-          icon: Bot,
-          path: '/automation',
-          description: 'Tự động hóa thu thập dữ liệu',
-        },
+        // Ẩn tạm thời - bật lại khi cần
+        // {
+        //   id: 'automation',
+        //   label: 'ONE Automation',
+        //   icon: Bot,
+        //   path: '/automation',
+        //   description: 'Tự động hóa thu thập dữ liệu',
+        // },
         {
           id: 'settings',
           label: 'Cài đặt',

@@ -1,20 +1,20 @@
-import React, { useState } from 'react';
 import {
-  User,
-  Shield,
-  Mail,
-  Clock,
-  Calendar,
-  LogOut,
-  Edit,
-  Save,
-  X,
-  CheckCircle,
   AlertTriangle,
-  Package,
-  Users,
   BarChart2,
-} from 'lucide-react';
+  Calendar,
+  CheckCircle,
+  Clock,
+  Edit,
+  LogOut,
+  Mail,
+  Package,
+  Save,
+  Shield,
+  User,
+  Users,
+  X,
+} from 'lucide-react'
+import { useState } from 'react'
 
 // ==================== USER PROFILE COMPONENT ====================
 /**
@@ -24,18 +24,18 @@ import {
  */
 
 const UserProfile = ({ user, onUpdateProfile, onLogout }) => {
-  const [isEditing, setIsEditing] = useState(false);
-  const [editedUser, setEditedUser] = useState(user || {});
+  const [isEditing, setIsEditing] = useState(false)
+  const [editedUser, setEditedUser] = useState(user || {})
 
   const handleSave = () => {
-    onUpdateProfile?.(editedUser);
-    setIsEditing(false);
-  };
+    onUpdateProfile?.(editedUser)
+    setIsEditing(false)
+  }
 
   const handleCancel = () => {
-    setEditedUser(user || {});
-    setIsEditing(false);
-  };
+    setEditedUser(user || {})
+    setIsEditing(false)
+  }
 
   // Permission mapping for display
   const permissionLabels = {
@@ -56,40 +56,40 @@ const UserProfile = ({ user, onUpdateProfile, onLogout }) => {
     export_reports: 'Xuất báo cáo',
     view_costs: 'Xem chi phí',
     financial_reports: 'Báo cáo tài chính',
-  };
+  }
 
   // Role-based colors
   const getRoleColor = (role) => {
     switch (role?.toLowerCase()) {
       case 'warehouse manager':
-        return 'bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-300';
+        return 'bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-300'
       case 'warehouse supervisor':
-        return 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-300';
+        return 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-300'
       case 'warehouse staff':
-        return 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300';
+        return 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300'
       case 'warehouse accountant':
-        return 'bg-orange-100 text-orange-800 dark:bg-orange-900/20 dark:text-orange-300';
+        return 'bg-orange-100 text-orange-800 dark:bg-orange-900/20 dark:text-orange-300'
       case 'guest user':
-        return 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-300';
+        return 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-300'
       default:
-        return 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-300';
+        return 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-300'
     }
-  };
+  }
 
   const getRoleIcon = (role) => {
     switch (role?.toLowerCase()) {
       case 'warehouse manager':
-        return <Shield size={16} />;
+        return <Shield size={16} />
       case 'warehouse supervisor':
-        return <Users size={16} />;
+        return <Users size={16} />
       case 'warehouse staff':
-        return <Package size={16} />;
+        return <Package size={16} />
       case 'warehouse accountant':
-        return <BarChart2 size={16} />;
+        return <BarChart2 size={16} />
       default:
-        return <User size={16} />;
+        return <User size={16} />
     }
-  };
+  }
 
   if (!user) {
     return (
@@ -101,7 +101,7 @@ const UserProfile = ({ user, onUpdateProfile, onLogout }) => {
           </div>
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -117,7 +117,7 @@ const UserProfile = ({ user, onUpdateProfile, onLogout }) => {
               <h2 className="text-xl font-bold">{user.name}</h2>
               <div
                 className={`inline-flex items-center space-x-1 px-2 py-1 rounded-full text-xs font-medium ${getRoleColor(
-                  user.role
+                  user.role,
                 )}`}
               >
                 {getRoleIcon(user.role)}
@@ -203,9 +203,7 @@ const UserProfile = ({ user, onUpdateProfile, onLogout }) => {
                       className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
                     />
                   ) : (
-                    <span className="text-gray-900 dark:text-white">
-                      {user.email}
-                    </span>
+                    <span className="text-gray-900 dark:text-white">{user.email}</span>
                   )}
                 </div>
               </div>
@@ -216,9 +214,7 @@ const UserProfile = ({ user, onUpdateProfile, onLogout }) => {
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Phòng ban
                 </label>
-                <p className="text-gray-900 dark:text-white">
-                  {user.department}
-                </p>
+                <p className="text-gray-900 dark:text-white">{user.department}</p>
               </div>
 
               <div>
@@ -227,9 +223,7 @@ const UserProfile = ({ user, onUpdateProfile, onLogout }) => {
                 </label>
                 <div className="flex items-center space-x-2">
                   <Clock size={16} className="text-gray-400" />
-                  <span className="text-gray-900 dark:text-white">
-                    {user.shift}
-                  </span>
+                  <span className="text-gray-900 dark:text-white">{user.shift}</span>
                 </div>
               </div>
             </div>
@@ -247,10 +241,7 @@ const UserProfile = ({ user, onUpdateProfile, onLogout }) => {
                 key={permission}
                 className="flex items-center space-x-2 p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg"
               >
-                <CheckCircle
-                  size={16}
-                  className="text-green-600 dark:text-green-400"
-                />
+                <CheckCircle size={16} className="text-green-600 dark:text-green-400" />
                 <span className="text-sm text-green-800 dark:text-green-300">
                   {permissionLabels[permission] || permission}
                 </span>
@@ -273,9 +264,7 @@ const UserProfile = ({ user, onUpdateProfile, onLogout }) => {
                 </span>
               </div>
               <p className="text-gray-900 dark:text-white">
-                {user.lastLogin
-                  ? new Date(user.lastLogin).toLocaleString('vi-VN')
-                  : 'Chưa có'}
+                {user.lastLogin ? new Date(user.lastLogin).toLocaleString('vi-VN') : 'Chưa có'}
               </p>
             </div>
 
@@ -286,9 +275,7 @@ const UserProfile = ({ user, onUpdateProfile, onLogout }) => {
                   ID người dùng
                 </span>
               </div>
-              <p className="text-gray-900 dark:text-white font-mono text-sm">
-                {user.id}
-              </p>
+              <p className="text-gray-900 dark:text-white font-mono text-sm">{user.id}</p>
             </div>
           </div>
         </div>
@@ -310,7 +297,7 @@ const UserProfile = ({ user, onUpdateProfile, onLogout }) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default UserProfile;
+export default UserProfile

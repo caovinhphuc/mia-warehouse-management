@@ -1,6 +1,6 @@
 // ==================== IMPORTS ====================
-import { UploadCloud } from 'lucide-react';
-import { createContext, useContext, useEffect, useState } from 'react';
+import { UploadCloud } from 'lucide-react'
+import { createContext, useContext, useEffect, useState } from 'react'
 
 import {
   Activity,
@@ -35,7 +35,7 @@ import {
   WifiOff,
   X,
   XCircle,
-} from 'lucide-react';
+} from 'lucide-react'
 
 // ==================== NOTIFICATION PROVIDER ====================
 /**
@@ -44,57 +44,57 @@ import {
  * Cập nhật: 08/06/2025 - Trưởng phòng Kho vận
  */
 
-const NotificationContext = createContext();
+const NotificationContext = createContext()
 
 export const NotificationProvider = ({ children }) => {
-  const [notifications, setNotifications] = useState([]);
-  const [maxNotifications] = useState(5); // Giới hạn 5 thông báo hiển thị
+  const [notifications, setNotifications] = useState([])
+  const [maxNotifications] = useState(5) // Giới hạn 5 thông báo hiển thị
 
   // Thêm thông báo mới
   const addNotification = (notification) => {
-    const id = Date.now() + Math.random();
+    const id = Date.now() + Math.random()
     const newNotification = {
       id,
       timestamp: new Date(),
       ...notification,
-    };
+    }
 
     setNotifications((prev) => {
-      const updated = [newNotification, ...prev].slice(0, maxNotifications);
-      return updated;
-    });
+      const updated = [newNotification, ...prev].slice(0, maxNotifications)
+      return updated
+    })
 
     // Tự động xóa thông báo sau 5s (trừ loại 'error' và 'warning')
     if (!['error', 'warning'].includes(notification.type)) {
       setTimeout(() => {
-        removeNotification(id);
-      }, 5000);
+        removeNotification(id)
+      }, 5000)
     }
 
-    return id;
-  };
+    return id
+  }
 
   // Xóa thông báo
   const removeNotification = (id) => {
-    setNotifications((prev) => prev.filter((n) => n.id !== id));
-  };
+    setNotifications((prev) => prev.filter((n) => n.id !== id))
+  }
 
   // Clear tất cả thông báo
   const clearAll = () => {
-    setNotifications([]);
-  };
+    setNotifications([])
+  }
 
   // Các method tiện ích cho warehouse operations
   const notifySuccess = (message, details = '') =>
-    addNotification({ type: 'success', message, details });
+    addNotification({ type: 'success', message, details })
 
   const notifyError = (message, details = '') =>
-    addNotification({ type: 'error', message, details });
+    addNotification({ type: 'error', message, details })
 
   const notifyWarning = (message, details = '') =>
-    addNotification({ type: 'warning', message, details });
+    addNotification({ type: 'warning', message, details })
 
-  const notifyInfo = (message, details = '') => addNotification({ type: 'info', message, details });
+  const notifyInfo = (message, details = '') => addNotification({ type: 'info', message, details })
 
   // Thông báo đặc biệt cho SLA và sync
   const notifySLAAlert = (orderID, remainingTime) =>
@@ -103,14 +103,14 @@ export const NotificationProvider = ({ children }) => {
       message: `Đơn hàng ${orderID} sắp quá hạn SLA`,
       details: `Còn ${remainingTime} phút để hoàn thành`,
       action: { label: 'Xem đơn', href: `/orders/${orderID}` },
-    });
+    })
 
   const notifySyncStatus = (status, details) =>
     addNotification({
       type: status === 'success' ? 'success' : 'error',
       message: `Google Sheets ${status === 'success' ? 'đồng bộ thành công' : 'lỗi đồng bộ'}`,
       details: details,
-    });
+    })
 
   return (
     <NotificationContext.Provider
@@ -130,23 +130,23 @@ export const NotificationProvider = ({ children }) => {
       {children}
       <NotificationContainer />
     </NotificationContext.Provider>
-  );
-};
+  )
+}
 
 // Hook sử dụng notification
 export const useNotification = () => {
-  const context = useContext(NotificationContext);
+  const context = useContext(NotificationContext)
   if (!context) {
-    throw new Error('useNotification must be used within NotificationProvider');
+    throw new Error('useNotification must be used within NotificationProvider')
   }
-  return context;
-};
+  return context
+}
 
 // Container hiển thị notifications
 const NotificationContainer = () => {
-  const { notifications, removeNotification } = useNotification();
+  const { notifications, removeNotification } = useNotification()
 
-  if (notifications.length === 0) return null;
+  if (notifications.length === 0) return null
 
   return (
     <div className="fixed top-4 right-4 z-50 space-y-2 max-w-sm">
@@ -158,12 +158,12 @@ const NotificationContainer = () => {
         />
       ))}
     </div>
-  );
-};
+  )
+}
 
 // Component notification item
 const NotificationItem = ({ notification, onRemove }) => {
-  const { type, message, details, timestamp, action } = notification;
+  const { type, message, details, timestamp, action } = notification
 
   const typeConfig = {
     success: {
@@ -190,10 +190,10 @@ const NotificationItem = ({ notification, onRemove }) => {
       borderColor: 'border-blue-200 dark:border-blue-800',
       iconColor: 'text-blue-600 dark:text-blue-400',
     },
-  };
+  }
 
-  const config = typeConfig[type] || typeConfig.info;
-  const Icon = config.icon;
+  const config = typeConfig[type] || typeConfig.info
+  const Icon = config.icon
 
   return (
     <div
@@ -221,8 +221,8 @@ const NotificationItem = ({ notification, onRemove }) => {
         </button>
       </div>
     </div>
-  );
-};
+  )
+}
 
 // ==================== HEADER COMPONENT ====================
 /**
@@ -240,9 +240,9 @@ export const Header = ({
   toggleSidebar,
   currentUser = { name: 'Trưởng phòng Kho vận', role: 'Manager' },
 }) => {
-  const [searchValue, setSearchValue] = useState('');
-  const [showUserMenu, setShowUserMenu] = useState(false);
-  const { notifications } = useNotification();
+  const [searchValue, setSearchValue] = useState('')
+  const [showUserMenu, setShowUserMenu] = useState(false)
+  const { notifications } = useNotification()
 
   // Connection status config
   const getConnectionStatus = () => {
@@ -253,35 +253,35 @@ export const Header = ({
           color: 'text-green-500',
           text: 'Đã kết nối',
           subtitle: lastSyncTime ? `Sync: ${lastSyncTime.toLocaleTimeString('vi-VN')}` : '',
-        };
+        }
       case 'connecting':
         return {
           icon: RefreshCw,
           color: 'text-blue-500',
           text: 'Đang kết nối...',
           subtitle: 'Thiết lập kết nối Google Sheets',
-        };
+        }
       case 'error':
         return {
           icon: WifiOff,
           color: 'text-red-500',
           text: 'Lỗi kết nối',
           subtitle: 'Không thể kết nối Google Sheets',
-        };
+        }
       default:
         return {
           icon: Database,
           color: 'text-gray-500',
           text: 'Chưa kết nối',
           subtitle: '',
-        };
+        }
     }
-  };
+  }
 
-  const connStatus = getConnectionStatus();
-  const StatusIcon = connStatus.icon;
+  const connStatus = getConnectionStatus()
+  const StatusIcon = connStatus.icon
 
-  const unreadCount = notifications.filter((n) => !n.read).length;
+  const unreadCount = notifications.filter((n) => !n.read).length
 
   return (
     <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 lg:px-6 py-4">
@@ -433,8 +433,8 @@ export const Header = ({
         </div>
       </div>
     </header>
-  );
-};
+  )
+}
 
 // ==================== SIDEBAR COMPONENT ====================
 /**
@@ -444,7 +444,7 @@ export const Header = ({
  */
 
 export const Sidebar = ({ isOpen, currentPath = '/dashboard', onNavigate = () => {} }) => {
-  const [expandedSections, setExpandedSections] = useState(['main']);
+  const [expandedSections, setExpandedSections] = useState(['main'])
 
   // Menu configuration cho hệ thống kho vận
   const menuItems = [
@@ -558,15 +558,15 @@ export const Sidebar = ({ isOpen, currentPath = '/dashboard', onNavigate = () =>
         },
       ],
     },
-  ];
+  ]
 
   const toggleSection = (sectionId) => {
     setExpandedSections((prev) =>
       prev.includes(sectionId) ? prev.filter((id) => id !== sectionId) : [...prev, sectionId],
-    );
-  };
+    )
+  }
 
-  const isItemActive = (path) => currentPath === path;
+  const isItemActive = (path) => currentPath === path
 
   return (
     <>
@@ -623,8 +623,8 @@ export const Sidebar = ({ isOpen, currentPath = '/dashboard', onNavigate = () =>
                 {expandedSections.includes(section.section) && (
                   <div className="mt-2 space-y-1">
                     {section.items.map((item) => {
-                      const Icon = item.icon;
-                      const isActive = isItemActive(item.path);
+                      const Icon = item.icon
+                      const isActive = isItemActive(item.path)
 
                       return (
                         <button
@@ -654,7 +654,7 @@ export const Sidebar = ({ isOpen, currentPath = '/dashboard', onNavigate = () =>
                             </p>
                           </div>
                         </button>
-                      );
+                      )
                     })}
                   </div>
                 )}
@@ -680,8 +680,8 @@ export const Sidebar = ({ isOpen, currentPath = '/dashboard', onNavigate = () =>
         </div>
       </aside>
     </>
-  );
-};
+  )
+}
 
 // ==================== FOOTER COMPONENT ====================
 /**
@@ -696,7 +696,7 @@ export const Footer = ({
   totalOrders = 0,
   systemVersion = 'v2.1.0',
 }) => {
-  const currentYear = new Date().getFullYear();
+  const currentYear = new Date().getFullYear()
 
   return (
     <footer className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
@@ -778,8 +778,8 @@ export const Footer = ({
         </div>
       </div>
     </footer>
-  );
-};
+  )
+}
 
 // ==================== LOADING SPINNER COMPONENT ====================
 /**
@@ -799,7 +799,7 @@ export const LoadingSpinner = ({
     md: 'w-8 h-8',
     lg: 'w-12 h-12',
     xl: 'w-16 h-16',
-  };
+  }
 
   const typeConfig = {
     default: {
@@ -822,10 +822,10 @@ export const LoadingSpinner = ({
       color: 'text-orange-600',
       bgColor: 'bg-orange-50 dark:bg-orange-900/20',
     },
-  };
+  }
 
-  const config = typeConfig[type] || typeConfig.default;
-  const Icon = config.icon;
+  const config = typeConfig[type] || typeConfig.default
+  const Icon = config.icon
 
   const LoadingContent = () => (
     <div
@@ -847,18 +847,18 @@ export const LoadingSpinner = ({
         )}
       </div>
     </div>
-  );
+  )
 
   if (fullScreen) {
     return (
       <div className="fixed inset-0 bg-white dark:bg-gray-900 bg-opacity-90 dark:bg-opacity-90 z-50 flex items-center justify-center">
         <LoadingContent />
       </div>
-    );
+    )
   }
 
-  return <LoadingContent />;
-};
+  return <LoadingContent />
+}
 
 // ==================== ERROR FALLBACK COMPONENT ====================
 /**
@@ -873,7 +873,7 @@ export const ErrorFallback = ({
   resetError,
   componentName = 'Component',
 }) => {
-  const [showDetails, setShowDetails] = useState(false);
+  const [showDetails, setShowDetails] = useState(false)
 
   const errorConfig = {
     connection: {
@@ -919,10 +919,10 @@ export const ErrorFallback = ({
         'Liên hệ support nếu lỗi tiếp tục xảy ra',
       ],
     },
-  };
+  }
 
-  const config = errorConfig[errorType] || errorConfig.general;
-  const Icon = config.icon;
+  const config = errorConfig[errorType] || errorConfig.general
+  const Icon = config.icon
 
   const getColorClasses = (color) =>
     ({
@@ -950,9 +950,9 @@ export const ErrorFallback = ({
         icon: 'text-gray-600 dark:text-gray-400',
         button: 'bg-gray-600 hover:bg-gray-700',
       },
-    }[color]);
+    })[color]
 
-  const colors = getColorClasses(config.color);
+  const colors = getColorClasses(config.color)
 
   return (
     <div className={`p-6 rounded-lg border ${colors.bg} ${colors.border} max-w-2xl mx-auto`}>
@@ -1020,8 +1020,8 @@ export const ErrorFallback = ({
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
 // ==================== NETWORK STATUS COMPONENT ====================
 /**
@@ -1029,65 +1029,65 @@ export const ErrorFallback = ({
  * Tích hợp với App state để theo dõi kết nối và hiệu suất hệ thống
  */
 export const NetworkStatus = () => {
-  const [isOnline, setIsOnline] = useState(navigator.onLine);
-  const [connectionQuality, setConnectionQuality] = useState('good');
-  const [lastCheck, setLastCheck] = useState(new Date());
+  const [isOnline, setIsOnline] = useState(navigator.onLine)
+  const [connectionQuality, setConnectionQuality] = useState('good')
+  const [lastCheck, setLastCheck] = useState(new Date())
 
   useEffect(() => {
     const handleOnline = () => {
-      setIsOnline(true);
-      setConnectionQuality('good');
-      setLastCheck(new Date());
-    };
+      setIsOnline(true)
+      setConnectionQuality('good')
+      setLastCheck(new Date())
+    }
 
     const handleOffline = () => {
-      setIsOnline(false);
-      setConnectionQuality('offline');
-      setLastCheck(new Date());
-    };
+      setIsOnline(false)
+      setConnectionQuality('offline')
+      setLastCheck(new Date())
+    }
 
     const checkConnectionQuality = async () => {
-      if (!navigator.onLine) return;
+      if (!navigator.onLine) return
 
-      const startTime = performance.now();
+      const startTime = performance.now()
       try {
         await fetch('/favicon.ico', {
           method: 'HEAD',
           cache: 'no-cache',
-        });
-        const latency = performance.now() - startTime;
+        })
+        const latency = performance.now() - startTime
 
         if (latency < 200) {
-          setConnectionQuality('excellent');
+          setConnectionQuality('excellent')
         } else if (latency < 500) {
-          setConnectionQuality('good');
+          setConnectionQuality('good')
         } else if (latency < 1000) {
-          setConnectionQuality('fair');
+          setConnectionQuality('fair')
         } else {
-          setConnectionQuality('poor');
+          setConnectionQuality('poor')
         }
-        setLastCheck(new Date());
+        setLastCheck(new Date())
       } catch (error) {
-        setConnectionQuality('poor');
+        setConnectionQuality('poor')
       }
-    };
+    }
 
     // Event listeners
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
+    window.addEventListener('online', handleOnline)
+    window.addEventListener('offline', handleOffline)
 
     // Periodic connection quality check
-    const interval = setInterval(checkConnectionQuality, 30000); // Every 30 seconds
+    const interval = setInterval(checkConnectionQuality, 30000) // Every 30 seconds
 
     // Initial check
-    checkConnectionQuality();
+    checkConnectionQuality()
 
     return () => {
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
-      clearInterval(interval);
-    };
-  }, []);
+      window.removeEventListener('online', handleOnline)
+      window.removeEventListener('offline', handleOffline)
+      clearInterval(interval)
+    }
+  }, [])
 
   const getStatusConfig = () => {
     if (!isOnline) {
@@ -1098,7 +1098,7 @@ export const NetworkStatus = () => {
         borderColor: 'border-red-200 dark:border-red-800',
         text: 'Offline',
         description: 'Không có kết nối mạng',
-      };
+      }
     }
 
     switch (connectionQuality) {
@@ -1110,7 +1110,7 @@ export const NetworkStatus = () => {
           borderColor: 'border-green-200 dark:border-green-800',
           text: 'Excellent',
           description: 'Kết nối tuyệt vời',
-        };
+        }
       case 'good':
         return {
           icon: Wifi,
@@ -1119,7 +1119,7 @@ export const NetworkStatus = () => {
           borderColor: 'border-blue-200 dark:border-blue-800',
           text: 'Good',
           description: 'Kết nối tốt',
-        };
+        }
       case 'fair':
         return {
           icon: Wifi,
@@ -1128,7 +1128,7 @@ export const NetworkStatus = () => {
           borderColor: 'border-yellow-200 dark:border-yellow-800',
           text: 'Fair',
           description: 'Kết nối chậm',
-        };
+        }
       case 'poor':
         return {
           icon: Wifi,
@@ -1137,7 +1137,7 @@ export const NetworkStatus = () => {
           borderColor: 'border-orange-200 dark:border-orange-800',
           text: 'Poor',
           description: 'Kết nối kém',
-        };
+        }
       default:
         return {
           icon: Wifi,
@@ -1146,12 +1146,12 @@ export const NetworkStatus = () => {
           borderColor: 'border-gray-200 dark:border-gray-800',
           text: 'Unknown',
           description: 'Đang kiểm tra...',
-        };
+        }
     }
-  };
+  }
 
-  const statusConfig = getStatusConfig();
-  const StatusIcon = statusConfig.icon;
+  const statusConfig = getStatusConfig()
+  const StatusIcon = statusConfig.icon
 
   return (
     <div
@@ -1170,8 +1170,8 @@ export const NetworkStatus = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
 // ==================== DEMO COMPONENT ====================
 /**
@@ -1180,31 +1180,31 @@ export const NetworkStatus = () => {
  */
 
 const SharedComponentsDemo = () => {
-  const [isDarkMode, setIsDarkMode] = useState(true);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [currentPath, setCurrentPath] = useState('/dashboard');
-  const [connectionStatus] = useState('connected');
-  const [showError, setShowError] = useState(false);
-  const [showLoading, setShowLoading] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(true)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [currentPath, setCurrentPath] = useState('/dashboard')
+  const [connectionStatus] = useState('connected')
+  const [showError, setShowError] = useState(false)
+  const [showLoading, setShowLoading] = useState(false)
 
-  const { notifySuccess, notifyError } = useNotification();
+  const { notifySuccess, notifyError } = useNotification()
 
-  const lastSyncTime = new Date();
+  const lastSyncTime = new Date()
 
   const handleNavigation = (path) => {
     if (typeof path === 'string') {
-      setCurrentPath(path);
+      setCurrentPath(path)
     }
-    setSidebarOpen(false); // Close sidebar on mobile after navigation
-  };
+    setSidebarOpen(false) // Close sidebar on mobile after navigation
+  }
 
   const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
-  };
+    setSidebarOpen(!sidebarOpen)
+  }
 
   const resetError = () => {
-    setShowError(false);
-  };
+    setShowError(false)
+  }
 
   if (showError) {
     return (
@@ -1216,11 +1216,11 @@ const SharedComponentsDemo = () => {
           componentName="SharedComponentsDemo"
         />
       </div>
-    );
+    )
   }
 
   if (showLoading) {
-    return <LoadingSpinner type="sync" message="Đang đồng bộ với Google Sheets..." fullScreen />;
+    return <LoadingSpinner type="sync" message="Đang đồng bộ với Google Sheets..." fullScreen />
   }
 
   return (
@@ -1266,10 +1266,10 @@ const SharedComponentsDemo = () => {
                     </button>
                     <button
                       onClick={() => {
-                        notifySuccess('Thành công!', 'Đây là thông báo thành công.');
+                        notifySuccess('Thành công!', 'Đây là thông báo thành công.')
                         setTimeout(() => {
-                          notifyError('Lỗi!', 'Đây là thông báo lỗi.');
-                        }, 2000);
+                          notifyError('Lỗi!', 'Đây là thông báo lỗi.')
+                        }, 2000)
                       }}
                       className="w-full px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
                     >
@@ -1313,8 +1313,8 @@ const SharedComponentsDemo = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
 // Main export component wrapped with NotificationProvider
 export default function SharedComponentsApp() {
@@ -1322,5 +1322,5 @@ export default function SharedComponentsApp() {
     <NotificationProvider>
       <SharedComponentsDemo />
     </NotificationProvider>
-  );
+  )
 }

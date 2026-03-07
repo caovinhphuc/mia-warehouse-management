@@ -1,23 +1,22 @@
 // Enhanced Transport Module - Quản lý vận chuyển tối ưu
-import React, { useState, useEffect, useMemo } from 'react';
 import {
-import logger from "../../utils/logger";
-  TruckIcon,
-  MagnifyingGlassIcon,
-  PlusIcon,
-  EyeIcon,
-  PencilIcon,
-  TrashIcon,
-  MapPinIcon,
-  ClockIcon,
-  UserIcon,
-  PhoneIcon,
-  CheckCircleIcon,
-  ExclamationTriangleIcon,
-  XCircleIcon,
   CalendarIcon,
-  ChatBubbleBottomCenterTextIcon
-} from '@heroicons/react/24/outline';
+  CheckCircleIcon,
+  ClockIcon,
+  ExclamationTriangleIcon,
+  EyeIcon,
+  MagnifyingGlassIcon,
+  MapPinIcon,
+  PencilIcon,
+  PhoneIcon,
+  PlusIcon,
+  TrashIcon,
+  TruckIcon,
+  UserIcon,
+  XCircleIcon,
+} from '@heroicons/react/24/outline'
+import { useMemo, useState } from 'react'
+import logger from '../../utils/logger'
 
 const TransportPage = () => {
   const [transports, setTransports] = useState([
@@ -33,7 +32,7 @@ const TransportPage = () => {
       cargo: 'Điện tử tiêu dùng',
       weight: '5.2 tấn',
       cost: 12500000,
-      currentLocation: 'Vinh, Nghệ An'
+      currentLocation: 'Vinh, Nghệ An',
     },
     {
       id: 'T002',
@@ -47,7 +46,7 @@ const TransportPage = () => {
       cargo: 'Thực phẩm đông lạnh',
       weight: '3.8 tấn',
       cost: 4200000,
-      currentLocation: 'Cần Thơ'
+      currentLocation: 'Cần Thơ',
     },
     {
       id: 'T003',
@@ -61,122 +60,123 @@ const TransportPage = () => {
       cargo: 'Vật liệu xây dựng',
       weight: '8.5 tấn',
       cost: 15800000,
-      currentLocation: 'Đà Nẵng'
-    }
-  ]);
+      currentLocation: 'Đà Nẵng',
+    },
+  ])
 
-  const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState('all');
-  const [showModal, setShowModal] = useState(false);
-  const [selectedTransport, setSelectedTransport] = useState(null);
-  const [editMode, setEditMode] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('')
+  const [statusFilter, setStatusFilter] = useState('all')
+  const [showModal, setShowModal] = useState(false)
+  const [selectedTransport, setSelectedTransport] = useState(null)
+  const [editMode, setEditMode] = useState(false)
 
   // Filter and search transports
   const filteredTransports = useMemo(() => {
-    return transports.filter(transport => {
-      const matchesSearch = transport.vehicleNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           transport.driverName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           transport.route.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesStatus = statusFilter === 'all' || transport.status === statusFilter;
-      return matchesSearch && matchesStatus;
-    });
-  }, [transports, searchTerm, statusFilter]);
+    return transports.filter((transport) => {
+      const matchesSearch =
+        transport.vehicleNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        transport.driverName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        transport.route.toLowerCase().includes(searchTerm.toLowerCase())
+      const matchesStatus = statusFilter === 'all' || transport.status === statusFilter
+      return matchesSearch && matchesStatus
+    })
+  }, [transports, searchTerm, statusFilter])
 
   // Get status styles
   const getStatusStyle = (status) => {
     switch (status) {
       case 'in_progress':
-        return 'bg-blue-100 text-blue-800 border-blue-200';
+        return 'bg-blue-100 text-blue-800 border-blue-200'
       case 'completed':
-        return 'bg-green-100 text-green-800 border-green-200';
+        return 'bg-green-100 text-green-800 border-green-200'
       case 'scheduled':
-        return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+        return 'bg-yellow-100 text-yellow-800 border-yellow-200'
       case 'cancelled':
-        return 'bg-red-100 text-red-800 border-red-200';
+        return 'bg-red-100 text-red-800 border-red-200'
       case 'delayed':
-        return 'bg-orange-100 text-orange-800 border-orange-200';
+        return 'bg-orange-100 text-orange-800 border-orange-200'
       default:
-        return 'bg-gray-100 text-gray-800 border-gray-200';
+        return 'bg-gray-100 text-gray-800 border-gray-200'
     }
-  };
+  }
 
   // Get status icon
   const getStatusIcon = (status) => {
     switch (status) {
       case 'in_progress':
-        return <TruckIcon className="w-4 h-4" />;
+        return <TruckIcon className="w-4 h-4" />
       case 'completed':
-        return <CheckCircleIcon className="w-4 h-4" />;
+        return <CheckCircleIcon className="w-4 h-4" />
       case 'scheduled':
-        return <CalendarIcon className="w-4 h-4" />;
+        return <CalendarIcon className="w-4 h-4" />
       case 'cancelled':
-        return <XCircleIcon className="w-4 h-4" />;
+        return <XCircleIcon className="w-4 h-4" />
       case 'delayed':
-        return <ExclamationTriangleIcon className="w-4 h-4" />;
+        return <ExclamationTriangleIcon className="w-4 h-4" />
       default:
-        return <ClockIcon className="w-4 h-4" />;
+        return <ClockIcon className="w-4 h-4" />
     }
-  };
+  }
 
   // Get status text
   const getStatusText = (status) => {
     switch (status) {
       case 'in_progress':
-        return 'Đang vận chuyển';
+        return 'Đang vận chuyển'
       case 'completed':
-        return 'Hoàn thành';
+        return 'Hoàn thành'
       case 'scheduled':
-        return 'Đã lên lịch';
+        return 'Đã lên lịch'
       case 'cancelled':
-        return 'Đã hủy';
+        return 'Đã hủy'
       case 'delayed':
-        return 'Bị trễ';
+        return 'Bị trễ'
       default:
-        return 'Không xác định';
+        return 'Không xác định'
     }
-  };
+  }
 
   // Format currency
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('vi-VN', {
       style: 'currency',
-      currency: 'VND'
-    }).format(amount);
-  };
+      currency: 'VND',
+    }).format(amount)
+  }
 
   // Handle view transport
   const handleViewTransport = (transport) => {
-    setSelectedTransport(transport);
-    setEditMode(false);
-    setShowModal(true);
-  };
+    setSelectedTransport(transport)
+    setEditMode(false)
+    setShowModal(true)
+  }
 
   // Handle edit transport
   const handleEditTransport = (transport) => {
-    setSelectedTransport(transport);
-    setEditMode(true);
-    setShowModal(true);
-  };
+    setSelectedTransport(transport)
+    setEditMode(true)
+    setShowModal(true)
+  }
 
   // Handle delete transport
   const handleDeleteTransport = (id) => {
     if (window.confirm('Bạn có chắc chắn muốn xóa đơn vận chuyển này?')) {
-      setTransports(prev => prev.filter(t => t.id !== id));
+      setTransports((prev) => prev.filter((t) => t.id !== id))
     }
-  };
+  }
 
   // Statistics
   const stats = useMemo(() => {
-    const total = transports.length;
-    const inProgress = transports.filter(t => t.status === 'in_progress').length;
-    const completed = transports.filter(t => t.status === 'completed').length;
-    const scheduled = transports.filter(t => t.status === 'scheduled').length;
+    const total = transports.length
+    const inProgress = transports.filter((t) => t.status === 'in_progress').length
+    const completed = transports.filter((t) => t.status === 'completed').length
+    const scheduled = transports.filter((t) => t.status === 'scheduled').length
     const totalRevenue = transports
-      .filter(t => t.status === 'completed')
-      .reduce((sum, t) => sum + t.cost, 0);
-    
-    return { total, inProgress, completed, scheduled, totalRevenue };
-  }, [transports]);
+      .filter((t) => t.status === 'completed')
+      .reduce((sum, t) => sum + t.cost, 0)
+
+    return { total, inProgress, completed, scheduled, totalRevenue }
+  }, [transports])
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -193,9 +193,9 @@ const TransportPage = () => {
             </div>
             <button
               onClick={() => {
-                setSelectedTransport(null);
-                setEditMode(true);
-                setShowModal(true);
+                setSelectedTransport(null)
+                setEditMode(true)
+                setShowModal(true)
               }}
               className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-2"
             >
@@ -218,7 +218,7 @@ const TransportPage = () => {
               <TruckIcon className="w-12 h-12 text-blue-600" />
             </div>
           </div>
-          
+
           <div className="bg-white rounded-xl shadow-sm p-6 border">
             <div className="flex items-center justify-between">
               <div>
@@ -259,11 +259,23 @@ const TransportPage = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Doanh thu</p>
-                <p className="text-2xl font-bold text-green-600">{formatCurrency(stats.totalRevenue)}</p>
+                <p className="text-2xl font-bold text-green-600">
+                  {formatCurrency(stats.totalRevenue)}
+                </p>
               </div>
               <div className="p-3 bg-green-100 rounded-full">
-                <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                <svg
+                  className="w-6 h-6 text-green-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"
+                  />
                 </svg>
               </div>
             </div>
@@ -285,7 +297,7 @@ const TransportPage = () => {
                 />
               </div>
             </div>
-            
+
             <div className="flex items-center space-x-4">
               <select
                 value={statusFilter}
@@ -308,7 +320,7 @@ const TransportPage = () => {
           <div className="px-6 py-4 border-b border-gray-200">
             <h2 className="text-lg font-semibold text-gray-900">Danh sách chuyến hàng</h2>
           </div>
-          
+
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead className="bg-gray-50">
@@ -343,7 +355,9 @@ const TransportPage = () => {
                       <div>
                         <div className="flex items-center space-x-2">
                           <TruckIcon className="w-5 h-5 text-gray-400" />
-                          <span className="font-medium text-gray-900">{transport.vehicleNumber}</span>
+                          <span className="font-medium text-gray-900">
+                            {transport.vehicleNumber}
+                          </span>
                         </div>
                         <div className="flex items-center space-x-2 mt-1">
                           <UserIcon className="w-4 h-4 text-gray-400" />
@@ -365,7 +379,9 @@ const TransportPage = () => {
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border ${getStatusStyle(transport.status)}`}>
+                      <span
+                        className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border ${getStatusStyle(transport.status)}`}
+                      >
                         {getStatusIcon(transport.status)}
                         <span className="ml-2">{getStatusText(transport.status)}</span>
                       </span>
@@ -421,7 +437,7 @@ const TransportPage = () => {
               </tbody>
             </table>
           </div>
-          
+
           {filteredTransports.length === 0 && (
             <div className="text-center py-12">
               <TruckIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
@@ -439,7 +455,11 @@ const TransportPage = () => {
             <div className="p-6 border-b border-gray-200">
               <div className="flex items-center justify-between">
                 <h3 className="text-lg font-semibold text-gray-900">
-                  {editMode ? (selectedTransport ? 'Chỉnh sửa chuyến hàng' : 'Thêm chuyến hàng mới') : 'Chi tiết chuyến hàng'}
+                  {editMode
+                    ? selectedTransport
+                      ? 'Chỉnh sửa chuyến hàng'
+                      : 'Thêm chuyến hàng mới'
+                    : 'Chi tiết chuyến hàng'}
                 </h3>
                 <button
                   onClick={() => setShowModal(false)}
@@ -449,11 +469,11 @@ const TransportPage = () => {
                 </button>
               </div>
             </div>
-            
+
             <div className="p-6">
               {editMode ? (
-                <TransportForm 
-                  transport={selectedTransport} 
+                <TransportForm
+                  transport={selectedTransport}
                   onSave={() => setShowModal(false)}
                   onCancel={() => setShowModal(false)}
                 />
@@ -465,12 +485,12 @@ const TransportPage = () => {
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
 // Transport Details Component
 const TransportDetails = ({ transport }) => {
-  if (!transport) return null;
+  if (!transport) return null
 
   return (
     <div className="space-y-6">
@@ -501,9 +521,7 @@ const TransportDetails = ({ transport }) => {
                 <MapPinIcon className="w-5 h-5 text-gray-600" />
                 <span className="font-medium">{transport.route}</span>
               </div>
-              <div className="text-gray-600">
-                Vị trí hiện tại: {transport.currentLocation}
-              </div>
+              <div className="text-gray-600">Vị trí hiện tại: {transport.currentLocation}</div>
             </div>
           </div>
         </div>
@@ -537,12 +555,16 @@ const TransportDetails = ({ transport }) => {
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">Trạng thái</label>
           <div className="bg-gray-50 rounded-lg p-4">
-            <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border`}>
+            <span
+              className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border`}
+            >
               {transport.status === 'in_progress' && <TruckIcon className="w-4 h-4 mr-2" />}
               {transport.status === 'completed' && <CheckCircleIcon className="w-4 h-4 mr-2" />}
               {transport.status === 'scheduled' && <CalendarIcon className="w-4 h-4 mr-2" />}
               {transport.status === 'cancelled' && <XCircleIcon className="w-4 h-4 mr-2" />}
-              {transport.status === 'delayed' && <ExclamationTriangleIcon className="w-4 h-4 mr-2" />}
+              {transport.status === 'delayed' && (
+                <ExclamationTriangleIcon className="w-4 h-4 mr-2" />
+              )}
               {transport.status === 'in_progress' && 'Đang vận chuyển'}
               {transport.status === 'completed' && 'Hoàn thành'}
               {transport.status === 'scheduled' && 'Đã lên lịch'}
@@ -558,15 +580,15 @@ const TransportDetails = ({ transport }) => {
             <span className="text-2xl font-bold text-green-600">
               {new Intl.NumberFormat('vi-VN', {
                 style: 'currency',
-                currency: 'VND'
+                currency: 'VND',
               }).format(transport.cost)}
             </span>
           </div>
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
 // Transport Form Component
 const TransportForm = ({ transport, onSave, onCancel }) => {
@@ -581,22 +603,22 @@ const TransportForm = ({ transport, onSave, onCancel }) => {
     cargo: transport?.cargo || '',
     weight: transport?.weight || '',
     cost: transport?.cost || '',
-    currentLocation: transport?.currentLocation || ''
-  });
+    currentLocation: transport?.currentLocation || '',
+  })
 
   const handleSubmit = (e) => {
-    e.preventDefault();
+    e.preventDefault()
     // Here you would typically save to your backend
-    logger.info('Saving transport:', formData);
-    onSave();
-  };
+    logger.info('Saving transport:', formData)
+    onSave()
+  }
 
   const handleInputChange = (field, value) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [field]: value
-    }));
-  };
+      [field]: value,
+    }))
+  }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
@@ -658,9 +680,7 @@ const TransportForm = ({ transport, onSave, onCancel }) => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Trạng thái
-          </label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Trạng thái</label>
           <select
             value={formData.status}
             onChange={(e) => handleInputChange('status', e.target.value)}
@@ -675,9 +695,7 @@ const TransportForm = ({ transport, onSave, onCancel }) => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Vị trí hiện tại
-          </label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Vị trí hiện tại</label>
           <input
             type="text"
             value={formData.currentLocation}
@@ -727,9 +745,7 @@ const TransportForm = ({ transport, onSave, onCancel }) => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Khối lượng
-          </label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Khối lượng</label>
           <input
             type="text"
             value={formData.weight}
@@ -770,7 +786,7 @@ const TransportForm = ({ transport, onSave, onCancel }) => {
         </button>
       </div>
     </form>
-  );
-};
+  )
+}
 
-export default TransportPage;
+export default TransportPage

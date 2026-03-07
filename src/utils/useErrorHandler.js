@@ -4,16 +4,16 @@
  * @module utils/useErrorHandler
  */
 
-import { useCallback, useRef, useState } from "react";
-import logger from "./logger";
+import { useCallback, useRef, useState } from 'react'
+import logger from './logger'
 
 /**
  * Enhanced error handler with retry mechanisms and centralized error reporting
  * @returns {Object} Error handling methods and state
  */
 export const useErrorHandler = () => {
-  const [errors, setErrors] = useState([]);
-  const retryAttemptsRef = useRef({});
+  const [errors, setErrors] = useState([])
+  const retryAttemptsRef = useRef({})
 
   /**
    * Handle an error with comprehensive logging and optional retry
@@ -21,104 +21,97 @@ export const useErrorHandler = () => {
    * @param {string} context - Context where the error occurred
    * @param {Object} options - Error handling options
    */
-  const handleError = useCallback(
-    (error, context = "Unknown", options = {}) => {
-      const {
-        shouldRetry = false,
-        maxRetries = 3,
-        retryDelay = 1000,
-        reportToService = true,
-        severity = "error",
-        userMessage = null,
-      } = options;
+  const handleError = useCallback((error, context = 'Unknown', options = {}) => {
+    const {
+      shouldRetry = false,
+      maxRetries = 3,
+      retryDelay = 1000,
+      reportToService = true,
+      severity = 'error',
+      userMessage = null,
+    } = options
 
-      const errorId = `${context}_${Date.now()}`;
-      const errorDetails = {
-        id: errorId,
-        message: error.message || "Unknown error",
-        stack: error.stack,
-        context,
-        timestamp: new Date().toISOString(),
-        severity,
-        userAgent: navigator.userAgent,
-        url: window.location.href,
-        userId: null, // Will be populated if user is authenticated
-      };
+    const errorId = `${context}_${Date.now()}`
+    const errorDetails = {
+      id: errorId,
+      message: error.message || 'Unknown error',
+      stack: error.stack,
+      context,
+      timestamp: new Date().toISOString(),
+      severity,
+      userAgent: navigator.userAgent,
+      url: window.location.href,
+      userId: null, // Will be populated if user is authenticated
+    }
 
-      // Enhanced error details for different error types
-      if (error.name) errorDetails.type = error.name;
-      if (error.code) errorDetails.code = error.code;
-      if (error.status) errorDetails.httpStatus = error.status;
+    // Enhanced error details for different error types
+    if (error.name) errorDetails.type = error.name
+    if (error.code) errorDetails.code = error.code
+    if (error.status) errorDetails.httpStatus = error.status
 
-      // Log to console with appropriate level
-      switch (severity) {
-        case "critical":
-        case "error":
-          logger.error(`[${context}] Error:`, error);
-          break;
-        case "warning":
-          logger.warn(`[${context}] Warning:`, error);
-          break;
-        default:
-          logger.info(`[${context}] Info:`, error);
+    // Log to console with appropriate level
+    switch (severity) {
+      case 'critical':
+      case 'error':
+        logger.error(`[${context}] Error:`, error)
+        break
+      case 'warning':
+        logger.warn(`[${context}] Warning:`, error)
+        break
+      default:
+        logger.info(`[${context}] Info:`, error)
+    }
+
+    // Add to errors state
+    setErrors((prev) => {
+      const newErrors = [errorDetails, ...prev.slice(0, 49)] // Keep last 50 errors
+      return newErrors
+    })
+
+    // Report to monitoring service if enabled
+    if (reportToService && process.env.NODE_ENV === 'production') {
+      try {
+        // In production, this would send to your error tracking service
+        // Example: Sentry, LogRocket, Rollbar, etc.
+        reportErrorToService(errorDetails)
+      } catch (reportingError) {
+        logger.warn('Failed to report error to monitoring service:', reportingError)
       }
+    }
 
-      // Add to errors state
-      setErrors((prev) => {
-        const newErrors = [errorDetails, ...prev.slice(0, 49)]; // Keep last 50 errors
-        return newErrors;
-      });
+    // Handle retry logic
+    if (shouldRetry) {
+      const currentAttempts = retryAttemptsRef.current[errorId] || 0
 
-      // Report to monitoring service if enabled
-      if (reportToService && process.env.NODE_ENV === "production") {
-        try {
-          // In production, this would send to your error tracking service
-          // Example: Sentry, LogRocket, Rollbar, etc.
-          reportErrorToService(errorDetails);
-        } catch (reportingError) {
-          logger.warn(
-            "Failed to report error to monitoring service:",
-            reportingError
-          );
-        }
+      if (currentAttempts < maxRetries) {
+        retryAttemptsRef.current[errorId] = currentAttempts + 1
+
+        return new Promise((resolve, reject) => {
+          setTimeout(
+            () => {
+              logger.info(`Retrying ${context} (attempt ${currentAttempts + 1}/${maxRetries})`)
+              resolve()
+            },
+            retryDelay * (currentAttempts + 1),
+          ) // Exponential backoff
+        })
+      } else {
+        logger.error(`Max retries (${maxRetries}) reached for ${context}`)
+        delete retryAttemptsRef.current[errorId]
       }
+    }
 
-      // Handle retry logic
-      if (shouldRetry) {
-        const currentAttempts = retryAttemptsRef.current[errorId] || 0;
+    // Show user notification if message provided
+    if (userMessage && window.showNotification) {
+      window.showNotification({
+        type: severity === 'critical' ? 'error' : severity,
+        title: 'Error Occurred',
+        message: userMessage,
+      })
+    }
 
-        if (currentAttempts < maxRetries) {
-          retryAttemptsRef.current[errorId] = currentAttempts + 1;
-
-          return new Promise((resolve, reject) => {
-            setTimeout(() => {
-              logger.info(
-                `Retrying ${context} (attempt ${
-                  currentAttempts + 1
-                }/${maxRetries})`
-              );
-              resolve();
-            }, retryDelay * (currentAttempts + 1)); // Exponential backoff
-          });
-        } else {
-          logger.error(`Max retries (${maxRetries}) reached for ${context}`);
-          delete retryAttemptsRef.current[errorId];
-        }
-      }
-
-      // Show user notification if message provided
-      if (userMessage && window.showNotification) {
-        window.showNotification({
-          type: severity === "critical" ? "error" : severity,
-          title: "Error Occurred",
-          message: userMessage,
-        });
-      }
-
-      return errorDetails;
-    },
-    []
-  );
+    return errorDetails
+  }, [])
 
   /**
    * Handle async errors with automatic retry
@@ -128,36 +121,34 @@ export const useErrorHandler = () => {
    */
   const handleAsyncError = useCallback(
     async (asyncFn, context, options = {}) => {
-      const maxRetries = options.maxRetries || 3;
-      let attempt = 0;
+      const maxRetries = options.maxRetries || 3
+      let attempt = 0
 
       while (attempt <= maxRetries) {
         try {
-          return await asyncFn();
+          return await asyncFn()
         } catch (error) {
-          attempt++;
+          attempt++
 
           if (attempt > maxRetries) {
             handleError(error, context, {
               ...options,
               shouldRetry: false,
-            });
-            throw error;
+            })
+            throw error
           }
 
           // Log retry attempt
-          logger.info(
-            `Async operation failed, retrying... (${attempt}/${maxRetries})`
-          );
+          logger.info(`Async operation failed, retrying... (${attempt}/${maxRetries})`)
 
           // Wait before retry with exponential backoff
-          const delay = (options.retryDelay || 1000) * Math.pow(2, attempt - 1);
-          await new Promise((resolve) => setTimeout(resolve, delay));
+          const delay = (options.retryDelay || 1000) * Math.pow(2, attempt - 1)
+          await new Promise((resolve) => setTimeout(resolve, delay))
         }
       }
     },
-    [handleError]
-  );
+    [handleError],
+  )
 
   /**
    * Create an error boundary handler
@@ -167,15 +158,15 @@ export const useErrorHandler = () => {
     (componentName) => {
       return (error, errorInfo) => {
         handleError(error, `ErrorBoundary_${componentName}`, {
-          severity: "critical",
+          severity: 'critical',
           reportToService: true,
-          userMessage: "An unexpected error occurred. Please refresh the page.",
+          userMessage: 'An unexpected error occurred. Please refresh the page.',
           additionalInfo: errorInfo,
-        });
-      };
+        })
+      }
     },
-    [handleError]
-  );
+    [handleError],
+  )
 
   /**
    * Handle form validation errors
@@ -186,22 +177,18 @@ export const useErrorHandler = () => {
     (validationErrors, formName) => {
       const errorSummary = Object.entries(validationErrors)
         .map(([field, message]) => `${field}: ${message}`)
-        .join(", ");
+        .join(', ')
 
-      handleError(
-        new Error(`Validation failed: ${errorSummary}`),
-        `Form_${formName}`,
-        {
-          severity: "warning",
-          reportToService: false,
-          shouldRetry: false,
-        }
-      );
+      handleError(new Error(`Validation failed: ${errorSummary}`), `Form_${formName}`, {
+        severity: 'warning',
+        reportToService: false,
+        shouldRetry: false,
+      })
 
-      return validationErrors;
+      return validationErrors
     },
-    [handleError]
-  );
+    [handleError],
+  )
 
   /**
    * Handle API errors with specific logic for different status codes
@@ -211,44 +198,44 @@ export const useErrorHandler = () => {
    */
   const handleApiError = useCallback(
     (error, endpoint, options = {}) => {
-      let errorMessage = "API request failed";
-      let shouldRetry = false;
-      let severity = "error";
+      let errorMessage = 'API request failed'
+      let shouldRetry = false
+      let severity = 'error'
 
       if (error.status) {
         switch (error.status) {
           case 401:
-            errorMessage = "Authentication required";
-            severity = "warning";
-            break;
+            errorMessage = 'Authentication required'
+            severity = 'warning'
+            break
           case 403:
-            errorMessage = "Access forbidden";
-            severity = "warning";
-            break;
+            errorMessage = 'Access forbidden'
+            severity = 'warning'
+            break
           case 404:
-            errorMessage = "Resource not found";
-            severity = "warning";
-            break;
+            errorMessage = 'Resource not found'
+            severity = 'warning'
+            break
           case 429:
-            errorMessage = "Too many requests - please wait";
-            shouldRetry = true;
-            severity = "warning";
-            break;
+            errorMessage = 'Too many requests - please wait'
+            shouldRetry = true
+            severity = 'warning'
+            break
           case 500:
           case 502:
           case 503:
           case 504:
-            errorMessage = "Server error - please try again";
-            shouldRetry = true;
-            severity = "error";
-            break;
+            errorMessage = 'Server error - please try again'
+            shouldRetry = true
+            severity = 'error'
+            break
           default:
-            errorMessage = `API error (${error.status})`;
+            errorMessage = `API error (${error.status})`
         }
-      } else if (error.name === "NetworkError" || !navigator.onLine) {
-        errorMessage = "Network connection error";
-        shouldRetry = true;
-        severity = "warning";
+      } else if (error.name === 'NetworkError' || !navigator.onLine) {
+        errorMessage = 'Network connection error'
+        shouldRetry = true
+        severity = 'warning'
       }
 
       return handleError(error, `API_${endpoint}`, {
@@ -256,10 +243,10 @@ export const useErrorHandler = () => {
         shouldRetry,
         severity,
         userMessage: errorMessage,
-      });
+      })
     },
-    [handleError]
-  );
+    [handleError],
+  )
 
   /**
    * Clear errors from state
@@ -268,11 +255,11 @@ export const useErrorHandler = () => {
   const clearErrors = useCallback((errorId = null) => {
     setErrors((prev) => {
       if (errorId) {
-        return prev.filter((error) => error.id !== errorId);
+        return prev.filter((error) => error.id !== errorId)
       }
-      return [];
-    });
-  }, []);
+      return []
+    })
+  }, [])
 
   /**
    * Get errors with filtering options
@@ -280,26 +267,24 @@ export const useErrorHandler = () => {
    */
   const getErrors = useCallback(
     (filters = {}) => {
-      const { severity, context, limit = 10 } = filters;
+      const { severity, context, limit = 10 } = filters
 
-      let filteredErrors = errors;
+      let filteredErrors = errors
 
       if (severity) {
-        filteredErrors = filteredErrors.filter(
-          (error) => error.severity === severity
-        );
+        filteredErrors = filteredErrors.filter((error) => error.severity === severity)
       }
 
       if (context) {
         filteredErrors = filteredErrors.filter((error) =>
-          error.context.toLowerCase().includes(context.toLowerCase())
-        );
+          error.context.toLowerCase().includes(context.toLowerCase()),
+        )
       }
 
-      return filteredErrors.slice(0, limit);
+      return filteredErrors.slice(0, limit)
     },
-    [errors]
-  );
+    [errors],
+  )
 
   return {
     handleError,
@@ -310,8 +295,8 @@ export const useErrorHandler = () => {
     clearErrors,
     getErrors,
     errors,
-  };
-};
+  }
+}
 
 /**
  * Report error to external monitoring service
@@ -337,7 +322,7 @@ const reportErrorToService = (errorDetails) => {
   //   body: JSON.stringify(errorDetails),
   // });
 
-  logger.info("Error reported to monitoring service:", errorDetails);
-};
+  logger.info('Error reported to monitoring service:', errorDetails)
+}
 
-export default useErrorHandler;
+export default useErrorHandler

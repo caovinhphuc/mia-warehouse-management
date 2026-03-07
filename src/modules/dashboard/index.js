@@ -23,11 +23,12 @@ import {
   Warehouse,
   X,
   Zap,
-} from 'lucide-react';
-import { useEffect, useState } from 'react';
-import { useTheme } from '../../App';
-import { automationAPI } from '../automation/services/automationAPI';
-import logger from "../../utils/logger";
+} from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { useTheme } from '../../App'
+import logger from '../../utils/logger'
+import { useNotification } from '../../shared/hooks/useNotification'
+import { automationAPI } from '../automation/services/automationAPI'
 
 // ==================== MOCK INTEGRATED DATA ====================
 const generateIntegratedData = () => ({
@@ -318,20 +319,37 @@ const generateIntegratedData = () => ({
       },
     ],
   },
-});
+})
 
 // ==================== MAIN COMPONENT ====================
 const IntegrationDashboard = () => {
-  const { isDarkMode, toggleTheme } = useTheme();
-  const [data, setData] = useState(generateIntegratedData());
-  const [isEditMode, setIsEditMode] = useState(false);
-  const [activeView, setActiveView] = useState('dashboard');
-  const [autoRefresh, setAutoRefresh] = useState(true);
-  const [quickActionLoading, setQuickActionLoading] = useState(null); // Track which quick action is loading
+  const { isDarkMode, toggleTheme } = useTheme()
+  const { addNotification } = useNotification()
+  const [data, setData] = useState(generateIntegratedData())
+  const [isEditMode, setIsEditMode] = useState(false)
+  const [activeView, setActiveView] = useState('dashboard')
+  const [autoRefresh, setAutoRefresh] = useState(true)
+  const [quickActionLoading, setQuickActionLoading] = useState(null) // Track which quick action is loading
+  const [soundNotifications, setSoundNotifications] = useState(() => {
+    try {
+      const v = localStorage.getItem('mia-dashboard-sound-notifications')
+      return v === null ? true : JSON.parse(v)
+    } catch {
+      return true
+    }
+  })
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('mia-dashboard-sound-notifications', JSON.stringify(soundNotifications))
+    } catch (e) {
+      logger.warn('Could not persist sound notifications setting', e)
+    }
+  }, [soundNotifications])
 
   // Real-time updates
   useEffect(() => {
-    if (!autoRefresh) return;
+    if (!autoRefresh) return
 
     const interval = setInterval(() => {
       setData((prev) => ({
@@ -356,11 +374,11 @@ const IntegrationDashboard = () => {
           ...prev.systemStatus,
           lastUpdate: new Date(),
         },
-      }));
-    }, 5000);
+      }))
+    }, 5000)
 
-    return () => clearInterval(interval);
-  }, [autoRefresh]);
+    return () => clearInterval(interval)
+  }, [autoRefresh])
 
   const views = [
     { id: 'dashboard', label: 'Control Center', icon: Grid },
@@ -368,7 +386,7 @@ const IntegrationDashboard = () => {
     { id: 'integrations', label: 'Integrations', icon: Zap },
     { id: 'automation', label: 'Automation', icon: Activity },
     { id: 'settings', label: 'Settings', icon: Settings },
-  ];
+  ]
 
   const themeClasses = {
     background: isDarkMode ? 'bg-gray-900' : 'bg-gray-50',
@@ -380,62 +398,99 @@ const IntegrationDashboard = () => {
       muted: isDarkMode ? 'text-gray-400' : 'text-gray-500',
     },
     border: isDarkMode ? 'border-gray-700' : 'border-gray-200',
-  };
+  }
 
   const handleQuickAction = async (actionId) => {
-    logger.info(`Executing quick action: ${actionId}`);
+    logger.info(`Executing quick action: ${actionId}`)
+    setQuickActionLoading(actionId)
 
-    setQuickActionLoading(actionId); // Set loading state
+    const notify = (type, message, title = '') => {
+      addNotification({ type, message, ...(title && { title }) })
+    }
 
     try {
       switch (actionId) {
-        case 'automation-start':
-          await automationAPI.start();
-          logger.info('Automation started successfully');
-          // Update integration status
-          setData((prev) => ({
-            ...prev,
-            systemStatus: {
-              ...prev.systemStatus,
-              integrations: {
-                ...prev.systemStatus.integrations,
-                automation: { status: 'connected', lastSync: 'just now' },
-              },
-            },
-          }));
-          break;
-
-        case 'automation-stop':
-          await automationAPI.stop();
-          logger.info('Automation stopped successfully');
-          // Update integration status
-          setData((prev) => ({
-            ...prev,
-            systemStatus: {
-              ...prev.systemStatus,
-              integrations: {
-                ...prev.systemStatus.integrations,
-                automation: { status: 'warning', lastSync: 'stopped' },
-              },
-            },
-          }));
-          break;
+        case 'emergency-stop':
+          notify('warning', 'Đã kích hoạt dừng khẩn cấp. Toàn bộ thao tác kho đã tạm dừng.', 'Emergency Stop')
+          break
 
         case 'force-sync':
-          // Force sync all integrations including automation
-          await automationAPI.getStatus();
-          logger.info('Force sync completed');
-          break;
+          try {
+            await automationAPI.getStatus()
+            notify('success', 'Đã đồng bộ tất cả hệ thống thành công.', 'Force Sync')
+          } catch (err) {
+            notify('info', 'Force sync: Đang dùng mock. Kết nối backend để đồng bộ thật.', 'Force Sync')
+          }
+          break
+
+        case 'backup-now':
+          notify('info', 'Đang tạo backup hệ thống...', 'Backup')
+          await new Promise((r) => setTimeout(r, 2000))
+          notify('success', 'Backup đã được tạo thành công.', 'Backup')
+          break
+
+        case 'maintenance-mode':
+          notify('warning', 'Hệ thống đã chuyển sang chế độ bảo trì.', 'Maintenance Mode')
+          break
+
+        case 'generate-report':
+          notify('info', 'Đang tạo báo cáo...', 'Generate Report')
+          await new Promise((r) => setTimeout(r, 2000))
+          notify('success', 'Báo cáo đã được tạo và lưu.', 'Generate Report')
+          break
+
+        case 'broadcast-message':
+          notify('info', 'Đã gửi thông báo tới toàn bộ nhân viên.', 'Broadcast Alert')
+          break
+
+        case 'automation-start':
+          try {
+            await automationAPI.start()
+            setData((prev) => ({
+              ...prev,
+              systemStatus: {
+                ...prev.systemStatus,
+                integrations: {
+                  ...prev.systemStatus.integrations,
+                  automation: { status: 'connected', lastSync: 'just now' },
+                },
+              },
+            }))
+            notify('success', 'Automation đã được khởi động.', 'Start Automation')
+          } catch (err) {
+            notify('error', err?.message || 'Không thể kết nối automation API. Kiểm tra backend.', 'Start Automation')
+          }
+          break
+
+        case 'automation-stop':
+          try {
+            await automationAPI.stop()
+            setData((prev) => ({
+              ...prev,
+              systemStatus: {
+                ...prev.systemStatus,
+                integrations: {
+                  ...prev.systemStatus.integrations,
+                  automation: { status: 'warning', lastSync: 'stopped' },
+                },
+              },
+            }))
+            notify('success', 'Automation đã được dừng.', 'Stop Automation')
+          } catch (err) {
+            notify('error', err?.message || 'Không thể kết nối automation API. Kiểm tra backend.', 'Stop Automation')
+          }
+          break
 
         default:
-          logger.info(`Action ${actionId} not implemented yet`);
+          notify('info', `Tính năng "${actionId}" sẽ sớm được triển khai.`, 'Coming Soon')
       }
     } catch (error) {
-      logger.error(`Error executing action ${actionId}:`, error);
+      logger.error(`Error executing action ${actionId}:`, error)
+      notify('error', error?.message || 'Có lỗi xảy ra.')
     } finally {
-      setQuickActionLoading(null); // Reset loading state
+      setQuickActionLoading(null)
     }
-  };
+  }
 
   return (
     <div
@@ -451,8 +506,8 @@ const IntegrationDashboard = () => {
             <div>
               <h1 className="text-2xl font-bold">MIA Warehouse Control Center</h1>
               <p className={`${themeClasses.text.muted}`}>
-                Integration Dashboard • 01/06/2025 15:00 • System Status:
-                <span className="text-green-500 ml-1 font-medium">Healthy</span>
+                Integration Dashboard •{' '}
+                {data.systemStatus.lastUpdate.toLocaleString('vi-VN')}
               </p>
             </div>
           </div>
@@ -542,11 +597,21 @@ const IntegrationDashboard = () => {
           <IntegrationsView data={data.integrationStatus} themeClasses={themeClasses} />
         )}
         {activeView === 'automation' && <AutomationView themeClasses={themeClasses} />}
-        {activeView === 'settings' && <SettingsView themeClasses={themeClasses} />}
+        {activeView === 'settings' && (
+            <SettingsView
+              themeClasses={themeClasses}
+              autoRefresh={autoRefresh}
+              onAutoRefreshChange={setAutoRefresh}
+              isDarkMode={isDarkMode}
+              onDarkModeChange={toggleTheme}
+              soundNotifications={soundNotifications}
+              onSoundNotificationsChange={setSoundNotifications}
+            />
+          )}
       </div>
     </div>
-  );
-};
+  )
+}
 
 // ==================== DASHBOARD VIEW ====================
 const DashboardView = ({ data, themeClasses, isEditMode, onQuickAction, quickActionLoading }) => {
@@ -560,7 +625,7 @@ const DashboardView = ({ data, themeClasses, isEditMode, onQuickAction, quickAct
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4">
           {data.quickActions.map((action) => {
-            const isLoading = quickActionLoading === action.id;
+            const isLoading = quickActionLoading === action.id
             return (
               <button
                 key={action.id}
@@ -570,8 +635,8 @@ const DashboardView = ({ data, themeClasses, isEditMode, onQuickAction, quickAct
                   isLoading
                     ? 'animate-pulse border-blue-400 bg-blue-50 dark:bg-blue-900/20 cursor-not-allowed'
                     : action.critical
-                    ? 'border-red-300 hover:border-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 hover:shadow-red-200 hover:shadow-lg hover:scale-105'
-                    : 'border-gray-300 hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:shadow-blue-200 hover:shadow-lg hover:scale-105'
+                      ? 'border-red-300 hover:border-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 hover:shadow-red-200 hover:shadow-lg hover:scale-105'
+                      : 'border-gray-300 hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:shadow-blue-200 hover:shadow-lg hover:scale-105'
                 }`}
               >
                 <div
@@ -596,7 +661,7 @@ const DashboardView = ({ data, themeClasses, isEditMode, onQuickAction, quickAct
                   <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
                 )}
               </button>
-            );
+            )
           })}
         </div>
       </div>
@@ -621,7 +686,7 @@ const DashboardView = ({ data, themeClasses, isEditMode, onQuickAction, quickAct
         {/* Column 1 - Main metrics and charts */}
         <div className="xl:col-span-2 space-y-6">
           {data.widgets
-            .filter((w) => ['orders-overview', 'performance-chart'].includes(w.id))
+            .filter((w) => [].includes(w.id))
             .map((widget) => (
               <div
                 key={widget.id}
@@ -635,23 +700,25 @@ const DashboardView = ({ data, themeClasses, isEditMode, onQuickAction, quickAct
               </div>
             ))}
 
-          {/* Inventory status row */}
-          <div
-            className={`${themeClasses.surface} rounded-xl border ${themeClasses.border} p-6 hover:shadow-md transition-shadow`}
-          >
-            <WidgetRenderer
-              widget={data.widgets.find((w) => w.id === 'inventory-status')}
-              themeClasses={themeClasses}
-              isEditMode={isEditMode}
-            />
-          </div>
+          {/* Inventory status row - Ẩn (có UI ở Inventory module) */}
+          {false && (
+            <div
+              className={`${themeClasses.surface} rounded-xl border ${themeClasses.border} p-6 hover:shadow-md transition-shadow`}
+            >
+              <WidgetRenderer
+                widget={data.widgets.find((w) => w.id === 'inventory-status')}
+                themeClasses={themeClasses}
+                isEditMode={isEditMode}
+              />
+            </div>
+          )}
         </div>
 
         {/* Column 2 - Side panels */}
         <div className="space-y-6">
           {data.widgets
             .filter((w) =>
-              ['live-alerts', 'staff-status', 'top-products', 'automation-status'].includes(w.id),
+              [].includes(w.id),
             )
             .map((widget) => (
               <div
@@ -669,32 +736,34 @@ const DashboardView = ({ data, themeClasses, isEditMode, onQuickAction, quickAct
         </div>
       </div>
 
-      {/* Module status overview */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {Object.entries(data.systemStatus.modules).map(([module, status]) => (
-          <ModuleStatusCard
-            key={module}
-            module={module}
-            status={status}
-            themeClasses={themeClasses}
-          />
-        ))}
-      </div>
+      {/* Module status overview - Ẩn tạm (trùng System Status tab) */}
+      {false && (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {Object.entries(data.systemStatus.modules).map(([module, status]) => (
+            <ModuleStatusCard
+              key={module}
+              module={module}
+              status={status}
+              themeClasses={themeClasses}
+            />
+          ))}
+        </div>
+      )}
     </div>
-  );
-};
+  )
+}
 
 // ==================== METRIC CARD ====================
 const MetricCard = ({ label, value, themeClasses, isLive }) => {
   const getValueColor = (label, value) => {
     if (label.toLowerCase().includes('sla')) {
-      return value >= 95 ? 'text-green-600' : value >= 90 ? 'text-yellow-600' : 'text-red-600';
+      return value >= 95 ? 'text-green-600' : value >= 90 ? 'text-yellow-600' : 'text-red-600'
     }
     if (label.toLowerCase().includes('error')) {
-      return value <= 2 ? 'text-green-600' : value <= 5 ? 'text-yellow-600' : 'text-red-600';
+      return value <= 2 ? 'text-green-600' : value <= 5 ? 'text-yellow-600' : 'text-red-600'
     }
-    return 'text-blue-600';
-  };
+    return 'text-blue-600'
+  }
 
   return (
     <div
@@ -714,8 +783,8 @@ const MetricCard = ({ label, value, themeClasses, isLive }) => {
           ? value > 1000
             ? `${(value / 1000).toFixed(1)}K`
             : value % 1 !== 0
-            ? value.toFixed(1)
-            : value
+              ? value.toFixed(1)
+              : value
           : value}
       </p>
       {/* Progress bar for percentage values */}
@@ -728,8 +797,8 @@ const MetricCard = ({ label, value, themeClasses, isLive }) => {
                 parseFloat(value) >= 95
                   ? 'bg-green-500'
                   : parseFloat(value) >= 90
-                  ? 'bg-yellow-500'
-                  : 'bg-red-500'
+                    ? 'bg-yellow-500'
+                    : 'bg-red-500'
               }`}
               style={{ width: `${Math.min(parseFloat(value) || 0, 100)}%` }}
             ></div>
@@ -737,8 +806,8 @@ const MetricCard = ({ label, value, themeClasses, isLive }) => {
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
 // ==================== WIDGET RENDERER ====================
 const WidgetRenderer = ({ widget, themeClasses, isEditMode }) => {
@@ -758,7 +827,7 @@ const WidgetRenderer = ({ widget, themeClasses, isEditMode }) => {
               </div>
             ))}
           </div>
-        );
+        )
 
       case 'alert-feed':
         return (
@@ -770,7 +839,7 @@ const WidgetRenderer = ({ widget, themeClasses, isEditMode }) => {
               </li>
             ))}
           </ul>
-        );
+        )
 
       case 'line-chart':
         return (
@@ -778,7 +847,7 @@ const WidgetRenderer = ({ widget, themeClasses, isEditMode }) => {
             {/* Placeholder for chart rendering */}
             <p>Chart rendering logic goes here</p>
           </div>
-        );
+        )
 
       case 'donut-chart':
         return (
@@ -807,7 +876,7 @@ const WidgetRenderer = ({ widget, themeClasses, isEditMode }) => {
               ))}
             </div>
           </div>
-        );
+        )
 
       case 'progress-bars':
         return (
@@ -827,7 +896,7 @@ const WidgetRenderer = ({ widget, themeClasses, isEditMode }) => {
               </div>
             ))}
           </div>
-        );
+        )
 
       case 'table':
         return (
@@ -855,7 +924,7 @@ const WidgetRenderer = ({ widget, themeClasses, isEditMode }) => {
               </tbody>
             </table>
           </div>
-        );
+        )
 
       case 'automation-widget':
         return (
@@ -897,12 +966,12 @@ const WidgetRenderer = ({ widget, themeClasses, isEditMode }) => {
               <span className="font-medium">{widget.data.nextRun}</span>
             </div>
           </div>
-        );
+        )
 
       default:
-        return <div className="text-center text-gray-500">Unknown widget type</div>;
+        return <div className="text-center text-gray-500">Unknown widget type</div>
     }
-  };
+  }
 
   return (
     <div>
@@ -921,8 +990,8 @@ const WidgetRenderer = ({ widget, themeClasses, isEditMode }) => {
       </div>
       {renderWidget()}
     </div>
-  );
-};
+  )
+}
 
 // ==================== MODULE STATUS CARD ====================
 const ModuleStatusCard = ({ module, status, themeClasses }) => {
@@ -934,11 +1003,11 @@ const ModuleStatusCard = ({ module, status, themeClasses }) => {
       picking: Navigation,
       analytics: BarChart3,
       alerts: Bell,
-    };
-    return icons[module] || Activity;
-  };
+    }
+    return icons[module] || Activity
+  }
 
-  const ModuleIcon = getModuleIcon(module);
+  const ModuleIcon = getModuleIcon(module)
 
   return (
     <div
@@ -980,8 +1049,8 @@ const ModuleStatusCard = ({ module, status, themeClasses }) => {
               status.performance >= 95
                 ? 'bg-green-500'
                 : status.performance >= 85
-                ? 'bg-yellow-500'
-                : 'bg-red-500'
+                  ? 'bg-yellow-500'
+                  : 'bg-red-500'
             }`}
             style={{ width: `${status.performance}%` }}
           ></div>
@@ -994,8 +1063,8 @@ const ModuleStatusCard = ({ module, status, themeClasses }) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
 // ==================== SYSTEM STATUS VIEW ====================
 const SystemStatusView = ({ data, themeClasses }) => {
@@ -1066,8 +1135,8 @@ const SystemStatusView = ({ data, themeClasses }) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
 // ==================== INTEGRATIONS VIEW ====================
 const IntegrationsView = ({ data, themeClasses }) => {
@@ -1148,11 +1217,32 @@ const IntegrationsView = ({ data, themeClasses }) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
 // ==================== SETTINGS VIEW ====================
-const SettingsView = ({ themeClasses }) => {
+const SettingsView = ({
+  themeClasses,
+  autoRefresh,
+  onAutoRefreshChange,
+  isDarkMode,
+  onDarkModeChange,
+  soundNotifications,
+  onSoundNotificationsChange,
+}) => {
+  const Toggle = ({ checked, onChange, id }) => (
+    <label className="relative inline-flex items-center cursor-pointer" htmlFor={id}>
+      <input
+        id={id}
+        type="checkbox"
+        checked={checked}
+        onChange={(e) => onChange(e.target.checked)}
+        className="sr-only peer"
+      />
+      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+    </label>
+  )
+
   return (
     <div className="space-y-6">
       <div className={`${themeClasses.surface} rounded-xl border ${themeClasses.border} p-6`}>
@@ -1163,10 +1253,7 @@ const SettingsView = ({ themeClasses }) => {
               <h4 className="font-medium">Auto Refresh</h4>
               <p className="text-sm text-gray-500">Automatically refresh data every 5 seconds</p>
             </div>
-            <label className="relative inline-flex items-center cursor-pointer">
-              <input type="checkbox" defaultChecked className="sr-only peer" />
-              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-            </label>
+            <Toggle id="auto-refresh" checked={autoRefresh} onChange={onAutoRefreshChange} />
           </div>
 
           <div className="flex items-center justify-between">
@@ -1174,10 +1261,7 @@ const SettingsView = ({ themeClasses }) => {
               <h4 className="font-medium">Dark Mode</h4>
               <p className="text-sm text-gray-500">Switch to dark theme</p>
             </div>
-            <label className="relative inline-flex items-center cursor-pointer">
-              <input type="checkbox" className="sr-only peer" />
-              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-            </label>
+            <Toggle id="dark-mode" checked={isDarkMode} onChange={() => onDarkModeChange()} />
           </div>
 
           <div className="flex items-center justify-between">
@@ -1185,10 +1269,11 @@ const SettingsView = ({ themeClasses }) => {
               <h4 className="font-medium">Sound Notifications</h4>
               <p className="text-sm text-gray-500">Play sound for critical alerts</p>
             </div>
-            <label className="relative inline-flex items-center cursor-pointer">
-              <input type="checkbox" defaultChecked className="sr-only peer" />
-              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-            </label>
+            <Toggle
+              id="sound-notifications"
+              checked={soundNotifications}
+              onChange={onSoundNotificationsChange}
+            />
           </div>
         </div>
       </div>
@@ -1228,8 +1313,8 @@ const SettingsView = ({ themeClasses }) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
 // ==================== AUTOMATION VIEW ====================
 const AutomationView = ({ themeClasses }) => {
@@ -1239,51 +1324,51 @@ const AutomationView = ({ themeClasses }) => {
     totalRuns: 0,
     successRate: 0,
     currentTask: null,
-  });
+  })
 
-  const [logs, setLogs] = useState([]);
+  const [logs, setLogs] = useState([])
 
   useEffect(() => {
     // Load automation status
-    loadAutomationStatus();
-    loadAutomationLogs();
-  }, []);
+    loadAutomationStatus()
+    loadAutomationLogs()
+  }, [])
 
   const loadAutomationStatus = async () => {
     try {
-      const status = await automationAPI.getStatus();
-      setAutomationStatus(status);
+      const status = await automationAPI.getStatus()
+      setAutomationStatus(status)
     } catch (error) {
-      logger.error('Error loading automation status:', error);
+      logger.error('Error loading automation status:', error)
     }
-  };
+  }
 
   const loadAutomationLogs = async () => {
     try {
-      const logsData = await automationAPI.getLogs();
-      setLogs(logsData.slice(0, 10)); // Show last 10 logs
+      const logsData = await automationAPI.getLogs()
+      setLogs(logsData.slice(0, 10)) // Show last 10 logs
     } catch (error) {
-      logger.error('Error loading automation logs:', error);
+      logger.error('Error loading automation logs:', error)
     }
-  };
+  }
 
   const handleStartAutomation = async () => {
     try {
-      await automationAPI.start();
-      await loadAutomationStatus();
+      await automationAPI.start()
+      await loadAutomationStatus()
     } catch (error) {
-      logger.error('Error starting automation:', error);
+      logger.error('Error starting automation:', error)
     }
-  };
+  }
 
   const handleStopAutomation = async () => {
     try {
-      await automationAPI.stop();
-      await loadAutomationStatus();
+      await automationAPI.stop()
+      await loadAutomationStatus()
     } catch (error) {
-      logger.error('Error stopping automation:', error);
+      logger.error('Error stopping automation:', error)
     }
-  };
+  }
 
   return (
     <div className="space-y-6">
@@ -1397,8 +1482,8 @@ const AutomationView = ({ themeClasses }) => {
                   log.level === 'error'
                     ? 'border-red-500 bg-red-50 dark:bg-red-900/20'
                     : log.level === 'warning'
-                    ? 'border-yellow-500 bg-yellow-50 dark:bg-yellow-900/20'
-                    : 'border-green-500 bg-green-50 dark:bg-green-900/20'
+                      ? 'border-yellow-500 bg-yellow-50 dark:bg-yellow-900/20'
+                      : 'border-green-500 bg-green-50 dark:bg-green-900/20'
                 }`}
               >
                 <div className="flex items-center justify-between">
@@ -1447,7 +1532,8 @@ const AutomationView = ({ themeClasses }) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default IntegrationDashboard;
+// Switch: export OptimizedDashboard | IntegrationDashboard
+export default IntegrationDashboard

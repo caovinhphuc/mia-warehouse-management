@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react'
 import {
   Clock,
   Truck,
@@ -19,8 +19,8 @@ const ShippingSLAComparison = () => {
   const [alerts, setAlerts] = useState([]);
   const [customCutoffs, setCustomCutoffs] = useState({});
 
-  // Dữ liệu nhà vận chuyển
-  const carriers = [
+  // Dữ liệu nhà vận chuyển (useMemo để tránh thay đổi deps của useEffect)
+  const carriers = useMemo(() => [
     {
       name: 'GHN',
       marketShare: '7.91%',
@@ -106,7 +106,7 @@ const ShippingSLAComparison = () => {
       tiktokRating: 3.9,
       color: 'bg-indigo-500',
     },
-  ];
+  ], [])
 
   // Móc thời gian chi tiết theo quy định sàn và NVC
   const detailedTimeAnchors = {
