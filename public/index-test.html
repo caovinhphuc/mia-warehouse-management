@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="vi">
   <head>
     <!-- ==================== BASIC META TAGS ==================== -->
@@ -11,10 +11,7 @@
 
     <!-- ==================== PRIMARY META TAGS ==================== -->
     <title>MIA Warehouse Management System - Hệ thống quản lý kho vận</title>
-    <meta
-      name="title"
-      content="Warehouse Management System - Hệ thống quản lý kho vận"
-    />
+    <meta name="title" content="Warehouse Management System - Hệ thống quản lý kho vận" />
     <meta
       name="description"
       content="Hệ thống quản lý kho vận hiện đại với dashboard trực quan, quản lý đơn hàng, nhân viên và báo cáo thời gian thực"
@@ -56,10 +53,7 @@
     <!-- ==================== THEME & COLORS ==================== -->
     <meta name="theme-color" content="#1f2937" />
     <meta name="msapplication-TileColor" content="#1f2937" />
-    <meta
-      name="msapplication-config"
-      content="%PUBLIC_URL%/browserconfig.xml"
-    />
+    <meta name="msapplication-config" content="%PUBLIC_URL%/browserconfig.xml" />
 
     <!-- ==================== SECURITY HEADERS ==================== -->
     <!-- Content Security Policy (CSP) - Adjust based on your needs -->
@@ -79,10 +73,7 @@
     <!-- ==================== PWA SUPPORT ==================== -->
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta
-      name="apple-mobile-web-app-status-bar-style"
-      content="black-translucent"
-    />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="Warehouse System" />
 
     <!-- ==================== ANALYTICS (Optional) ==================== -->
@@ -104,15 +95,13 @@
           align-items: center;
           justify-content: center;
           z-index: 9999;
-          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
-            'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
-            'Helvetica Neue', sans-serif;
+          font-family:
+            -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
+            'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
         "
       >
         <div style="text-align: center; padding: 2rem; max-width: 600px">
-          <h1 style="color: #111827; margin-bottom: 1rem">
-            JavaScript Required
-          </h1>
+          <h1 style="color: #111827; margin-bottom: 1rem">JavaScript Required</h1>
           <p style="color: #4b5563; margin-bottom: 1rem">
             Bạn cần bật JavaScript để chạy ứng dụng này.
           </p>
@@ -130,34 +119,34 @@
     <!-- ==================== ERROR HANDLING ==================== -->
     <script>
       // Global error handler for unhandled errors
-      window.addEventListener("error", (event) => {
-        console.error("Global Error:", event.error);
+      window.addEventListener('error', (event) => {
+        console.error('Global Error:', event.error)
         // TODO: Send to error tracking service (e.g., Sentry, LogRocket)
         // Example: errorTracking.captureException(event.error);
-      });
+      })
 
       // Handle unhandled promise rejections
-      window.addEventListener("unhandledrejection", (event) => {
-        console.error("Unhandled Promise Rejection:", event.reason);
+      window.addEventListener('unhandledrejection', (event) => {
+        console.error('Unhandled Promise Rejection:', event.reason)
         // TODO: Send to error tracking service
         // Example: errorTracking.captureException(event.reason);
-      });
+      })
 
       // Performance monitoring
-      if ("performance" in window && "PerformanceObserver" in window) {
+      if ('performance' in window && 'PerformanceObserver' in window) {
         try {
           const observer = new PerformanceObserver((list) => {
             for (const entry of list.getEntries()) {
               // Log long tasks (blocking main thread > 50ms)
-              if (entry.entryType === "longtask") {
-                console.warn("Long Task Detected:", entry);
+              if (entry.entryType === 'longtask') {
+                console.warn('Long Task Detected:', entry)
               }
             }
-          });
-          observer.observe({ entryTypes: ["longtask"] });
+          })
+          observer.observe({ entryTypes: ['longtask'] })
         } catch (e) {
           // PerformanceObserver not supported
-          console.warn("PerformanceObserver not supported");
+          console.warn('PerformanceObserver not supported')
         }
       }
     </script>

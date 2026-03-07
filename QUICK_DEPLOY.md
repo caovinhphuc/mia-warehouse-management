@@ -76,9 +76,9 @@ GENERATE_SOURCEMAP=false
 
 > 📋 Chi tiết biến env: xem `VERCEL_ENV_VARS.md` hoặc `env.example`
 
-3. Chọn environment: **Production, Preview, Development**
-4. Click **Save**
-5. Vercel sẽ tự động redeploy
+1. Chọn environment: **Production, Preview, Development**
+2. Click **Save**
+3. Vercel sẽ tự động redeploy
 
 ---
 

@@ -1,6 +1,6 @@
 // ==================== WIDGET RENDERER ====================
-import React from 'react';
-import { Edit, X } from 'lucide-react';
+import React from 'react'
+import { Edit, X } from 'lucide-react'
 import {
   Package,
   Warehouse,
@@ -9,12 +9,37 @@ import {
   BarChart3,
   Bell,
   Activity,
-} from 'lucide-react';
-import PropTypes from 'prop-types';
-import { useTheme } from '../../hooks/useTheme';
-import { useModuleStatus } from '../../hooks/useModuleStatus';
+} from 'lucide-react'
+import PropTypes from 'prop-types'
+import {
+  ArcElement,
+  CategoryScale,
+  Chart as ChartJS,
+  Filler,
+  Legend,
+  LinearScale,
+  LineElement,
+  PointElement,
+  Title,
+  Tooltip,
+} from 'chart.js'
+import { Doughnut, Line } from 'react-chartjs-2'
+import { useTheme } from '../../../../App'
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  ArcElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler,
+)
 
 const WidgetRenderer = ({ widget, themeClasses, isEditMode }) => {
+  const { isDarkMode } = useTheme()
   const renderWidget = () => {
     switch (widget.type) {
       case 'metric-grid':
@@ -66,54 +91,70 @@ const WidgetRenderer = ({ widget, themeClasses, isEditMode }) => {
           </div>
         );
 
-      case 'line-chart':
+      case 'line-chart': {
+        const textColor = isDarkMode ? '#9ca3af' : '#6b7280'
+        const gridColor = isDarkMode ? 'rgba(75, 85, 99, 0.3)' : 'rgba(209, 213, 219, 0.5)'
+        const chartData = {
+          labels:
+            widget.data.categories?.length === widget.data.series?.[0]?.data?.length
+              ? widget.data.categories
+              : widget.data.series?.[0]?.data?.map((_, i) => `${String(i + 8).padStart(2, '0')}:00`) || [],
+          datasets: (widget.data.series || []).map((s, i) => ({
+            label: s.name,
+            data: s.data,
+            borderColor: i === 0 ? '#3b82f6' : '#10b981',
+            backgroundColor: i === 0 ? 'rgba(59, 130, 246, 0.1)' : 'rgba(16, 185, 129, 0.1)',
+            fill: true,
+            tension: 0.3,
+          })),
+        }
+        const options = {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { labels: { color: textColor } },
+          },
+          scales: {
+            x: { grid: { color: gridColor }, ticks: { color: textColor } },
+            y: { grid: { color: gridColor }, ticks: { color: textColor } },
+          },
+        }
         return (
-          <div className="h-48 flex items-end space-x-2">
-            {widget.data.series[0].data.map((value, index) => (
-              <div key={index} className="flex-1 flex flex-col items-center">
-                <div
-                  className="w-full bg-blue-500 rounded-t"
-                  style={{ height: `${(value / 100) * 150}px` }}
-                ></div>
-                <span className="text-xs mt-2">
-                  {widget.data.categories[index]}
-                </span>
-              </div>
-            ))}
+          <div className="h-48">
+            <Line data={chartData} options={options} />
           </div>
-        );
+        )
+      }
 
-      case 'donut-chart':
+      case 'donut-chart': {
+        const series = widget.data.series || []
+        const textColor = isDarkMode ? '#9ca3af' : '#6b7280'
+        const chartData = {
+          labels: series.map((s) => s.name),
+          datasets: [
+            {
+              data: series.map((s) => s.value),
+              backgroundColor: series.map((s) => s.color || '#6b7280'),
+              borderWidth: 0,
+            },
+          ],
+        }
+        const options = {
+          responsive: true,
+          maintainAspectRatio: true,
+          cutout: '60%',
+          plugins: {
+            legend: { position: 'bottom', labels: { color: textColor, padding: 8 } },
+          },
+        }
         return (
           <div className="flex flex-col items-center">
-            <div className="relative w-32 h-32 mb-4">
-              {/* Simplified donut chart representation */}
-              <div className="w-full h-full rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-                <div className="w-16 h-16 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center">
-                  <span className="text-lg font-bold">
-                    {widget.data.series.reduce(
-                      (sum, item) => sum + item.value,
-                      0
-                    )}
-                  </span>
-                </div>
-              </div>
-            </div>
-            <div className="space-y-1">
-              {widget.data.series.map((item, index) => (
-                <div key={index} className="flex items-center space-x-2">
-                  <div
-                    className="w-3 h-3 rounded-full"
-                    style={{ backgroundColor: item.color }}
-                  ></div>
-                  <span className="text-sm">
-                    {item.name}: {item.value}
-                  </span>
-                </div>
-              ))}
+            <div className="w-full max-w-[200px]">
+              <Doughnut data={chartData} options={options} />
             </div>
           </div>
-        );
+        )
+      }
 
       case 'progress-bars':
         return (

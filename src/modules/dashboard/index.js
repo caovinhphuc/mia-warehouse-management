@@ -24,11 +24,14 @@ import {
   X,
   Zap,
 } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useTheme } from '../../App'
 import logger from '../../utils/logger'
 import { useNotification } from '../../shared/hooks/useNotification'
-import { automationAPI } from '../automation/services/automationAPI'
+import {
+  automationAPI,
+  mockAutomationData,
+} from '../automation/services/automationAPI'
 
 // ==================== MOCK INTEGRATED DATA ====================
 const generateIntegratedData = () => ({
@@ -596,7 +599,9 @@ const IntegrationDashboard = () => {
         {activeView === 'integrations' && (
           <IntegrationsView data={data.integrationStatus} themeClasses={themeClasses} />
         )}
-        {activeView === 'automation' && <AutomationView themeClasses={themeClasses} />}
+        {activeView === 'automation' && (
+            <AutomationView themeClasses={themeClasses} onNotify={addNotification} />
+          )}
         {activeView === 'settings' && (
             <SettingsView
               themeClasses={themeClasses}
@@ -686,7 +691,7 @@ const DashboardView = ({ data, themeClasses, isEditMode, onQuickAction, quickAct
         {/* Column 1 - Main metrics and charts */}
         <div className="xl:col-span-2 space-y-6">
           {data.widgets
-            .filter((w) => [].includes(w.id))
+            .filter((w) => ['orders-overview', 'performance-chart'].includes(w.id))
             .map((widget) => (
               <div
                 key={widget.id}
@@ -717,9 +722,7 @@ const DashboardView = ({ data, themeClasses, isEditMode, onQuickAction, quickAct
         {/* Column 2 - Side panels */}
         <div className="space-y-6">
           {data.widgets
-            .filter((w) =>
-              [].includes(w.id),
-            )
+            .filter((w) => ['live-alerts', 'staff-status', 'top-products', 'automation-status'].includes(w.id))
             .map((widget) => (
               <div
                 key={widget.id}
@@ -1317,7 +1320,20 @@ const SettingsView = ({
 }
 
 // ==================== AUTOMATION VIEW ====================
-const AutomationView = ({ themeClasses }) => {
+const mapMockToStatus = (mock) => {
+  const s = mock?.status || mock
+  const total = s?.totalRuns ?? 0
+  const success = s?.successRuns ?? 0
+  return {
+    isRunning: Boolean(s?.isRunning),
+    lastRun: s?.lastRun ?? null,
+    totalRuns: total,
+    successRate: total ? Math.round((success / total) * 100) : 0,
+    currentTask: s?.currentTask ?? 'Idle',
+  }
+}
+
+const AutomationView = ({ themeClasses, onNotify }) => {
   const [automationStatus, setAutomationStatus] = useState({
     isRunning: false,
     lastRun: null,
@@ -1325,39 +1341,70 @@ const AutomationView = ({ themeClasses }) => {
     successRate: 0,
     currentTask: null,
   })
-
   const [logs, setLogs] = useState([])
+  const [apiOffline, setApiOffline] = useState(false)
 
-  useEffect(() => {
-    // Load automation status
-    loadAutomationStatus()
-    loadAutomationLogs()
-  }, [])
+  const notify = useCallback(
+    (type, message, title = '') => {
+      onNotify?.({ type, message, ...(title && { title }) })
+    },
+    [onNotify],
+  )
 
-  const loadAutomationStatus = async () => {
+  const loadAutomationStatus = useCallback(async () => {
     try {
-      const status = await automationAPI.getStatus()
-      setAutomationStatus(status)
+      const res = await automationAPI.getStatus()
+      setAutomationStatus(mapMockToStatus(res))
+      setApiOffline(false)
     } catch (error) {
       logger.error('Error loading automation status:', error)
+      setAutomationStatus(mapMockToStatus(mockAutomationData))
+      setApiOffline(true)
+      onNotify?.({
+        type: 'info',
+        message:
+          'Backend automation API không phản hồi. Đang dùng dữ liệu mẫu. Chạy backend để kết nối thật.',
+        title: 'Automation',
+      })
     }
-  }
+  }, [onNotify])
 
-  const loadAutomationLogs = async () => {
+  const loadAutomationLogs = useCallback(async () => {
     try {
       const logsData = await automationAPI.getLogs()
-      setLogs(logsData.slice(0, 10)) // Show last 10 logs
+      setLogs(Array.isArray(logsData) ? logsData.slice(0, 10) : [])
+      setApiOffline(false)
     } catch (error) {
       logger.error('Error loading automation logs:', error)
+      const mock = mockAutomationData?.logs || []
+      setLogs(
+        mock.map((l) => ({
+          level: l.type === 'success' ? 'info' : l.type || 'info',
+          message: l.message,
+          timestamp: l.timestamp,
+          details: l.details,
+        })),
+      )
     }
-  }
+  }, [])
+
+  useEffect(() => {
+    loadAutomationStatus()
+    loadAutomationLogs()
+  }, [loadAutomationStatus, loadAutomationLogs])
 
   const handleStartAutomation = async () => {
     try {
       await automationAPI.start()
       await loadAutomationStatus()
+      notify('success', 'Automation đã khởi động.', 'Start')
     } catch (error) {
       logger.error('Error starting automation:', error)
+      notify(
+        'error',
+        'Không thể kết nối automation API. Kiểm tra backend có chạy tại localhost:8000.',
+        'Start Automation',
+      )
     }
   }
 
@@ -1365,13 +1412,34 @@ const AutomationView = ({ themeClasses }) => {
     try {
       await automationAPI.stop()
       await loadAutomationStatus()
+      notify('success', 'Automation đã dừng.', 'Stop')
     } catch (error) {
       logger.error('Error stopping automation:', error)
+      notify(
+        'error',
+        'Không thể kết nối automation API. Kiểm tra backend.',
+        'Stop Automation',
+      )
     }
   }
 
   return (
     <div className="space-y-6">
+      {apiOffline && (
+        <div
+          className={`${themeClasses.surface} rounded-xl border border-amber-500/50 bg-amber-50 dark:bg-amber-900/20 p-4 flex items-center justify-between`}
+        >
+          <span className="text-sm text-amber-800 dark:text-amber-200">
+            Đang dùng dữ liệu mẫu. Backend automation chưa chạy hoặc không phản hồi.
+          </span>
+          <button
+            onClick={loadAutomationStatus}
+            className="text-amber-700 dark:text-amber-300 hover:underline text-sm font-medium"
+          >
+            Thử lại
+          </button>
+        </div>
+      )}
       {/* Automation Control Panel */}
       <div className={`${themeClasses.surface} rounded-xl border ${themeClasses.border} p-6`}>
         <div className="flex items-center justify-between mb-6">

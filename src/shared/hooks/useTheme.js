@@ -1,40 +1,34 @@
-import { useMemo } from 'react';
+import { useMemo } from 'react'
 import {
-  getThemeClasses,
-  getSidebarClasses,
-  getCardClasses,
   getButtonClasses,
+  getCardClasses,
+  getSidebarClasses,
   getStatusColor,
-} from '../constants/theme';
+  getThemeClasses,
+} from '../constants/theme'
 
 // ==================== THEME HOOK ====================
 // Custom hook to easily access theme classes and utilities
 export const useTheme = (isDarkMode = false) => {
-  const themeClasses = useMemo(() => getThemeClasses(isDarkMode), [isDarkMode]);
+  const themeClasses = useMemo(() => getThemeClasses(isDarkMode), [isDarkMode])
 
-  const sidebarClasses = useMemo(
-    () => getSidebarClasses(isDarkMode),
-    [isDarkMode]
-  );
+  const sidebarClasses = useMemo(() => getSidebarClasses(isDarkMode), [isDarkMode])
 
   const getCardTheme = useMemo(
     () =>
       (variant = 'default') =>
         getCardClasses(variant),
-    []
-  );
+    [],
+  )
 
   const getButtonTheme = useMemo(
     () =>
       (variant = 'primary') =>
         getButtonClasses(variant),
-    []
-  );
+    [],
+  )
 
-  const getStatusTheme = useMemo(
-    () => (status) => getStatusColor(status, isDarkMode),
-    [isDarkMode]
-  );
+  const getStatusTheme = useMemo(() => (status) => getStatusColor(status, isDarkMode), [isDarkMode])
 
   return {
     // Core theme classes
@@ -52,14 +46,14 @@ export const useTheme = (isDarkMode = false) => {
     pageContainer: `min-h-screen ${themeClasses.background}`,
     contentContainer: `${themeClasses.surface} rounded-lg ${themeClasses.border}`,
     headerContainer: `${themeClasses.surface} ${themeClasses.card.header}`,
-  };
-};
+  }
+}
 
 // ==================== SEMANTIC THEME HELPERS ====================
 // Pre-built semantic combinations for common use cases
 
 export const useSemanticTheme = (isDarkMode = false) => {
-  const theme = useTheme(isDarkMode);
+  const theme = useTheme(isDarkMode)
 
   return {
     ...theme,
@@ -101,7 +95,7 @@ export const useSemanticTheme = (isDarkMode = false) => {
     bodyText: `text-sm ${theme.text.secondary}`,
     mutedText: `text-xs ${theme.text.muted}`,
     subtleText: `text-xs ${theme.text.subtle}`,
-  };
-};
+  }
+}
 
-export default useTheme;
+export default useTheme

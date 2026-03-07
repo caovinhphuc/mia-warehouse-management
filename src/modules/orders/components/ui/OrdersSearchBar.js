@@ -9,8 +9,8 @@ import {
   PLATFORMS,
   STAFF_LIST,
 } from '../../config/constants';
-import { useSemanticTheme } from '../../../../shared/hooks/useTheme';
-import { useAuth } from '../../../../App';
+import { useSemanticTheme } from '../../../../shared/hooks/useTheme'
+import { useTheme } from '../../../../App'
 
 export const OrdersSearchBar = ({
   searchTerm,
@@ -20,7 +20,7 @@ export const OrdersSearchBar = ({
   showAdvancedFilters,
   onToggleAdvancedFilters,
 }) => {
-  const { isDarkMode } = useAuth();
+  const { isDarkMode } = useTheme()
   const theme = useSemanticTheme(isDarkMode);
   const hasActiveFilters = Object.values(filters).some(
     (value) => value !== 'all' && value !== 'today'

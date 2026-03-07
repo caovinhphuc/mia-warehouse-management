@@ -8,13 +8,13 @@ import { Eye, CheckCircle, MoreHorizontal, Clock, User } from 'lucide-react';
 import { Badge } from '../../../../components/ui/CommonComponents';
 import { ORDER_PRIORITIES, STATUS_LABELS } from '../../config/constants';
 import { formatRemainingTime, dateHelpers } from '../../utils/dateHelpers';
-import { useSemanticTheme } from '../../../../shared/hooks/useTheme';
-import { useAuth } from '../../../../App';
+import { useSemanticTheme } from '../../../../shared/hooks/useTheme'
+import { useTheme } from '../../../../App'
 
 export const OrderRow = ({ order, isSelected, onSelect, onStatusChange }) => {
-  const navigate = useNavigate();
-  const { isDarkMode } = useAuth();
-  const theme = useSemanticTheme(isDarkMode);
+  const navigate = useNavigate()
+  const { isDarkMode } = useTheme()
+  const theme = useSemanticTheme(isDarkMode)
 
   const timeDisplay = formatRemainingTime(order);
   const priorityConfig = ORDER_PRIORITIES[order.priority];
