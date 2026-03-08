@@ -37,7 +37,7 @@ export const Footer = ({
               </span>
               <span>•</span>
               <span>
-                Workspace: <strong>Kho Vận MIA</strong>
+                Khu vực làm việc: <strong>Kho Vận MIA</strong>
               </span>
             </div>
           </div>
@@ -50,14 +50,14 @@ export const Footer = ({
                 <>
                   <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
                   <span className="text-green-600 dark:text-green-400">
-                    Google Sheets Connected
+                    Đã kết nối Google Sheets
                   </span>
                 </>
               ) : (
                 <>
                   <div className="w-2 h-2 bg-red-500 rounded-full"></div>
                   <span className="text-red-600 dark:text-red-400">
-                    Disconnected
+                    Mất kết nối
                   </span>
                 </>
               )}
@@ -88,7 +88,7 @@ export const Footer = ({
                 type="button"
                 className="hover:text-blue-600 dark:hover:text-blue-400 bg-transparent border-none cursor-pointer"
               >
-                API Docs
+                Tài liệu API
               </button>
             </div>
           </div>
@@ -101,9 +101,9 @@ export const Footer = ({
             vận.
           </div>
           <div className="flex items-center space-x-4 mt-2 md:mt-0">
-            <span>Environment: Production</span>
+            <span>Môi trường: Production</span>
             <span>•</span>
-            <span>Region: Vietnam</span>
+            <span>Khu vực: Việt Nam</span>
             <span>•</span>
             <span>Cập nhật: 08/06/2025</span>
           </div>

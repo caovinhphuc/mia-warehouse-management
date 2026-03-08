@@ -32,7 +32,7 @@ export const Sidebar = ({ isOpen, currentPath = '/dashboard', onNavigate = () =>
       items: [
         {
           id: 'dashboard',
-          label: 'Integration Dashboard',
+          label: 'Bảng điều khiển',
           icon: BarChart2,
           path: '/dashboard',
           description: 'Bảng điều khiển tích hợp',
@@ -150,7 +150,7 @@ export const Sidebar = ({ isOpen, currentPath = '/dashboard', onNavigate = () =>
           label: 'Cài đặt',
           icon: Settings,
           path: '/settings',
-          description: 'System configuration',
+          description: 'Cấu hình hệ thống',
         },
       ],
     },
@@ -268,7 +268,7 @@ export const Sidebar = ({ isOpen, currentPath = '/dashboard', onNavigate = () =>
                 </span>
               </div>
               <p className="text-xs text-blue-600 dark:text-blue-400">
-                Google Sheets Integration Active
+                Đã kết nối Google Sheets
               </p>
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Cập nhật: 08/06/2025</p>
             </div>

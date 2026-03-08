@@ -114,7 +114,7 @@ REACT_APP_AUDIT_WEBHOOK_URL = [PASTE_YOUR_WEB_APP_URL_HERE]
 REACT_APP_PROFILE_UPDATE_WEBHOOK_URL = [PASTE_YOUR_WEB_APP_URL_HERE]
 ```
 
-3. Vercel sẽ tự động redeploy
+1. Vercel sẽ tự động redeploy
 
 ---
 

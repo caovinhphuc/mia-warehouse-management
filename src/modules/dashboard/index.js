@@ -74,22 +74,22 @@ const generateIntegratedData = () => ({
   widgets: [
     {
       id: 'orders-overview',
-      title: 'Orders Overview',
+      title: 'Tổng quan đơn hàng',
       type: 'metric-grid',
       size: 'large',
       position: { x: 0, y: 0, w: 6, h: 4 },
       data: {
         metrics: [
-          { label: 'Today Orders', value: 289, change: '+12%', color: 'blue' },
-          { label: 'In Progress', value: 15, change: '-3%', color: 'orange' },
+          { label: 'Đơn hôm nay', value: 289, change: '+12%', color: 'blue' },
+          { label: 'Đang xử lý', value: 15, change: '-3%', color: 'orange' },
           {
-            label: 'SLA Compliance',
+            label: 'Tuân thủ SLA',
             value: '94.8%',
             change: '+2.1%',
             color: 'green',
           },
           {
-            label: 'Avg Process Time',
+            label: 'Thời gian xử lý TB',
             value: '22.5m',
             change: '-8%',
             color: 'purple',
@@ -99,7 +99,7 @@ const generateIntegratedData = () => ({
     },
     {
       id: 'live-alerts',
-      title: 'Live Alerts',
+      title: 'Cảnh báo trực tiếp',
       type: 'alert-feed',
       size: 'medium',
       position: { x: 6, y: 0, w: 6, h: 4 },
@@ -107,26 +107,26 @@ const generateIntegratedData = () => ({
         alerts: [
           {
             type: 'critical',
-            message: 'VALI-PIS-24 out of stock',
-            time: '2m ago',
+            message: 'VALI-PIS-24 hết hàng',
+            time: '2 phút trước',
             module: 'inventory',
           },
           {
             type: 'warning',
-            message: '3 staff on unscheduled break',
-            time: '5m ago',
+            message: '3 nhân viên nghỉ không theo ca',
+            time: '5 phút trước',
             module: 'staff',
           },
           {
             type: 'info',
-            message: 'Peak hour efficiency: 98%',
-            time: '10m ago',
+            message: 'Hiệu suất giờ cao điểm: 98%',
+            time: '10 phút trước',
             module: 'picking',
           },
           {
             type: 'success',
-            message: 'Daily backup completed',
-            time: '15m ago',
+            message: 'Đã sao lưu hàng ngày',
+            time: '15 phút trước',
             module: 'system',
           },
         ],
@@ -134,18 +134,18 @@ const generateIntegratedData = () => ({
     },
     {
       id: 'performance-chart',
-      title: 'Hourly Performance',
+      title: 'Hiệu suất theo giờ',
       type: 'line-chart',
       size: 'large',
       position: { x: 0, y: 4, w: 8, h: 4 },
       data: {
         series: [
           {
-            name: 'Orders',
+            name: 'Đơn hàng',
             data: [45, 52, 38, 64, 72, 68, 89, 95, 78, 82, 76, 69],
           },
           {
-            name: 'Efficiency',
+            name: 'Hiệu suất',
             data: [78, 82, 85, 89, 92, 88, 94, 96, 91, 87, 84, 82],
           },
         ],
@@ -166,16 +166,16 @@ const generateIntegratedData = () => ({
     },
     {
       id: 'staff-status',
-      title: 'Staff Status',
+      title: 'Trạng thái nhân sự',
       type: 'donut-chart',
       size: 'medium',
       position: { x: 8, y: 4, w: 4, h: 4 },
       data: {
         series: [
-          { name: 'Working', value: 18, color: '#10B981' },
-          { name: 'Break', value: 3, color: '#F59E0B' },
-          { name: 'Absent', value: 2, color: '#EF4444' },
-          { name: 'Training', value: 5, color: '#3B82F6' },
+          { name: 'Đang làm việc', value: 18, color: '#10B981' },
+          { name: 'Nghỉ giải lao', value: 3, color: '#F59E0B' },
+          { name: 'Vắng mặt', value: 2, color: '#EF4444' },
+          { name: 'Đào tạo', value: 5, color: '#3B82F6' },
         ],
       },
     },
@@ -196,12 +196,12 @@ const generateIntegratedData = () => ({
     },
     {
       id: 'top-products',
-      title: 'Top Products Today',
+      title: 'Sản phẩm bán chạy hôm nay',
       type: 'table',
       size: 'medium',
       position: { x: 6, y: 8, w: 6, h: 3 },
       data: {
-        headers: ['Product', 'Orders', 'Revenue'],
+        headers: ['Sản phẩm', 'Đơn hàng', 'Doanh thu'],
         rows: [
           ['Vali Larita 28"', '42', '52.5M'],
           ['Travel Pillow', '38', '7.6M'],
@@ -212,7 +212,7 @@ const generateIntegratedData = () => ({
     },
     {
       id: 'automation-status',
-      title: 'Automation Status',
+      title: 'Trạng thái tự động hóa',
       type: 'automation-widget',
       size: 'medium',
       position: { x: 8, y: 4, w: 4, h: 4 },
@@ -220,7 +220,7 @@ const generateIntegratedData = () => ({
         status: 'running',
         tasksToday: 145,
         successRate: 97.8,
-        currentTask: 'Data Extraction',
+        currentTask: 'Thu thập dữ liệu',
         nextRun: '15:30',
       },
     },
@@ -229,50 +229,50 @@ const generateIntegratedData = () => ({
   quickActions: [
     {
       id: 'emergency-stop',
-      label: 'Emergency Stop',
+      label: 'Dừng khẩn cấp',
       icon: SquareIcon,
       color: 'red',
       critical: true,
     },
     {
       id: 'force-sync',
-      label: 'Force Sync All',
+      label: 'Đồng bộ tất cả',
       icon: RefreshCw,
       color: 'blue',
     },
     {
       id: 'backup-now',
-      label: 'Backup Now',
+      label: 'Sao lưu ngay',
       icon: Upload,
       color: 'green',
     },
     {
       id: 'maintenance-mode',
-      label: 'Maintenance Mode',
+      label: 'Chế độ bảo trì',
       icon: Settings,
       color: 'orange',
     },
     {
       id: 'generate-report',
-      label: 'Generate Report',
+      label: 'Tạo báo cáo',
       icon: FileText,
       color: 'purple',
     },
     {
       id: 'broadcast-message',
-      label: 'Broadcast Alert',
+      label: 'Gửi thông báo',
       icon: Bell,
       color: 'yellow',
     },
     {
       id: 'automation-start',
-      label: 'Start Automation',
+      label: 'Chạy automation',
       icon: Play,
       color: 'green',
     },
     {
       id: 'automation-stop',
-      label: 'Stop Automation',
+      label: 'Dừng automation',
       icon: Pause,
       color: 'red',
     },
@@ -384,11 +384,11 @@ const IntegrationDashboard = () => {
   }, [autoRefresh])
 
   const views = [
-    { id: 'dashboard', label: 'Control Center', icon: Grid },
-    { id: 'system', label: 'System Status', icon: Monitor },
-    { id: 'integrations', label: 'Integrations', icon: Zap },
-    { id: 'automation', label: 'Automation', icon: Activity },
-    { id: 'settings', label: 'Settings', icon: Settings },
+    { id: 'dashboard', label: 'Điều khiển', icon: Grid },
+    { id: 'system', label: 'Trạng thái hệ thống', icon: Monitor },
+    { id: 'integrations', label: 'Tích hợp', icon: Zap },
+    { id: 'automation', label: 'Tự động hóa', icon: Activity },
+    { id: 'settings', label: 'Cài đặt', icon: Settings },
   ]
 
   const themeClasses = {
@@ -507,9 +507,9 @@ const IntegrationDashboard = () => {
               <Command size={24} className="text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold">MIA Warehouse Control Center</h1>
+              <h1 className="text-2xl font-bold">Bảng điều khiển MIA Warehouse</h1>
               <p className={`${themeClasses.text.muted}`}>
-                Integration Dashboard •{' '}
+                Bảng điều khiển tích hợp •{' '}
                 {data.systemStatus.lastUpdate.toLocaleString('vi-VN')}
               </p>
             </div>
@@ -519,7 +519,7 @@ const IntegrationDashboard = () => {
             {/* System health indicator */}
             <div className="flex items-center space-x-2">
               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-              <span className="text-sm font-medium">Live</span>
+              <span className="text-sm font-medium">Trực tuyến</span>
             </div>
 
             {/* Auto refresh toggle */}
@@ -532,7 +532,7 @@ const IntegrationDashboard = () => {
               }`}
             >
               {autoRefresh ? <Play size={16} /> : <Pause size={16} />}
-              <span className="text-sm font-medium">Auto Refresh</span>
+                <span className="text-sm font-medium">Tự động làm mới</span>
             </button>
 
             {/* Edit mode toggle */}
@@ -626,7 +626,7 @@ const DashboardView = ({ data, themeClasses, isEditMode, onQuickAction, quickAct
       <div className={`${themeClasses.surface} rounded-xl border ${themeClasses.border} p-6`}>
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold">Thao tác nhanh</h3>
-          <span className="text-sm text-gray-500">Nhấp để thực hiện</span>
+          <span className="text-sm text-gray-500">Nhấn để thực hiện</span>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4">
           {data.quickActions.map((action) => {
@@ -728,7 +728,6 @@ const DashboardView = ({ data, themeClasses, isEditMode, onQuickAction, quickAct
                 key={widget.id}
                 className={`${themeClasses.surface} rounded-xl border ${themeClasses.border} p-6 hover:shadow-md transition-shadow`}
               >
-                <h3 className="text-lg font-semibold mb-4">{widget.title}</h3>
                 <WidgetRenderer
                   widget={widget}
                   themeClasses={themeClasses}
@@ -1249,28 +1248,28 @@ const SettingsView = ({
   return (
     <div className="space-y-6">
       <div className={`${themeClasses.surface} rounded-xl border ${themeClasses.border} p-6`}>
-        <h3 className="text-lg font-semibold mb-4">Dashboard Configuration</h3>
+        <h3 className="text-lg font-semibold mb-4">Cấu hình Dashboard</h3>
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h4 className="font-medium">Auto Refresh</h4>
-              <p className="text-sm text-gray-500">Automatically refresh data every 5 seconds</p>
+              <h4 className="font-medium">Tự động làm mới</h4>
+              <p className="text-sm text-gray-500">Tự động làm mới dữ liệu mỗi 5 giây</p>
             </div>
             <Toggle id="auto-refresh" checked={autoRefresh} onChange={onAutoRefreshChange} />
           </div>
 
           <div className="flex items-center justify-between">
             <div>
-              <h4 className="font-medium">Dark Mode</h4>
-              <p className="text-sm text-gray-500">Switch to dark theme</p>
+              <h4 className="font-medium">Chế độ tối</h4>
+              <p className="text-sm text-gray-500">Chuyển sang giao diện tối</p>
             </div>
             <Toggle id="dark-mode" checked={isDarkMode} onChange={() => onDarkModeChange()} />
           </div>
 
           <div className="flex items-center justify-between">
             <div>
-              <h4 className="font-medium">Sound Notifications</h4>
-              <p className="text-sm text-gray-500">Play sound for critical alerts</p>
+              <h4 className="font-medium">Thông báo âm thanh</h4>
+              <p className="text-sm text-gray-500">Phát âm thanh cho cảnh báo quan trọng</p>
             </div>
             <Toggle
               id="sound-notifications"
@@ -1282,35 +1281,35 @@ const SettingsView = ({
       </div>
 
       <div className={`${themeClasses.surface} rounded-xl border ${themeClasses.border} p-6`}>
-        <h3 className="text-lg font-semibold mb-4">System Maintenance</h3>
+        <h3 className="text-lg font-semibold mb-4">Bảo trì hệ thống</h3>
         <div className="space-y-3">
           <button className="w-full text-left p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors">
-            <h4 className="font-medium text-blue-700 dark:text-blue-400">Backup System Data</h4>
-            <p className="text-sm text-blue-600 dark:text-blue-300">Create a full system backup</p>
+            <h4 className="font-medium text-blue-700 dark:text-blue-400">Sao lưu dữ liệu hệ thống</h4>
+            <p className="text-sm text-blue-600 dark:text-blue-300">Tạo bản sao lưu toàn hệ thống</p>
           </button>
 
           <button className="w-full text-left p-3 bg-green-50 dark:bg-green-900/20 rounded-lg hover:bg-green-100 dark:hover:bg-green-900/30 transition-colors">
             <h4 className="font-medium text-green-700 dark:text-green-400">
-              Force Sync All Modules
+              Đồng bộ tất cả module
             </h4>
             <p className="text-sm text-green-600 dark:text-green-300">
-              Synchronize all module data
+              Đồng bộ dữ liệu tất cả module
             </p>
           </button>
 
           <button className="w-full text-left p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg hover:bg-yellow-100 dark:hover:bg-yellow-900/30 transition-colors">
             <h4 className="font-medium text-yellow-700 dark:text-yellow-400">
-              System Health Check
+              Kiểm tra sức khỏe hệ thống
             </h4>
             <p className="text-sm text-yellow-600 dark:text-yellow-300">
-              Run comprehensive system diagnostics
+              Chạy chẩn đoán toàn diện hệ thống
             </p>
           </button>
 
           <button className="w-full text-left p-3 bg-red-50 dark:bg-red-900/20 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors">
-            <h4 className="font-medium text-red-700 dark:text-red-400">Restart All Services</h4>
+            <h4 className="font-medium text-red-700 dark:text-red-400">Khởi động lại tất cả dịch vụ</h4>
             <p className="text-sm text-red-600 dark:text-red-300">
-              ⚠️ This will cause temporary downtime
+              ⚠️ Hệ thống sẽ tạm ngưng một thời gian
             </p>
           </button>
         </div>
@@ -1443,7 +1442,7 @@ const AutomationView = ({ themeClasses, onNotify }) => {
       {/* Automation Control Panel */}
       <div className={`${themeClasses.surface} rounded-xl border ${themeClasses.border} p-6`}>
         <div className="flex items-center justify-between mb-6">
-          <h3 className="text-lg font-semibold">Automation Control</h3>
+          <h3 className="text-lg font-semibold">Điều khiển tự động hóa</h3>
           <div className="flex items-center space-x-2">
             <div
               className={`w-3 h-3 rounded-full ${
@@ -1451,7 +1450,7 @@ const AutomationView = ({ themeClasses, onNotify }) => {
               }`}
             ></div>
             <span className="text-sm font-medium">
-              {automationStatus.isRunning ? 'Running' : 'Stopped'}
+              {automationStatus.isRunning ? 'Đang chạy' : 'Đã dừng'}
             </span>
           </div>
         </div>
@@ -1459,25 +1458,25 @@ const AutomationView = ({ themeClasses, onNotify }) => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
           <div className="text-center">
             <div className="text-2xl font-bold text-blue-600">{automationStatus.totalRuns}</div>
-            <div className="text-sm text-gray-500">Total Runs</div>
+            <div className="text-sm text-gray-500">Tổng lần chạy</div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-green-600">{automationStatus.successRate}%</div>
-            <div className="text-sm text-gray-500">Success Rate</div>
+            <div className="text-sm text-gray-500">Tỷ lệ thành công</div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-purple-600">
               {automationStatus.lastRun
-                ? new Date(automationStatus.lastRun).toLocaleTimeString()
-                : 'Never'}
+                ? new Date(automationStatus.lastRun).toLocaleTimeString('vi-VN')
+                : 'Chưa chạy'}
             </div>
-            <div className="text-sm text-gray-500">Last Run</div>
+            <div className="text-sm text-gray-500">Chạy lần cuối</div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-orange-600">
-              {automationStatus.currentTask || 'Idle'}
+              {automationStatus.currentTask || 'Chờ'}
             </div>
-            <div className="text-sm text-gray-500">Current Task</div>
+            <div className="text-sm text-gray-500">Tác vụ hiện tại</div>
           </div>
         </div>
 
@@ -1499,7 +1498,7 @@ const AutomationView = ({ themeClasses, onNotify }) => {
             ) : (
               <>
                 <Play size={16} />
-                <span>Start Automation</span>
+                <span>Chạy tự động hóa</span>
               </>
             )}
           </button>
@@ -1514,7 +1513,7 @@ const AutomationView = ({ themeClasses, onNotify }) => {
             }`}
           >
             <Pause size={16} />
-            <span>Stop Automation</span>
+            <span>Dừng tự động hóa</span>
           </button>
 
           <button
@@ -1522,7 +1521,7 @@ const AutomationView = ({ themeClasses, onNotify }) => {
             className="flex items-center space-x-2 px-4 py-2 rounded-lg font-medium bg-blue-100 text-blue-700 hover:bg-blue-200 transition-colors"
           >
             <RefreshCw size={16} />
-            <span>Refresh</span>
+            <span>Làm mới</span>
           </button>
         </div>
       </div>
@@ -1530,18 +1529,18 @@ const AutomationView = ({ themeClasses, onNotify }) => {
       {/* Recent Automation Logs */}
       <div className={`${themeClasses.surface} rounded-xl border ${themeClasses.border} p-6`}>
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold">Recent Automation Logs</h3>
+          <h3 className="text-lg font-semibold">Nhật ký tự động hóa gần đây</h3>
           <button
             onClick={loadAutomationLogs}
             className="text-blue-600 hover:text-blue-700 text-sm font-medium"
           >
-            Refresh Logs
+            Làm mới nhật ký
           </button>
         </div>
 
         <div className="space-y-2 max-h-96 overflow-y-auto">
           {logs.length === 0 ? (
-            <div className="text-center py-8 text-gray-500">No automation logs available</div>
+            <div className="text-center py-8 text-gray-500">Chưa có nhật ký tự động hóa</div>
           ) : (
             logs.map((log, index) => (
               <div
@@ -1569,15 +1568,15 @@ const AutomationView = ({ themeClasses, onNotify }) => {
 
       {/* Automation Configuration Quick Access */}
       <div className={`${themeClasses.surface} rounded-xl border ${themeClasses.border} p-6`}>
-        <h3 className="text-lg font-semibold mb-4">Quick Configuration</h3>
+        <h3 className="text-lg font-semibold mb-4">Cấu hình nhanh</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <a
             href="/automation/config"
             className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-center"
           >
             <Settings size={32} className="mx-auto mb-2 text-gray-600" />
-            <div className="font-medium">Settings</div>
-            <div className="text-sm text-gray-500">Configure automation parameters</div>
+            <div className="font-medium">Cài đặt</div>
+            <div className="text-sm text-gray-500">Cấu hình tham số tự động hóa</div>
           </a>
 
           <a
@@ -1585,8 +1584,8 @@ const AutomationView = ({ themeClasses, onNotify }) => {
             className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-center"
           >
             <FileText size={32} className="mx-auto mb-2 text-gray-600" />
-            <div className="font-medium">Full Logs</div>
-            <div className="text-sm text-gray-500">View detailed logs</div>
+            <div className="font-medium">Nhật ký đầy đủ</div>
+            <div className="text-sm text-gray-500">Xem chi tiết nhật ký</div>
           </a>
 
           <a
@@ -1594,8 +1593,8 @@ const AutomationView = ({ themeClasses, onNotify }) => {
             className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-center"
           >
             <Monitor size={32} className="mx-auto mb-2 text-gray-600" />
-            <div className="font-medium">Dashboard</div>
-            <div className="text-sm text-gray-500">Full automation dashboard</div>
+            <div className="font-medium">Bảng điều khiển</div>
+            <div className="text-sm text-gray-500">Dashboard tự động hóa đầy đủ</div>
           </a>
         </div>
       </div>
