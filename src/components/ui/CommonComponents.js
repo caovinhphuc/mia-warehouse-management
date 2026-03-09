@@ -1,43 +1,37 @@
-import React, { useState } from 'react';
-import { AlertTriangle, CheckCircle, Info, X } from 'lucide-react';
+import { AlertTriangle, CheckCircle, Info, X } from 'lucide-react'
+import React, { useState } from 'react'
 
 // Toast Notification Component
-export const ToastNotification = ({
-  type = 'info',
-  title,
-  message,
-  onClose,
-  autoClose = true,
-}) => {
-  const [isVisible, setIsVisible] = useState(true);
+export const ToastNotification = ({ type = 'info', title, message, onClose, autoClose = true }) => {
+  const [isVisible, setIsVisible] = useState(true)
 
   React.useEffect(() => {
     if (autoClose) {
       const timer = setTimeout(() => {
-        setIsVisible(false);
-        onClose?.();
-      }, 5000);
-      return () => clearTimeout(timer);
+        setIsVisible(false)
+        onClose?.()
+      }, 5000)
+      return () => clearTimeout(timer)
     }
-  }, [autoClose, onClose]);
+  }, [autoClose, onClose])
 
-  if (!isVisible) return null;
+  if (!isVisible) return null
 
   const typeStyles = {
     success: 'bg-green-50 border-green-200 text-green-800',
     error: 'bg-red-50 border-red-200 text-red-800',
     warning: 'bg-yellow-50 border-yellow-200 text-yellow-800',
     info: 'bg-blue-50 border-blue-200 text-blue-800',
-  };
+  }
 
   const icons = {
     success: CheckCircle,
     error: AlertTriangle,
     warning: AlertTriangle,
     info: Info,
-  };
+  }
 
-  const Icon = icons[type];
+  const Icon = icons[type]
 
   return (
     <div
@@ -51,8 +45,8 @@ export const ToastNotification = ({
         </div>
         <button
           onClick={() => {
-            setIsVisible(false);
-            onClose?.();
+            setIsVisible(false)
+            onClose?.()
           }}
           className="flex-shrink-0 opacity-75 hover:opacity-100"
         >
@@ -60,19 +54,19 @@ export const ToastNotification = ({
         </button>
       </div>
     </div>
-  );
-};
+  )
+}
 
 // Modal Component
 export const Modal = ({ isOpen, onClose, title, children, size = 'md' }) => {
-  if (!isOpen) return null;
+  if (!isOpen) return null
 
   const sizeClasses = {
     sm: 'max-w-md',
     md: 'max-w-lg',
     lg: 'max-w-2xl',
     xl: 'max-w-4xl',
-  };
+  }
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">
@@ -98,8 +92,8 @@ export const Modal = ({ isOpen, onClose, title, children, size = 'md' }) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
 // Loading Spinner Component
 export const LoadingSpinner = ({ size = 'md', text }) => {
@@ -107,7 +101,7 @@ export const LoadingSpinner = ({ size = 'md', text }) => {
     sm: 'w-4 h-4',
     md: 'w-6 h-6',
     lg: 'w-8 h-8',
-  };
+  }
 
   return (
     <div className="flex flex-col items-center justify-center space-y-2">
@@ -116,8 +110,8 @@ export const LoadingSpinner = ({ size = 'md', text }) => {
       ></div>
       {text && <p className="text-sm text-gray-500">{text}</p>}
     </div>
-  );
-};
+  )
+}
 
 // Confirmation Dialog Component
 export const ConfirmDialog = ({
@@ -134,7 +128,7 @@ export const ConfirmDialog = ({
     warning: 'bg-yellow-100 text-yellow-600',
     danger: 'bg-red-100 text-red-600',
     info: 'bg-blue-100 text-blue-600',
-  };
+  }
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={title} size="sm">
@@ -152,13 +146,11 @@ export const ConfirmDialog = ({
           </button>
           <button
             onClick={() => {
-              onConfirm();
-              onClose();
+              onConfirm()
+              onClose()
             }}
             className={`px-4 py-2 text-sm font-medium text-white rounded-md transition-colors ${
-              type === 'danger'
-                ? 'bg-red-600 hover:bg-red-700'
-                : 'bg-blue-600 hover:bg-blue-700'
+              type === 'danger' ? 'bg-red-600 hover:bg-red-700' : 'bg-blue-600 hover:bg-blue-700'
             }`}
           >
             {confirmText}
@@ -166,25 +158,19 @@ export const ConfirmDialog = ({
         </div>
       </div>
     </Modal>
-  );
-};
+  )
+}
 
 // Progress Bar Component
-export const ProgressBar = ({
-  value,
-  max = 100,
-  label,
-  color = 'blue',
-  showPercentage = true,
-}) => {
-  const percentage = Math.round((value / max) * 100);
+export const ProgressBar = ({ value, max = 100, label, color = 'blue', showPercentage = true }) => {
+  const percentage = Math.round((value / max) * 100)
 
   const colorClasses = {
     blue: 'bg-blue-500',
     green: 'bg-green-500',
     yellow: 'bg-yellow-500',
     red: 'bg-red-500',
-  };
+  }
 
   return (
     <div className="space-y-2">
@@ -201,8 +187,8 @@ export const ProgressBar = ({
         ></div>
       </div>
     </div>
-  );
-};
+  )
+}
 
 // Badge Component
 export const Badge = ({ children, variant = 'default', size = 'md' }) => {
@@ -212,13 +198,13 @@ export const Badge = ({ children, variant = 'default', size = 'md' }) => {
     warning: 'bg-yellow-100 text-yellow-800',
     error: 'bg-red-100 text-red-800',
     info: 'bg-blue-100 text-blue-800',
-  };
+  }
 
   const sizes = {
     sm: 'px-2 py-1 text-xs',
     md: 'px-2.5 py-1.5 text-sm',
     lg: 'px-3 py-2 text-base',
-  };
+  }
 
   return (
     <span
@@ -226,5 +212,5 @@ export const Badge = ({ children, variant = 'default', size = 'md' }) => {
     >
       {children}
     </span>
-  );
-};
+  )
+}
