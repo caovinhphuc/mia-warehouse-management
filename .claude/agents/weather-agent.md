@@ -11,25 +11,20 @@ skills:
   - weather-fetcher
 hooks:
   PreToolUse:
-    - matcher: ".*"
-      hooks:
-        - type: command
-          command: python3 ${CLAUDE_PROJECT_DIR}/.claude/hooks/scripts/hooks.py  --agent=weather-agent
-          timeout: 5000
-          async: true
+    - type: command
+      command: python3 ${CLAUDE_PROJECT_DIR}/.claude/hooks/scripts/hooks.py --agent=weather-agent
+      timeout: 5000
+      async: true
   PostToolUse:
-    - matcher: ".*"
-      hooks:
-        - type: command
-          command: python3 ${CLAUDE_PROJECT_DIR}/.claude/hooks/scripts/hooks.py  --agent=weather-agent
-          timeout: 5000
-          async: true
+    - type: command
+      command: python3 ${CLAUDE_PROJECT_DIR}/.claude/hooks/scripts/hooks.py --agent=weather-agent
+      timeout: 5000
+      async: true
   PostToolUseFailure:
-    - hooks:
-        - type: command
-          command: python3 ${CLAUDE_PROJECT_DIR}/.claude/hooks/scripts/hooks.py  --agent=weather-agent
-          timeout: 5000
-          async: true
+    - type: command
+      command: python3 ${CLAUDE_PROJECT_DIR}/.claude/hooks/scripts/hooks.py --agent=weather-agent
+      timeout: 5000
+      async: true
 ---
 
 # Weather Agent
